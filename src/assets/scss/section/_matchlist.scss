@@ -1,0 +1,382 @@
+.matchlist{
+  &__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+  &__content{
+    border-radius: 24px;
+    overflow: hidden;
+  }
+}
+
+.filter{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  padding: 24px 0 24px 0;
+  max-width: 608px;
+  border-radius: 24px;
+  z-index: 3;
+  box-shadow: 0px 13.8542px 7.814px rgba(33, 30, 70, 0.06),
+              0px 9.0379px 26.3528px rgba(33, 30, 70, 0.05),
+              0px 5.41108px 15.0472px rgba(33, 30, 70, 0.04);
+  transform: translateY(10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform $speed * 2 ease-in-out,
+              opacity $speed * 2 ease-in-out,
+              visibility $speed * 2 ease-in-out;
+  &.active{
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  & .modal__close{
+    top: 8px;
+    right: 8px;
+    position: absolute;
+  }
+  &__title{
+    margin-bottom: 21px;
+    padding-left: 24px;
+  }
+  &__content{
+    padding-left: 24px;
+    max-height: 530px;
+    overflow: auto;
+  }
+  &__subtitle{
+    font-weight: 600;
+    margin-bottom: 13px;
+    &:not(:first-child){
+      margin-top: 32px;
+    }
+  }
+  &__location{
+    justify-content: space-between;
+    margin: 0 -10px;
+    & > *{
+      margin: 0 10px;
+    }
+    & > *:first-child{
+      flex: 0 0 57.5%;
+    }
+    & > *:last-child{
+      flex: 1;
+    }
+  }
+  &__price{
+    &-labels{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 9px;
+    }
+    & .MuiSlider-rail{
+      height: 8px;
+    }
+    & .MuiSlider-track{
+      height: 8px;
+      border: transparent;
+    }
+    & .MuiSlider-mark{
+      background-color: transparent;
+    }
+    & .MuiSlider-thumb{
+      width: 32px;
+      height: 32px;
+    }
+  }
+}
+
+.tag-filter{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -4px;
+  &__item{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 55px;
+    margin: 4px;
+    padding: 7.5px 10px;
+    height: 32px;
+    border-radius: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 0.005rem;
+    transition: color $speed * 2 ease-in-out,
+                background-color $speed * 2 ease-in-out;
+  }
+}
+
+.content-matchlist{
+  position: relative;
+  &__body{
+    flex: 1;
+    overflow: hidden;
+  }
+  &__inner{
+    height: 0;
+    overflow: hidden;
+    position: relative;
+  }
+  &__info{
+    flex: 0 0 35%;
+    display: flex;
+    flex-direction: column;
+  }
+  &__content{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    & > *{
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
+
+.info-matchlist{
+  &__title{
+    margin-bottom: 16px;
+  }
+  &__price{
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  &__subtitle{
+    font-weight: 600;
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+  &__content{
+    max-height: 375px;
+    overflow: auto;
+    margin-bottom: 24px;
+  }
+  &__footer{
+    margin-top: auto;
+    & button{
+      margin-top: 8px;
+    }
+  }
+}
+
+.slider-matchlist{
+  &__prev,
+  &__next{
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    z-index: 2;
+    top: calc(50% - 25px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity $speed * 2 ease-in-out;
+    cursor: pointer;
+    &-disabled{
+      opacity: 0;
+      cursor: inherit;
+    }
+  }
+  &__prev{
+    left: 8px;
+  }
+  &__next{
+    right: 8px;
+    & i{
+      transform: rotate(180deg);
+    }
+  }
+  & .swiper-pagination{
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 2;
+  }
+  & .swiper-pagination-bullet{
+    transition: background-color $speed * 2 ease-in-out;
+    display: block;
+    width: 8px;
+    height: 8px;
+    margin: 0 8px;
+    border-radius: 100%;
+  }
+  & .swiper-slide{
+    overflow: hidden;
+    & img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      -o-object-fit: cover;
+      -o-object-position: center;
+    }
+  }
+  & .swiper-slide-active {
+    & .slider-matchlist__like,
+    & .slider-matchlist__times{
+      transform: scale(1);
+    }
+  }
+  &__actions{
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+  &__like,
+  &__times{
+    width: 72px;
+    height: 72px;
+    border-radius: 100%;
+    margin: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: scale(.5);
+    transition: transform $speed * 2 ease-in-out;
+  }
+  &__like i{
+    font-size: 26px;
+  }
+  &__times i{
+    font-size: 26px;
+  }
+}
+
+.stories{
+  margin: 24px 0 32px;
+  &__slide{
+    width: 64px;
+    height: 64px;
+    border-radius: 100%;
+    overflow: hidden;
+    cursor: pointer;
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      -o-object-fit: cover;
+      object-position: center;
+      -o-object-position: center;
+    }
+  }
+}
+
+
+@media (min-width: $lg) {
+  .content-matchlist{
+    height: 0;
+    padding-top: 65.5%;
+    &__wrapper{
+      display: flex;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    &__inner{
+      padding-top: 101%;
+    }
+  }
+  .slider-matchlist{
+    &__actions{
+      bottom: 64px;
+    }
+  }
+}
+
+
+@media (max-width: $lg) {
+  .slider-matchlist{
+    &__actions{
+      bottom: 30px;
+    }
+  }
+}
+
+@media (min-width: $md) {
+
+}
+
+@media (max-width: $md) {
+  .slider-matchlist{
+    &__actions{
+      bottom: 40px;
+    }
+  }
+}
+
+@media (min-width: $sm) and (max-width: $lg){
+  .content-matchlist{
+    &__inner{
+      padding-top: 50%;
+    }
+  }
+}
+
+@media (min-width: $sm) {
+  .matchlist{
+    &__content{
+      box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
+  .content-matchlist{
+    &__info{
+      padding: 24px 24px 32px;
+    }
+  }
+  .filter{
+    &__content{
+      padding-right: 48px;
+    }
+    &__location{
+      display: flex;
+    }
+  }
+}
+
+@media (max-width: $sm) {
+  .content-matchlist{
+    &__inner{
+      padding-top: 100%;
+    }
+    &__body{
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+  }
+  .slider-matchlist{
+    & .swiper-pagination{
+      display: none;
+    }
+  }
+  .slider-matchlist{
+    &__actions{
+      bottom: 16px;
+    }
+  }
+  
+  .filter{
+    &__content{
+      padding-right: 24px;
+    }
+  }
+}

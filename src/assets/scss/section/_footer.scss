@@ -1,0 +1,93 @@
+.footer{
+  flex-shrink: 0;
+  &__content{
+
+  }
+}
+
+.menu-footer{
+  &__item{
+    letter-spacing: 0.01rem;
+  }
+  &__name{
+    font-weight: 600;
+    margin-bottom: 16px
+  }
+}
+
+@media (min-width: $lg) {
+  .content-footer{
+    display: flex;
+    justify-content: space-between;
+    &__cell:not(:first-child){
+      margin-left: 32px;
+    }
+    &__cell:not(:last-child){
+      margin-right: 32px;
+    }
+  }
+}
+
+@media (max-width: $lg) {
+  .content-footer{
+    display: grid;
+    column-gap: 3%;
+  }
+}
+
+@media (min-width: $md) and (max-width: $lg) {
+  .content-footer{
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    row-gap: 25px;
+    grid-auto-rows: auto;
+    &__cell:first-child{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &__cell:first-child{
+      grid-column: span 3;
+    }
+  }
+}
+
+@media (min-width: $md){
+  .footer{
+    padding: 56px 0;
+  }
+  .menu-footer{
+    &__item + &__item{
+      margin-top: 7px;
+    }
+  }
+}
+
+@media (max-width: $md){
+  .footer{
+    padding: 24px 0 0;
+  }
+  .content-footer{
+    &__cell{
+      display: flex;
+      justify-content: center;
+    }
+    &__cell:not(:last-child){
+      text-align: center;
+    }
+    &__cell:first-child{
+      margin-bottom: 19px;
+    }
+    &__cell:not(:first-child){
+      margin-bottom: 48px;
+    }
+    & .social__list{
+      margin: 0 auto;
+    }
+  }
+  .menu-footer{
+    &__item + &__item{
+      margin-top: 16px;
+    }
+  }
+}

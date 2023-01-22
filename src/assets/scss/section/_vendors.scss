@@ -1,0 +1,148 @@
+.vendors{
+  &__content{
+
+  }
+  &__list{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  &__item{
+    
+  }
+}
+
+.item-vendor{
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow $speed * 2 ease-in-out;
+  &:hover{
+    & .item-vendor__like,
+    & .item-vendor__chat{
+      transform: translateY(0);
+    }
+  }
+  &__header{
+    height: 0;
+    padding-top: 75%;
+    position: relative;
+    overflow: hidden;
+  }
+  &__img{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    object-position: center;
+    -o-object-fit: cover;
+    -o-object-position: center;
+  }
+  &__actions{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    display: flex;
+    justify-content: center;
+    & > *{
+      margin: 0 4px;
+    }
+  }
+  &__like,
+  &__chat{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  &__like{
+    transition: transform $speed * 2 0s ease-in-out;
+  }
+  &__chat{
+    transition: transform $speed * 2 0.2s ease-in-out;
+  }
+  &__body{
+    padding: 16px;
+    & > *{
+      margin-bottom: 8px;
+    }
+  }
+  &__title{
+    cursor: pointer;
+    transition: color $speed * 2 ease-in-out;
+  }
+  &__price{
+    font-weight: 600;
+  }
+  &__text{
+
+  }
+}
+
+@media (min-width: $lg){
+  .vendors{
+    &__list{
+      margin: 12px -16px;
+    }
+  }
+  .item-vendor{
+    flex: 0 0 calc(33.3333% - 32px);
+  }
+}
+
+@media (min-width: $md) and (max-width: $lg){
+  .item-vendor{
+    flex: 0 0 calc(50% - 32px);
+  }
+}
+
+@media (min-width: $md){
+  .vendors{
+    &__list{
+      margin: 12px -16px;
+    }
+  }
+  .item-vendor{
+    margin: 12px 16px;
+    &__like,
+    &__chat{
+      transform: translateY(60px);
+    }
+  }
+}
+
+@media (max-width: $md){
+  .vendors{
+    &__list{
+      margin: 8px -8px;
+    }
+  }
+  .item-vendor{
+    margin: 8px 8px;
+  }
+}
+
+@media (min-width: $sm) and (max-width: $md){
+  .item-vendor{
+    flex: 0 0 calc(33.3333% - 16px);
+  }
+}
+
+@media (min-width: $xs) and (max-width: $sm){
+  .item-vendor{
+    flex: 0 0 calc(50% - 16px);
+  }
+}
+
+@media (max-width: $xs){
+  .item-vendor{
+    flex: 0 0 calc(100% - 16px);
+  }
+}

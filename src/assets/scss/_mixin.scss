@@ -1,0 +1,30 @@
+@mixin addFont($family, $type, $weight, $style){
+	@font-face {
+		font-family: "#{$family}";
+		src: url("../fonts/#{$family}/#{$type}/#{$family}-#{$type}.eot");
+		src: local(""),
+			url("../fonts/#{$family}/#{$type}/#{$family}-#{$type}.eot?#iefix") format("embedded-opentype"),
+			url("../fonts/#{$family}/#{$type}/#{$family}-#{$type}.woff2") format("woff2"),
+			url("../fonts/#{$family}/#{$type}/#{$family}-#{$type}.woff") format("woff"),
+			url("../fonts/#{$family}/#{$type}/#{$family}-#{$type}.ttf") format("truetype");
+		font-weight: $weight;
+		font-style: $style;
+		font-display: swap;
+	}
+}
+
+@mixin adaptiveFontSize($maxSize, $minSize){
+
+	$addSize: $maxSize - $minSize;
+	$addMobSize: $addSize + $addSize * 0.7;
+
+	@media(min-width: $xl){
+		font-size: $maxSize + px;
+	}
+	@media(min-width: $md) and (max-width: $xl){
+		font-size: calc(#{$minSize + px} + #{$addSize} * (100vw / #{$maxWidthContainer}));
+	}
+	@media(max-width: $md){
+		font-size: calc(#{$minSize + px} + #{$addMobSize} * ((100vw - #{$minWidthContainer + px}) / #{$maxWidthContainer}));
+	}
+}

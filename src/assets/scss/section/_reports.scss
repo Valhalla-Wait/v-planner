@@ -1,0 +1,97 @@
+.reports{
+  padding-bottom: 12px;
+  &__title{
+  }
+  &__header{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-bottom: 10px!important;
+  }
+  &__btns{
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    padding: 4px 0;
+    margin: 0 -4px 8px;
+    & > * {
+      margin: 0 4px;
+    }
+    & button{
+      height: 32px;
+      padding: 8px;
+    }
+  }
+  &__filter{
+    display: flex;
+    margin: 0 -4px;
+    & > * {
+      margin: 0 4px;
+      & > div{
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
+  &__table{
+    width: 100%;
+    overflow: auto;
+  }
+}
+
+@media (min-width: $lg){
+  .reports__table{
+    & .cell-service{
+
+    }
+  }
+}
+
+@media (max-width: $lg){
+  .reports__table{
+  }
+}
+
+@media (min-width: $md){
+  .reports{
+    padding-top: 24px;
+    &__title{
+      padding: 0 24px 0 14px;
+    }
+    &__header{
+      padding: 24px 24px 18px 14px;
+    }
+  }
+  .reports__table .table__row{
+    display: table-row;
+  }
+}
+
+
+@media (max-width: $md){
+  .reports{
+    margin: 0 -16px;
+    &__title{
+      padding: 0 24px 0 16px;
+    }
+    &__header{
+      padding: 24px 24px 18px 16px;
+    }
+    &__filter{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: flex-end;
+      padding: 8px 16px;
+      z-index: 2;
+      box-shadow: 0px -4px 4px rgba(0, 0, 0, .15);
+    }
+  }
+  .reports__table .table__row{
+    padding-left: 11px;
+    padding-right: 11px;
+    display: flex;
+  }
+}

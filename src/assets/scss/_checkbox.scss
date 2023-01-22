@@ -1,0 +1,64 @@
+/* Check */
+
+.check {
+  padding-left: 25px;
+  font-size: 12px;
+  letter-spacing: 0.015rem;
+  position: relative;
+}
+
+.check__input {
+  position: absolute;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.check__box {
+  position: absolute;
+  margin-left: -25px;
+  width: 18px;
+  height: 18px;
+  border-radius: 1px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color $speed ease-in-out,
+              background-color $speed ease-in-out;
+}
+
+.check__input + .check__box::before{
+  transition: 120ms transform ease-in-out;
+}
+/* Checked */
+
+.check__input:checked + .check__box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform-origin: bottom left;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+
+}
+
+/* Focused */
+
+.check__input:focus + .check__box {
+    // background-image: url(images/off-focused.svg);
+}
+
+.check__input:checked:focus + .check__box {
+    // background-image: url(images/on-focused.svg);
+}
+
+/* Disabled */
+
+.check__input:disabled + .check__box {
+    // background-image: url(images/off-disabled.svg);
+}
+
+.check__input:checked:disabled + .check__box {
+    // background-image: url(images/on-disabled.svg);
+}

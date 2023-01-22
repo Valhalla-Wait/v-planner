@@ -1,0 +1,155 @@
+.modal{
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity $speed ease-in-out,
+              background $speed ease-in-out;
+  &__wrapper{
+    overflow-x: hidden;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-30px); 
+    transition: transform $speed * 2 ease-out;
+  }
+  &__close{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+}
+
+.modal.active{
+  pointer-events: all;
+  backdrop-filter: blur(3px);
+  opacity: 1;
+  & .modal__wrapper{
+    transform: translateY(0);
+  }
+}
+
+.middle-modal{
+  &__content{
+    width: 100%;
+    position: relative;
+    padding: 48px $grid + px;
+    & .modal__close{
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+  }
+  &__header{
+  }
+  &__logo{
+    width: 208px;
+    height: 48px;
+    margin: 0 auto 24px;
+  }
+  &__title{
+    font-size: 18px;
+    text-align: center;
+  }
+  &__title:not(:first-child){
+    margin-top: 32px;
+    margin-bottom: 24px;
+  }
+  &__subtitle{
+    width: max-content;
+    margin: 16px auto 24px;
+    text-decoration: underline;
+  }
+  &__footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & > *{
+      margin-top: 24px;
+    }
+  }
+  &__link{
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+.small-modal{
+  &__content{
+    max-width: 352px;
+    border-radius: 24px;
+    position: relative;
+    padding: 24px $grid + px 48px;
+  }
+  &__header{
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  &__title{
+    font-weight: 600;
+    font-size: 24px;
+    margin-top: 16px;
+    letter-spacing: 0.01rem;
+  }
+  &__icon{
+    width: 48px;
+    height: 48px;
+    margin: 0 auto;
+    & img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      -o-object-fit: cover;
+      object-position: center;
+      -o-object-position: center;
+    }
+  }
+  &__subtitle{
+    letter-spacing: 0.005rem;
+    margin-top: 8px;
+  }
+}
+
+@media (min-width: $sm) {
+  .middle-modal{
+    &__content{
+      margin: 24px auto;
+      max-width: 416px;
+      border-radius: 24px;
+    }
+  }
+}
+
+@media (min-width: $md) {
+  .middle-modal{
+    &__content{
+    }
+  }
+}
+
+@media (min-width: $sm) {
+  .small-modal{
+    &__content{
+      margin: 80px auto;
+      width: 100%;  
+    }
+  }
+}
+
+@media (max-width: $sm) {
+  .small-modal{
+    &__content{
+      margin: 24px 16px;
+    }
+  }
+}

@@ -1,0 +1,46 @@
+.help{
+  margin-bottom: 32px;
+  &__content{
+    max-width: 544px;
+  }
+  &__header{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+  & button{
+    display: block;
+    margin-left: auto;
+    width: 100%;
+  }
+}
+
+@media (min-width: $sm){
+  .help{
+    & button{
+      max-width: 160px;
+    }
+  }
+}
+
+@media (min-width: $md){
+  .help{
+    &__header{
+      & h4{
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: $md){
+  .help{
+    &__header{
+      flex-direction: column;
+      &-info{
+        margin-top: 16px;
+      }
+    }
+  }
+}

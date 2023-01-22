@@ -1,0 +1,24 @@
+@import "./mixin";
+@import "./icon";
+
+$maxWidthContainer: 1120;
+$minWidthContainer: 360;
+
+$grid: 32;
+
+$fontFamily: "SFProDisplay";
+$fontFamilySora: "Sora";
+
+$speed: .3s;
+
+// Breakpoints
+$xs: 389.98px;
+$sm: 575.98px;
+$md: 767.98px;
+$lg: 991.98px;
+$xl: 1199.98px;
+
+@include addFont("SFProDisplay", "Regular", 400, "normal");
+@include addFont("SFProDisplay", "Semibold", 600, "normal");
+@include addFont("Sora", "Regular", 400, "normal");
+

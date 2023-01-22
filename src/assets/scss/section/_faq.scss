@@ -1,0 +1,86 @@
+.faq{
+  &__inner{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 24px;
+  }
+  &__body{
+    flex: 1;
+  }
+  &__menu{
+    padding: 0 16px 16px;
+  }
+  &__btn{
+    font-weight: 600;
+    text-decoration: underline;
+    font-size: 18px;
+  }
+}
+
+.folder-faq{
+  &__item{
+    padding-bottom: 32px;
+  }
+  &__item:not(:first-child){
+    padding-top: 32px;
+  }
+  &__title{
+    margin-bottom: 16px;
+  }
+  &__inner{
+    & h5{
+      margin-bottom: 8px;
+    }
+  }
+  &__inner:not(:last-child){
+    & p{
+      margin-bottom: 24px;
+    }
+  }
+}
+.menu-faq{
+  position: sticky;
+  top: 80px;
+  max-height: calc(100vh - 150px);
+  overflow: auto;
+  &__item{
+    margin-bottom: 24px;
+  }
+  &__list{
+    padding-left: 16px;
+  }
+  &__title{
+    margin-bottom: 16px;
+  }
+  &__text{
+    cursor: pointer;
+  }
+  &__text + &__text{
+    margin-top: 16px;
+  }
+}
+
+@media (min-width: $lg){
+  .faq{
+    &__menu{
+      flex: 0 0 255px;
+    }
+  }
+}
+
+@media (min-width: $md) and (max-width: $lg){
+  .faq{
+    &__menu{
+      flex: 0 0 155px;
+    }
+  }
+}
+
+@media (min-width: $md){
+  .faq{
+    &__body{
+      margin-right: 33px;
+    }
+  }
+}

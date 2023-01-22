@@ -1,0 +1,19 @@
+.account{
+  max-width: 352px;
+  & > form{
+    padding-bottom: 31px;
+    margin-bottom: 31px;
+  }
+}
+
+@media (min-width: $xl){
+  .account{
+    margin-left: 13.5%;
+  }
+}
+
+@media (max-width: $md) {
+  .account{
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,209 @@
+.started{
+  position: relative;
+  overflow: hidden;
+  &__content{
+  }
+  &__body{
+
+  }
+  &__title{
+  }
+  &__desc{
+    max-width: 352px;
+    @include adaptiveFontSize(18, 14);
+  }
+  &__btn{
+    width: 160px;
+  }
+  &__body{
+  }
+  &__slider{
+  }
+}
+
+.slider-started{
+  &__slide{
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    &::before{
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 115px;
+    }
+  }
+  &__img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    -o-object-fit: cover;
+    -o-object-position: center;
+  }
+  &__text{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  &__title{
+    @include adaptiveFontSize(18, 14);
+    font-weight: 600;
+  }
+  &__title,
+  &__subtitle{
+    letter-spacing: 0.01rem;
+  }
+  & .swiper-slide{
+    align-items: center;
+    display: flex;
+    width: 100%;
+    height: auto;
+  }
+  & .swiper-slide > *{
+    opacity: 0;
+  }
+  & .swiper-slide .slider-started__slide{
+    width: 100%;
+    transition: max-height $speed ease-in-out,
+                box-shadow $speed ease-in-out,
+                transform $speed ease-in-out;
+  }
+  & .swiper-slide-active .slider-started__slide,
+  & .swiper-slide-next .slider-started__slide{
+    opacity: 1;
+  }
+  & .swiper-slide-active .slider-started__slide{
+    max-height: 100%;
+  }
+  & .swiper-container{
+    overflow: visible;
+  }
+}
+
+@media (min-width: $xl){
+  .slider-started{
+    margin-left: 480px;
+  }
+}
+
+@media (min-width: $lg) and (max-width: $xl){
+  .slider-started{
+    margin-left: auto;
+  }
+}
+
+@media (min-width: $sm) and (max-width: $lg){
+  .started{
+    &__title{
+      text-align: center;
+    }
+    &__desc{
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+  }
+}
+
+@media (min-width: $lg){
+  .started{
+    &__content{
+      position: absolute;
+      z-index: 2;
+      height: 100%;
+      max-width: 448px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    &__content,
+    &__slider{
+      padding-bottom: 150px;
+    }
+  }
+  .slider-started{
+    max-width: 640px;
+    margin-left: 480px;
+    &__title{
+      margin-bottom: 8px;
+    }
+    &__text{
+      padding: 24px;
+    }
+    & .swiper-slide-next .slider-started__slide{
+      max-height: 78%;
+    }
+  }
+}
+
+@media (max-width: $lg){
+  .started{
+    margin-bottom: $grid / 2 + px;
+    &__title span{
+      display: block;
+    }
+    &__slider{
+      max-width: 91%;
+      & > div{
+        overflow: visible!important;
+      }
+    }
+  }
+  .slider-started{
+    margin-bottom: $grid + px;
+    &__text{
+      padding: 16px;
+    }
+    & .swiper-slide-next .slider-started__slide{
+      max-height: 83%;
+    }
+  }
+}
+
+@media (min-width: $md) and (max-width: $lg){
+  .started{
+    &__btn{
+      display: block;
+      margin: 0 auto 32px;
+    }
+  }
+}
+
+@media (min-width: $md) {
+  .started{
+    &__title{
+      margin-bottom: 19px;
+    }
+    &__desc{
+      margin-bottom: 36px;
+    }
+  }
+
+  .slider-started{
+    &__slide{
+      border-radius: 32px;
+    }
+  }
+}
+
+@media (max-width: $md) {
+  .started{
+    &__title{
+      letter-spacing: 0.05rem;
+      margin-bottom: 11px;
+    }
+    &__desc{
+      margin-bottom: 27px;
+    }
+  }
+
+  .slider-started{
+    &__slide{
+      border-radius: 16px;
+    }
+  }
+}
