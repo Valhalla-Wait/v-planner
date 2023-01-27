@@ -104,7 +104,7 @@ const UserSignUpForm = () => {
       ? watch(f.customBudget) && isValid
       : watch(f.budget) && isValid;
 
-  useEffect
+  // useEffect
 
   const onSubmit = (data) => {
     dispatch(signUpAction({ ...data }));

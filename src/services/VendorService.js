@@ -1,6 +1,6 @@
 export default class VendorService {
 
-  static async login(
+  static login(
     email,
     firstName,
     lastName,

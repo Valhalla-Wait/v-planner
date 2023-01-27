@@ -10,53 +10,72 @@ export const signUpAction = (data) => {
     dispatch(LoginStart);
     const reqBody = new FormData();
     const obj = {
-      firstName:  data.firstName,
-      surname:  data.lastName,
-      phoneNumber: data.phone,
-      username: data.name,
-      email: data.email,
-      password: data.password,
-      city: data.state.value,
-      companyName: data.name,
-      fieldOfActivity: data.type.value,
-      typeOfService:  data.type.value,
-      priceFrom: data.priceRange.value.priceFrom,
-      priceTo: data.priceRange.value.priceTo,
-      weddingActivity: data.activities.value,
-      companyTitle: data.title,
-      companyDescription: data.description,
       aboutCompany: data.aboutCompany,
       aboutTeam: data.aboutTeam,
+      city: data.state.value,
+      companyDescription: data.description,
+      companyName: data.name,
+      companyTitle: data.title,
+      email: data.email,
+      facebook: data.facebook,
+      fieldOfActivity: data.type.value,
+      firstName: data.firstName,
+      instagram: data.instagram,
+      password: data.password,
+      phoneNumber: data.phone,
       photoStyle: data.type.value,
-      serviceModels:[
+      priceFrom: data.priceRange.value.priceFrom,
+      priceTo: data.priceRange.value.priceTo,
+      serviceModels: [
+        //   {
+        //     name: data.serviceModels[0].name,
+        //     price: data.serviceModels[0].price,
+        //   }
         {
-          name: data.serviceModels[0].name,
-          price:data.serviceModels[0].price,
-        }
-      ]
-     }
+          "name": "test_name",
+          "price": 0
+        },
+      ],
+      surname: data.lastName,
+      tiktok: data.tiktok,
+      twitter: data.twitter,
+      username: data.name,
+      // typeOfService: data.type.value,
+      weddingActivity: data.activities.value,
+    }
+
+    console.log('obj', obj)
 
     const json = JSON.stringify(obj)
     const blob = new Blob([json], {
       type: 'application/json'
     });
 
-    reqBody.append("createVendorModel",blob);
     reqBody.append("avatar", data.avatar[0]);
     reqBody.append("companyAvatar", data.file[0]);
+    reqBody.append("createVendorModel", blob);
     for (const image of data.images) {
-      reqBody.append("photoAndVideos",image);
+      reqBody.append("photoAndVideos", image);
     }
+
+    for (var pair of reqBody.entries()) {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
+
+    for (const value of reqBody.values()) {
+      console.log('value', value)
+    }
+
 
     axios({
       method: "post",
-      url: `${process.env.REACT_APP_API_URL}/vendors/create`,
+      url: `${process.env.REACT_APP_URL_TEST}/vendors/create`,
       data: reqBody,
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
-        console.log("response in vendro",res)
-        dispatch(signInSuccess(res));
-      })
+      console.log("response in vendro", res)
+      dispatch(signInSuccess(res));
+    })
       .catch((err) => {
         dispatch(addTodoFailure(err.message));
       });

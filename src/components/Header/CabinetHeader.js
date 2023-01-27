@@ -28,7 +28,7 @@ const CabinetHeader = ({ name, image }) => {
   const state = useSelector((state) => state.userInfo);
 
   const { userInfo } = useSelector((state) => state);
-  console.log("state in notlify",state)
+  // console.log("state in notlify",state)
   return (
     <header className="header header-shadow">
       <div className="container">

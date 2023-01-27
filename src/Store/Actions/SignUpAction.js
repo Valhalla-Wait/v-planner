@@ -1,4 +1,4 @@
-import { SIGNIN_SUCCESS, SIGNIN_USER, SIGNIN_FAILED } from "../types";
+import { SIGNIN_SUCCESS, SIGNIN_START, SIGNIN_FAILED } from "../types";
 import axios from "axios";
 
 export const signUpAction = ({
@@ -79,7 +79,7 @@ const signInSuccess = (response) => {
 };
 
 const LoginStart = () => ({
-  type: SIGNIN_USER,
+  type: SIGNIN_START,
 });
 
 const addTodoFailure = (error) => ({
