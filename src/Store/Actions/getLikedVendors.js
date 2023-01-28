@@ -9,12 +9,12 @@ import {
 export const getLikedVendors = () =>{
     return (dispatch,getState)=>{
         dispatch(fetchStart);
-        const {userInfo} = getState()
+        const token = localStorage.getItem('token')
 
         axios({
             method: "get",
             url: `${process.env.REACT_APP_API_URL}/matches/liked-vendors`,
-            headers: { "Content-Type": "multipart/form-data",Authorization:`Bearer ${userInfo.token}`},
+            headers: { "Content-Type": "multipart/form-data",Authorization:`Bearer ${token}`},
         }).then((res) => {
             console.log("response in liked vendorsJs js",res)
             dispatch(fetchSuccess(res));

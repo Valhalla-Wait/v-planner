@@ -16,6 +16,7 @@ import ScrollToTop from "./components/SrcollToTop";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "./Store/Actions/getCurrentUser";
 import AuthService from "./services/AuthService";
+import { getLikedVendors } from "./Store/Actions/getLikedVendors";
 const App = (props) => {
   const modal = useModal();
   const auth = useAuth();
@@ -41,6 +42,7 @@ const App = (props) => {
     const token = localStorage.getItem("token")
     if (token) {
       dispatch(getCurrentUser(token))
+      dispatch(getLikedVendors())
       auth.check()
     }
   }, []);
