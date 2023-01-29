@@ -13,23 +13,23 @@ import Button from "../components/UI/Button";
 import { ModalContext } from "../context/ModalContext";
 import useDevice from "../hooks/useDevice";
 import { connect } from "react-redux";
-import {getDetailVendor} from "../Store/Actions/getVendorAction";
-import {useDispatch} from "react-redux";
+import { getDetailVendor } from "../Store/Actions/getVendorAction";
+import { useDispatch } from "react-redux";
 
 SwiperCore.use([Navigation]);
 
-function VendorItem({vendorMore,isLoading}) {
+function VendorItem({ vendorMore, isLoading }) {
 
-  const {id } = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const modal = useContext(ModalContext);
   const device = useDevice();
 
-  useEffect(()=>{
-      dispatch(getDetailVendor(id))
-  },[])
+  useEffect(() => {
+    dispatch(getDetailVendor(id))
+  }, [])
   const [like, setLike] = useState(false);
 
   const [swiperRef, setSwiperRef] = useState(null);
@@ -66,8 +66,8 @@ function VendorItem({vendorMore,isLoading}) {
     modal.setContent(<UnlikeModal onCallback={() => setLike(false)} />);
   };
   const images = vendorMore.vendorData.vendorModel.photos
-  console.log("vendor more",vendorMore)
-  console.log("images",images)
+  console.log("vendor more", vendorMore)
+  console.log("images", images)
   return (
     <>
       {isLoading ? (
@@ -141,15 +141,15 @@ function VendorItem({vendorMore,isLoading}) {
                         disabledClass: "slider-vendor__navigation-disabled",
                       }}
                     >
-                      {images.map((item,index)=>{
-                        return  <SwiperSlide className="slider-vendor__slide" key={index}>
+                      {images.map((item, index) => {
+                        return <SwiperSlide className="slider-vendor__slide" key={index}>
                           <a
-                              data-fancybox="gallery"
-                              href={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${item.name}`}
+                            data-fancybox="gallery"
+                            href={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${item.name}`}
                           >
                             <img
-                                src={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${item.name}`}
-                                alt=""
+                              src={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${item.name}`}
+                              alt=""
                             />
                           </a>
                         </SwiperSlide>

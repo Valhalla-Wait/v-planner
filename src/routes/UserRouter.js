@@ -10,7 +10,7 @@ import Rules from "../pages/Rules";
 import Matchlist from "../pages/Matchlist";
 import Faq from "../pages/Faq";
 import UserQuotes from "../pages/Quotes/UserQuotes";
-import {useContext, useEffect} from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import UserOrders from "../pages/Orders/UserOrders";
 import VendorList from "../pages/VendorList";
@@ -18,11 +18,9 @@ import VendorItem from "../pages/VendorItem";
 import UserChat from "../pages/Chat/UserChat";
 import { connect } from "react-redux";
 
-function UserRouter({token,userDto,loading,chat}) {
+function UserRouter({ token, userDto, loading, chat }) {
   const auth = useContext(AuthContext);
   const url = userDto.clientModel?.photoModel?.name
-
-
 
   return (
     <Routes>
@@ -34,16 +32,16 @@ function UserRouter({token,userDto,loading,chat}) {
       >
         <Route path="/" element={<MainPageLayout />}>
           <Route path="/" element={<Navigate to="/matchlist" />} />
-          {/* <Route path="/matchlist" element={<Matchlist />}/> */}
+          <Route path="/matchlist" element={<Matchlist />} />
           {/* {Object.keys(auth.user.profile.likes.users).length >= 10 && (
             <> */}
-              <Route path="/quotes" element={<UserQuotes />} />
-              <Route path="/orders" element={<UserOrders />} />
-              <Route path="/vendor" element={<VendorList />} />
-              <Route path="/vendor/:id" element={<VendorItem />} />
-              <Route path="/chat" element={<UserChat />} />
-              <Route path="/chat/:id" element={<UserChat />} />
-            {/* </>
+          <Route path="/quotes" element={<UserQuotes />} />
+          <Route path="/orders" element={<UserOrders />} />
+          <Route path="/vendor" element={<VendorList />} />
+          <Route path="/vendor/:id" element={<VendorItem />} />
+          <Route path="/chat" element={<UserChat />} />
+          <Route path="/chat/:id" element={<UserChat />} />
+          {/* </>
           )} */}
           <Route path="/about" element={<About />} />
           <Route path="/rules" element={<Rules />} />
@@ -63,10 +61,10 @@ function UserRouter({token,userDto,loading,chat}) {
 }
 const mapStateToProps = function (state) {
   return {
-    userDto:state.userInfo.userData,
-    token:state.userInfo.token,
-    loading:state.matchList.loading,
-    chat:state.chat
+    userDto: state.userInfo.userData,
+    token: state.userInfo.token,
+    loading: state.matchList.loading,
+    chat: state.chat
   };
 };
 
