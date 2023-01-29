@@ -30,11 +30,7 @@ export default function ChatForm({ onCallback }) {
     onCallback({
       id: Math.floor(Math.random() * 100000),
       type: !file ? "textMessage" : "fileMessage",
-      message: message.trim(""),
-      file: {
-        type: file && file.type.split("/")[0],
-        src: "/assets/images/vendor-slider/slide-4.jpg"
-      },
+      message: file ? file : message.trim(""),
       time: "12:05pm",
       isRecipient: false
     })
@@ -44,7 +40,15 @@ export default function ChatForm({ onCallback }) {
   }
 
   const onChangeFile = e => {
-    setFile(e.target.files.length ? e.target.files[0] : null)
+    if (e.target.files && e.target.files.length) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        setFile(e.target.result);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    setFile(null);
+    // setFile(e.target.files.length ? e.target.files[0] : null)
   }
 
   return (
@@ -53,10 +57,11 @@ export default function ChatForm({ onCallback }) {
         <label className="form-body-chat__icon">
           <i className="icon-photo-add-outline"></i>
           <input
+            onInput={onChangeFile}
             type="file"
             style={{display: "none"}}
             accept={[...allowerImageType, ...allowerVideoType]}
-            onChange={onChangeFile}
+            // onChange={onChangeFile}
           />
         </label>
         <input

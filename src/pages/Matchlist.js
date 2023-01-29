@@ -423,11 +423,11 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
   const triggerStories = () => {
     setTriggerStoriesSlide(!triggerStoriesSlide);
   };
-  const [story, setStory] = useState("")
-  // console.log("all vendors",dto)
-  useEffect(() => {
-    getAll()
-    getMessages()
+  const [story,setStory] = useState("")
+  console.log("all vendors",dto)
+   useEffect(() => {
+     getAll()
+     getMessages()
 
   }, [token]);
   // console.log("chatState after changing",chatState)

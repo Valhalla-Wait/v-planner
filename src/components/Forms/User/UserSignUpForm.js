@@ -85,6 +85,7 @@ const UserSignUpForm = () => {
   const dispatch = useDispatch();
 
   const [src, setSrc] = useState(null);
+  console.log(src)
   const [isCustomBudget, setIsCustomBudget] = useState(false);
   let { token } = useSelector((state) => state.userInfo);
 
