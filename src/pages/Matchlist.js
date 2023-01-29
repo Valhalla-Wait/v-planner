@@ -422,7 +422,7 @@ const marks = [{ value: 0 }, { value: 50 }, { value: 100 }];
   console.log("all vendors",dto)
    useEffect(() => {
      getAll()
-     getMessages()
+    //  getMessages()
 
    }, [token]);
   console.log("chatState after changing",chatState)

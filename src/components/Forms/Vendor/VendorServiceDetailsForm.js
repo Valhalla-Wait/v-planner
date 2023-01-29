@@ -63,7 +63,7 @@ const VendorServiceDetailsForm = ({ onCallback, onBack, onNext }) => {
       {serviceInputsData.map((input) => <ServiceForm key={input.id} id={input.id} services={serviceInputsData} title={input.title} callback={setService} />)}
 
       <div
-        className="btn btn-light" onClick={() => setServiceInputsData(prev => [
+        className="btn btn-light add-btn" onClick={() => setServiceInputsData(prev => [
           ...prev,
           {id: serviceInputsData.length, title: '', price: 0}
         ])}

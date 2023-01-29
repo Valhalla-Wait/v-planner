@@ -7,143 +7,55 @@ import ChatHistory from "./ChatHistory"
 import ChatMenu from "./ChatMenu"
 import ChatUsers from "./ChatUsers"
 import { getMessages as getMessagesAction } from "../../Store/Actions/getAllMessages";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { connectToChat, sendMessage } from "../../utils/webSocketChat"
 import axios from "axios"
+import { getChatMessages } from "../../Store/Actions/getChatMessages"
+import { getTimeFromDate } from "../../utils/getTimeFromDate"
+import { updateChatMessages } from "../../Store/Actions/updateChatMessages"
 
-function UserChat({ chatState, getMessages, userId, userName }) {
-  const currentUserId = useSelector(state => state.userInfo.userData.clientModel.id)
-  const token = useSelector(state => state.userInfo.token)
+function UserChat({ getMessages, userId, userName }) {
+
+  const dispatch = useDispatch()
+
+  const chatState = useSelector(state => state.chat)
+  const currentUserId = useSelector(state => state.userInfo?.userData?.id)
+  const currentUserData = useSelector(state => state.userInfo?.userData)
+  // const token = useSelector(state => state.userInfo.token)
   const { id } = useParams()
 
-  const getRecipients = (chatRooms, userList) => {
-    if (!chatRooms) return null
-    const recipientsIds = chatRooms.map((room) => Number(room.recipientId))
-    const recipients = []
-    for (let i = 0; i < recipientsIds.length; i++) {
-      recipients.push(userList.find((user) => user.vendorModel.id === recipientsIds[i]))
-    }
-    return recipients
-  }
-
-
-  const fetchData = async () => {
-    try {
-      const chatRoomData = await axios({
-        method: "get",
-        url: `${process.env.REACT_APP_API_URL}/chat-rooms/${currentUserId}`,
-        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
-      })
-
-      console.log("fetch 1", chatRoomData)
-
-      const allVendors = await axios({
-        method: "get",
-        url: `${process.env.REACT_APP_API_URL}/vendors/getAll`,
-        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
-      })
-      console.log("fetch 2", allVendors)
-      const recipients = getRecipients(chatRoomData.data.result, allVendors.data.result)
-      const recipientsChats = []
-      console.log("fetch 3", recipients)
-
-      if (recipients) {
-        for (let i = 0; i < recipients.length; i++) {
-
-          const chatMessages = await axios({
-            method: "get",
-            url: `${process.env.REACT_APP_API_URL}/messages/${currentUserId}/${recipients[i].vendorModel.id}`,
-            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
-          })
-
-          console.log("fetch 4", chatMessages)
-
-          const lastMessage = chatMessages.data.result.reverse().find((mess) => mess.status === "DELIVERED")
-          const convertDate = new Date(lastMessage.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
-          recipientsChats.push({
-            id: recipients[i].vendorModel.id,
-            avatar: recipients[i].vendorModel.photos[0].url,
-            firstName: recipients[i].firstName,
-            surname: recipients[i].surname,
-            lastMessage: {
-              message: lastMessage.content,
-              time: convertDate
-            },
-            newMessages: 0,
-            type: 'text'
-          })
-        }
-        setUsers(recipientsChats)
-        await fetchActiveChatData()
-      } else {
-        return setUsers([])
-      }
-
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const fetchActiveChatData = async () => {
-    try {
-      const allVendors = await axios({
-        method: "get",
-        url: `${process.env.REACT_APP_API_URL}/vendors/getAll`,
-        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
-      })
-      const currentVendorId = id ?? users[0].id
-      console.log(allVendors.data.result[0].vendorModel.id, currentVendorId)
-
-
-      const currentVendor = allVendors.data.result.find((vendor) => vendor.vendorModel.id === Number(currentVendorId))
-
-
-      setUser({
-        id: currentVendor.vendorModel.id,
-        avatar: currentVendor.vendorModel.photos[0],
-        name: `${currentVendor.firstName} ${currentVendor.surname}`,
-        description: currentVendor.vendorModel.companyName
-      })
-
-      const chatMessages = await axios({
-        method: "get",
-        url: `${process.env.REACT_APP_API_URL}/messages/${currentUserId}/${currentVendorId}`,
-        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
-      })
-      console.log("MESSAGES IN CHAT", chatMessages)
-      const messageList = chatMessages.data.result.map((m) => ({
-        id: m.id,
-        type: "textMessage",
-        message: m.content,
-        time: new Date(m.timestamp).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
-        isRecipient: m.senderId === Number(id)
-      }))
-      setMessages(messageList)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
+  // const selectedUsers = [
+  //   {id: },
+  // ]
 
   useEffect(() => {
-    fetchData()
-    
-    connectToChat(currentUserId)
+    getMessages()
+    connectToChat(currentUserId, onMessageReceived)
   }, []);
 
-  const [messList, setMessList] = useState([])
-  console.log(messList, token)
-  const [users, setUsers] = useState([])
+  const onMessageReceived = async (msg) => {
+      const notification = JSON.parse(msg.body);
+  
+      console.log('MSG ANSWER', notification)
+      getMessages()
+      // dispatch(updateChatMessages(notification))
 
-  const [messages, setMessages] = useState([
-     ])
+      // if (currentUserId === notification.senderId) {
+      //   findChatMessage(notification.id).then((message) => {
+      //     const newMessages = JSON.parse(sessionStorage.getItem("recoil-persist"))
+      //       .chatMessages;
+      //     newMessages.push(message);
+      //     setMessages(newMessages);
+      //   });
+      // } else {
+      //   message.info("Received a new message from " + notification.senderName);
+      // }
+    };
 
-  const [user, setUser] = useState({
-    id: '',
-    avatar: "",
-    name: "",
-    description: ""
-  })
+  const [selectedUser, setSelectedUser] = useState(chatState.chats ? chatState.chats[0] : null)
+
+  const [messages, setMessages] = useState()
+
   const { isMobile, isLaptop } = useDevice()
 
   const [menu, setMenu] = useState([
@@ -151,17 +63,124 @@ function UserChat({ chatState, getMessages, userId, userName }) {
     { title: "Archive", active: false }
   ])
 
+  console.log(chatState)
+  console.log(selectedUser)
   const addMessage = async (message) => {
 
-    await sendMessage(message.message, currentUserId, 1, userName, 'quoteVendor')
-
+    await sendMessage(message.message, currentUserId, selectedUser.id, userName, selectedUser.firstName)
+    // () => dispatch(getChatMessages(currentUserId, selectedUser.id))
+    
     setMessages([
       ...messages,
-      message
+      {
+        id: messages.reverse()[0]?.id + 1,
+        content: message.message,
+        message:  message.message,
+        senderId: currentUserId,
+        recipientId: selectedUser.id,
+        senderName: currentUserData.firstName,
+        recipientName: selectedUser.firstName,
+        time: getTimeFromDate(new Date()),
+        timestamp: new Date(),
+        type: 'textMessage',
+        status: "DELIVERED",
+        isRecipient: false
+    }
     ])
+
+    getMessages()
 
 
   }
+
+  const onCallback = (selectUserId) => {
+    const selectUser = chatState.chats.find((chat) => chat.id === selectUserId)
+    setMessages(selectUser?.messageHistory)
+    setSelectedUser(selectUser)
+
+  }
+
+
+    //COPY
+
+  // const connect = () => {
+  //   const Stomp = require("stompjs");
+  //   var SockJS = require("sockjs-client");
+  //   SockJS = new SockJS("http://localhost:8080/ws");
+  //   stompClient = Stomp.over(SockJS);
+  //   stompClient.connect({}, onConnected, onError);
+  // };
+
+  // const onConnected = () => {
+  //   console.log("connected");
+  //   console.log(currentUser);
+  //   stompClient.subscribe(
+  //     "/user/" + currentUser.id + "/queue/messages",
+  //     onMessageReceived
+  //   );
+  // };
+
+  // const onError = (err) => {
+  //   console.log(err);
+  // };
+
+  // const onMessageReceived = (msg) => {
+  //   const notification = JSON.parse(msg.body);
+  //   const active = JSON.parse(sessionStorage.getItem("recoil-persist"))
+  //     .chatActiveContact;
+
+  //   if (active.id === notification.senderId) {
+  //     findChatMessage(notification.id).then((message) => {
+  //       const newMessages = JSON.parse(sessionStorage.getItem("recoil-persist"))
+  //         .chatMessages;
+  //       newMessages.push(message);
+  //       setMessages(newMessages);
+  //     });
+  //   } else {
+  //     message.info("Received a new message from " + notification.senderName);
+  //   }
+  //   loadContacts();
+  // };
+
+  // const sendMessage = (msg) => {
+  //   if (msg.trim() !== "") {
+  //     const message = {
+  //       senderId: currentUser.id,
+  //       recipientId: activeContact.id,
+  //       senderName: currentUser.name,
+  //       recipientName: activeContact.name,
+  //       content: msg,
+  //       timestamp: new Date(),
+  //     };
+  //     stompClient.send("/app/chat", {}, JSON.stringify(message));
+
+  //     const newMessages = [...messages];
+  //     newMessages.push(message);
+  //     setMessages(newMessages);
+  //   }
+  // };
+
+  // const loadContacts = () => {
+  //   const promise = getUsers().then((users) =>
+  //     users.map((contact) =>
+  //       countNewMessages(contact.id, currentUser.id).then((count) => {
+  //         contact.newMessages = count;
+  //         return contact;
+  //       })
+  //     )
+  //   );
+
+  //   promise.then((promises) =>
+  //     Promise.all(promises).then((users) => {
+  //       setContacts(users);
+  //       if (activeContact === undefined && users.length > 0) {
+  //         setActiveContact(users[0]);
+  //       }
+  //     })
+  //   );
+  // };
+
+
 
   return (
     <section className="chat shadow">
@@ -171,27 +190,29 @@ function UserChat({ chatState, getMessages, userId, userName }) {
             <div className="chat__sidebar sidebar-chat">
               <h3 className="sidebar-chat__title">Chat</h3>
               <ChatMenu menu={menu} />
-              <ChatUsers users={users} />
+              <ChatUsers users={chatState.chats} onCallback={onCallback} />
             </div>
           )
         }
         {
           (((isMobile || isLaptop) && id) || (!isMobile && !isLaptop)) && (
-            <div className="chat__body body-chat">
-              <ChatHeader user={user}>
-                <div className="header-body-chat__action quote">
-                  <span>Request Quote</span>
-                  <i className="icon-quote"></i>
-                </div>
-                <div className="header-body-chat__action quote btn-circle">
-                  <i className="icon-trash-outline"></i>
-                </div>
-              </ChatHeader>
-              <div>
-                <ChatHistory messages={messages} user={user} />
-                <ChatForm onCallback={addMessage} />
+            selectedUser ? <div className="chat__body body-chat">
+            <ChatHeader user={selectedUser}>
+              <div className="header-body-chat__action quote">
+                <span>Request Quote</span>
+                <i className="icon-quote"></i>
               </div>
+              <div className="header-body-chat__action quote btn-circle">
+                <i className="icon-trash-outline"></i>
+              </div>
+            </ChatHeader>
+            <div>
+              <ChatHistory messages={messages} user={selectedUser} currentUser={currentUserData}/>
+              <ChatForm onCallback={addMessage} />
             </div>
+          </div>
+            :
+            'Select chat'
           )
         }
       </div>

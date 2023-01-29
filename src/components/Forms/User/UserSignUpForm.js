@@ -85,6 +85,7 @@ const UserSignUpForm = () => {
   const dispatch = useDispatch();
 
   const [src, setSrc] = useState(null);
+  console.log(src)
   const [isCustomBudget, setIsCustomBudget] = useState(false);
   let { token } = useSelector((state) => state.userInfo);
 
@@ -103,8 +104,6 @@ const UserSignUpForm = () => {
     isCustomBudget
       ? watch(f.customBudget) && isValid
       : watch(f.budget) && isValid;
-
-  useEffect
 
   const onSubmit = (data) => {
     dispatch(signUpAction({ ...data }));

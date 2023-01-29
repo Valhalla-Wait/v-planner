@@ -14,11 +14,12 @@ export default function ChatHeader({ user, children }) {
           (isMobile || isLaptop) && <div className="header-body-chat__back" onClick={() => navigate("/chat")}><i className="icon-arrow"></i></div>
         }
         <div className="header-body-chat__avatar">
-          <img src={user.avatar.url} alt="" />
+          <img src={user.avatar} alt="" />
         </div>
         <div className="header-body-chat__info">
-          <div className="header-body-chat__name">{user.name}</div>
-          { user.description && <div className="header-body-chat__text">{ user.description }</div> }
+          <div className="header-body-chat__name">{user.firstName}</div>
+          <div className="header-body-chat__text">{ user.companyName }</div>
+          {/* { user.description && <div className="header-body-chat__text">{ user.companyName }</div> } */}
         </div>
       </div>
       <div className="header-body-chat__actions">

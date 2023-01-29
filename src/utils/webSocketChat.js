@@ -1,6 +1,6 @@
 var stompClient = null;
 
-export const connectToChat = async (userId) => {
+export const connectToChat = async (userId, onMsgCallback) => {
     // const headers = {
     //     "Access-Control-Allow-Origin": "*"
     //     // "Authorization": `Bearer ${token}`
@@ -14,36 +14,23 @@ export const connectToChat = async (userId) => {
     // console.log(headers)
 
     // await stompClient.connect(JSON.stringify({'X-Authorization': `Bearer ${token}`}),  onConnected, onError);
-    await stompClient.connect({},  onConnected, onError);
+    await stompClient.connect({},  () => onConnected(userId, onMsgCallback), onError);
     
-    // console.log("connected and sub");
-
-    //     const message = {
-    //         senderId: senderId,
-    //         recipientId: recipientId,
-    //         senderName:senderName,
-    //         recipientName: recipientName,
-    //         content: 'hello anywhere!',
-    //         timestamp: new Date(),
-    //     };
-
-    //    await  stompClient.send("/app/chat", {}, JSON.stringify(message));
 };
-const onConnected = async () => {
+const onConnected = async (id, onMsgCallback) => {
         await stompClient.subscribe(
-            `/user/${2}/queue/messages`, (mess) => console.log(mess)
-            // onMessageReceived
+            `/user/${id}/queue/messages`, onMsgCallback
         );
         console.log("connected");
 
-    // sendMessage("adilet arybaev",senderId,recipientId,senderName,recipientName)
+    // sendMessage("hello 2",id,2,'Ivan','Mikhail')
 };
 
 const onError = (err) => {
     console.log(err);
 };
 export const sendMessage = async (msg,senderId,recipientId,senderName,recipientName) => {
-    // if (msg.trim() !== "") {
+    if (msg.trim() !== "") {
         const message = {
             senderId: senderId,
             recipientId: recipientId,
@@ -52,6 +39,9 @@ export const sendMessage = async (msg,senderId,recipientId,senderName,recipientN
             content: msg,
             timestamp: new Date(),
         };
+
        await  stompClient.send("/app/chat", {}, JSON.stringify(message));
-    // }
+       
+    }
 };
+
