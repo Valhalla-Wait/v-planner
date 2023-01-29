@@ -4,17 +4,19 @@ import { AuthContext } from "../../context/AuthContext"
 
 export default function ChatHistory({ messages, user, currentUser }) {
 
-  const findMsg = messages.findIndex((m) => m.content == "createRoom")
+  // if(messages.length) {
+    
+  // }
+
+  // const findMsg = messages.findIndex((m) => m.content == "createRoom")
 
   const chats = useSelector(state => state.chat.chats)
 
   const currentChatMessages = chats.find((chat) => chat.id === user.id)?.messageHistory
 
-
-  
-  if(findMsg !== -1) {
-    messages.splice(findMsg, 1)
-  }
+  // if(findMsg !== -1) {
+  //   messages.splice(findMsg, 1)
+  // }
 
   console.log(currentUser,user)
   console.log("MESAGES", messages)
