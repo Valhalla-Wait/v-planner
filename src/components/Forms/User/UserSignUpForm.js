@@ -105,6 +105,8 @@ const UserSignUpForm = () => {
       ? watch(f.customBudget) && isValid
       : watch(f.budget) && isValid;
 
+  useEffect
+
   const onSubmit = (data) => {
     dispatch(signUpAction({ ...data }));
     modal.destroy();

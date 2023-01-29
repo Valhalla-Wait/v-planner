@@ -1,6 +1,6 @@
 import Button from "../components/UI/Button";
 import SwiperCore, { Lazy, Virtual } from "swiper";
-import {useContext, useEffect, useState} from "react";
+import { useContext, useEffect, useState } from "react";
 import Stories from "../components/Stories";
 import MatchListSlider from "../components/MatchListSlider";
 import Select from "react-select";
@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDetailVendor } from "../Store/Actions/getVendorAction.js";
 import { connect } from "react-redux";
 import { getAllVendorsAction } from "../Store/Actions/GetAllVendors.js";
-import {getMessages as getMessagesAction} from "../Store/Actions/getAllMessages";
+import { getMessages as getMessagesAction } from "../Store/Actions/getAllMessages";
 
 
 SwiperCore.use([Lazy, Virtual]);
@@ -361,10 +361,14 @@ const storiesData = [
 
 const marks = [{ value: 0 }, { value: 50 }, { value: 100 }];
 
- function Matchlist({ dto, getAll,token,loading,getMessages,chatState}) {
+function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
   // const [data, setData] = useState(dto.result[0]);
-   const [data, setData] = useState(dto.result[0]);
-  console.log("dto",dto)
+
+  const [vendorIndex, setVendorIndex] = useState(0);
+  const data = useSelector((state) => state.matchList.allVendors.result[vendorIndex])
+  console.log('data', data)
+  console.log('vendorIndex', vendorIndex)
+
   const [filterActive, setFilterActive] = useState(false);
 
   const navigate = useNavigate();
@@ -374,6 +378,7 @@ const marks = [{ value: 0 }, { value: 50 }, { value: 100 }];
   const theme = useContext(ThemeContext);
   const auth = useContext(AuthContext);
   const device = useDevice();
+
 
   const [tags, setTags] = useState([
     { value: "Reception Venues", title: "Reception Venues", active: true },
@@ -422,209 +427,218 @@ const marks = [{ value: 0 }, { value: 50 }, { value: 100 }];
   console.log("all vendors",dto)
    useEffect(() => {
      getAll()
-    //  getMessages()
+     getMessages()
 
-   }, [token]);
-  console.log("chatState after changing",chatState)
+  }, [token]);
+  // console.log("chatState after changing",chatState)
 
-  console.log("Загрузка при рендере компоненты",loading)
-  console.log(token)
+  // console.log("Загрузка при рендере компоненты",loading)
+  // console.log(token)
 
   return (
-      <>
-        {loading?<div>loading...</div>:  <section className="matchlist">
-          <div className="matchlist__header">
-            <h3>Matchlist</h3>
-            <Button
-                className="btn btn-equalizer"
-                onClick={() => setFilterActive(!filterActive)}
-            >
-              <div>
-                <span>Filters</span>
-                <i className="icon-equalizer"></i>
-              </div>
-            </Button>
+    <>
+      {loading ? <div>loading...</div> : <section className="matchlist">
+        <div className="matchlist__header">
+          <h3>Matchlist</h3>
+          <Button
+            className="btn btn-equalizer"
+            onClick={() => setFilterActive(!filterActive)}
+          >
+            <div>
+              <span>Filters</span>
+              <i className="icon-equalizer"></i>
+            </div>
+          </Button>
 
-            <div className={filterActive ? "filter active" : "filter"}>
-              <h4 className="filter__title">Filters</h4>
-              <div className="filter__content">
-                <div className="filter__subtitle">Services</div>
-                <div className="filter__tag tag-filter">
-                  {tags.map((tag) => (
-                      <div
-                          className={
-                            tag.active ? "tag-filter__item active" : "tag-filter__item"
-                          }
-                          onClick={() => {
-                            setTags(
-                                tags.map((item) =>
-                                    item.title === tag.title
-                                        ? { ...item, active: !item.active }
-                                        : item
-                                )
-                            );
-                          }}
-                          key={tag.value}
-                      >
-                        {tag.title}
-                      </div>
-                  ))}
-                </div>
-                <div className="filter__subtitle">Location</div>
-                <div className="filter__location">
-                  <label className="input-label">
-                    <Select
-                        placeholder="State"
-                        options={[
-                          { value: "kiev", label: "Kiev" },
-                          { value: "new-your", label: "New York" },
-                        ]}
-                        isClearable={false}
-                        isSearchable={false}
-                        onChange={(...props) => {
-                          console.log(props);
-                        }}
-                        {...customReactSelectOptions(theme.get())}
-                    />
-                  </label>
-                  <label className="input-label">
-                    <Select
-                        placeholder="Distance"
-                        options={[
-                          { value: "+0", label: "+0 km" },
-                          { value: "+5", label: "+5 km" },
-                          { value: "+10", label: "+10 km" },
-                          { value: "+20", label: "+20 km" },
-                        ]}
-                        isClearable={false}
-                        isSearchable={false}
-                        onChange={(...props) => {
-                          console.log(props);
-                        }}
-                        {...customReactSelectOptions(theme.get())}
-                    />
-                  </label>
-                </div>
-                <div className="filter__subtitle">Price</div>
-                <div className="filter__price">
-                  <div className="filter__price-labels">
-                    <div className="filter__price-labels-item">Low</div>
-                    <div className="filter__price-labels-item">Medium</div>
-                    <div className="filter__price-labels-item">High</div>
+          <div className={filterActive ? "filter active" : "filter"}>
+            <h4 className="filter__title">Filters</h4>
+            <div className="filter__content">
+              <div className="filter__subtitle">Services</div>
+              <div className="filter__tag tag-filter">
+                {tags.map((tag) => (
+                  <div
+                    className={
+                      tag.active ? "tag-filter__item active" : "tag-filter__item"
+                    }
+                    onClick={() => {
+                      setTags(
+                        tags.map((item) =>
+                          item.title === tag.title
+                            ? { ...item, active: !item.active }
+                            : item
+                        )
+                      );
+                    }}
+                    key={tag.value}
+                  >
+                    {tag.title}
                   </div>
-                  <Slider
-                      step={null}
-                      defaultValue={50}
-                      marks={marks}
-                      style={{
-                        backgroudColor: "red",
-                      }}
-                  />
-                </div>
+                ))}
               </div>
-              <div className="modal__close" onClick={() => setFilterActive(false)}>
-                <i className="icon-times"></i>
+              <div className="filter__subtitle">Location</div>
+              <div className="filter__location">
+                <label className="input-label">
+                  <Select
+                    placeholder="State"
+                    options={[
+                      { value: "kiev", label: "Kiev" },
+                      { value: "new-your", label: "New York" },
+                    ]}
+                    isClearable={false}
+                    isSearchable={false}
+                    onChange={(...props) => {
+                      console.log(props);
+                    }}
+                    {...customReactSelectOptions(theme.get())}
+                  />
+                </label>
+                <label className="input-label">
+                  <Select
+                    placeholder="Distance"
+                    options={[
+                      { value: "+0", label: "+0 km" },
+                      { value: "+5", label: "+5 km" },
+                      { value: "+10", label: "+10 km" },
+                      { value: "+20", label: "+20 km" },
+                    ]}
+                    isClearable={false}
+                    isSearchable={false}
+                    onChange={(...props) => {
+                      console.log(props);
+                    }}
+                    {...customReactSelectOptions(theme.get())}
+                  />
+                </label>
+              </div>
+              <div className="filter__subtitle">Price</div>
+              <div className="filter__price">
+                <div className="filter__price-labels">
+                  <div className="filter__price-labels-item">Low</div>
+                  <div className="filter__price-labels-item">Medium</div>
+                  <div className="filter__price-labels-item">High</div>
+                </div>
+                <Slider
+                  step={null}
+                  defaultValue={50}
+                  marks={marks}
+                  style={{
+                    backgroudColor: "red",
+                  }}
+                />
               </div>
             </div>
+            <div className="modal__close" onClick={() => setFilterActive(false)}>
+              <i className="icon-times"></i>
+            </div>
           </div>
-          {device.isMobile &&
-              Object.keys(auth.user.profile.likes.users).length < 10 && <LabelLike />}
-          <div className="matchlist__stories stories">
-            <Stories
-                onCallback={(story) => {
-                  console.log("stroyDto", ...storiesData);
-                  console.log("idshki",story.id)
-                  setData(...dto.result.filter((item) => story.id === item.id));
-                  console.log("data after changing", dto);
+        </div>
+        {device.isMobile &&
+          Object.keys(auth.user.profile.likes.users).length < 10 && <LabelLike />}
+        <div className="matchlist__stories stories">
+          <Stories
+            onCallback={(story) => {
+              // console.log("stroyDto", ...storiesData);
+              // console.log("idshki",story.id)
+              // setData(...dto.result.filter((item) => story.id === item.id));
+              // console.log("data after changing", dto);
 
-                }}
-                // dto={
-                // }
-                triggerStories={triggerStoriesSlide}
-            />
-          </div>
-          <div className="matchlist__content content-matchlist">
+            }}
+            // dto={
+            // }
+            triggerStories={triggerStoriesSlide}
+          />
+        </div>
+        {data === undefined
+          ? <>MatchList is empty</>
+          : <div className="matchlist__content content-matchlist">
             <div className="content-matchlist__wrapper">
               <div className="content-matchlist__body">
                 <div className="content-matchlist__inner">
                   <div className="content-matchlist__content">
-                    {loading==true ? (
-                        "Loading..."
+                    {loading == true ? (
+                      "Loading..."
                     ) : (
-                        <MatchListSlider
-                            files={data?.photos}
-                            vendorId={data?.id}
-                            triggerStories={triggerStories}
-                            data={data}
-                        />
+                      <MatchListSlider
+                        files={data?.photos}
+                        vendorId={data?.id}
+                        triggerStories={triggerStories}
+                        data={data}
+                        setVendorIndex={setVendorIndex}
+                      />
                     )}
                   </div>
                 </div>
               </div>
               <div className="content-matchlist__info info-matchlist">
-                {loading==true ? (
-                    "Loading..."
+                {loading == true ? (
+                  "Loading..."
                 ) : (
-                    <>
-                      <h3 className="info-matchlist__title">{data?.companyTitle}</h3>
-                      <div className="info-matchlist__content">
-                        <div className="info-matchlist__price">{data?.price}</div>
-                        <p className="info-matchlist__description">
-                          {data?.companyDescription}
-                        </p>
-                        <div className="info-matchlist__subtitle">Services</div>
-                        <p className="italic">{data?.typeOfService}</p>
-                        <div className="info-matchlist__subtitle">About</div>
-                        <p>{data?.aboutCompany}</p>
-                      </div>
-                      <div className="info-matchlist__footer">
-                        {Object.keys(auth.user.profile.likes.users).length >= 10 && (
-                            <Button
-                                className="btn btn-go-chat d-block w-100"
-                                onClick={() => {
-                                  navigate(`/chat/${data?.id}`);
-                                }}
-                            >
-                              Go Chat
-                            </Button>
-                        )}
-
+                  <>
+                    <h3 className="info-matchlist__title">{data?.companyTitle}</h3>
+                    <div className="info-matchlist__content">
+                      <div className="info-matchlist__price">{data?.price}</div>
+                      <p className="info-matchlist__description">
+                        {data?.companyDescription}
+                      </p>
+                      <div className="info-matchlist__subtitle">Services</div>
+                      {
+                        data?.services.map((service =>
+                          <p className="italic">{service.name}</p>
+                        ))
+                      }
+                      <div className="info-matchlist__subtitle">About</div>
+                      <p>{data?.aboutCompany}</p>
+                    </div>
+                    <div className="info-matchlist__footer">
+                      {Object.keys(auth.user.profile.likes.users).length >= 10 && (
                         <Button
-                            className="btn btn-light d-block w-100"
-                            onClick={() => {
-                              dispatch(getDetailVendor(data?.id));
-                              navigate(`/vendor/${data?.id}`);
-                            }}
+                          className="btn btn-go-chat d-block w-100"
+                          onClick={() => {
+                            navigate(`/chat/${data?.id}`);
+                          }}
                         >
-                          View Vendor
+                          Go Chat
                         </Button>
-                      </div>
-                    </>
+                      )}
+
+                      <Button
+                        className="btn btn-light d-block w-100"
+                        onClick={() => {
+                          dispatch(getDetailVendor(data?.id));
+                          navigate(`/vendor/${data?.id}`);
+                        }}
+                      >
+                        View Vendor
+                      </Button>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
           </div>
-        </section>}
-      </>
+        }
+
+      </section>}
+    </>
 
   );
 }
 const mapStateToProps = function (state) {
   return {
     dto: state.matchList.allVendors,
-    token:state.userInfo.token,
-    loading:state.matchList.loading,
-    chatState:state.chat
+    token: state.userInfo.token,
+    loading: state.matchList.loading,
+    chatState: state.chat
 
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     getAll: () => dispatch(getAllVendorsAction()),
-    getMessages: ()=> dispatch(getMessagesAction())
+    getMessages: () => dispatch(getMessagesAction())
 
   };
 };
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Matchlist);
+export default connect(mapStateToProps, mapDispatchToProps)(Matchlist);

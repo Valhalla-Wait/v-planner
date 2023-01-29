@@ -13,7 +13,10 @@ import useSidebar from "./hooks/useSibedar";
 import { ThemeContext } from "./context/ThemeContext";
 import useTheme from "./hooks/useTheme";
 import ScrollToTop from "./components/SrcollToTop";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { getCurrentUser } from "./Store/Actions/getCurrentUser";
+import AuthService from "./services/AuthService";
+import { getLikedVendors } from "./Store/Actions/getLikedVendors";
 const App = (props) => {
   const modal = useModal();
   const auth = useAuth();
@@ -21,13 +24,26 @@ const App = (props) => {
   const sidebar = useSidebar();
   const theme = useTheme();
 
-  const routes = Routes(auth.isAuth, auth.user?.role);
+  const state = useSelector(state => state.userInfo)
+  const isAuth = useSelector(state => state.userInfo.isAuth)
+  const role = useSelector(state => state.userInfo.userData?.roleModel?.role)
 
-  console.log(auth.isAuth)
+  console.log('state', state)
+  console.log('isAuth', isAuth)
+  console.log('role', role)
+
+  const dispatch = useDispatch()
+
+  const routes = Routes(auth.isAuth, auth.user?.role || auth.user?.roleModel?.role);
+  // const routes = Routes(isAuth, role);
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      auth.check();
+    console.log('app js')
+    const token = localStorage.getItem("token")
+    if (token) {
+      dispatch(getCurrentUser(token))
+      dispatch(getLikedVendors())
+      auth.check()
     }
   }, []);
 

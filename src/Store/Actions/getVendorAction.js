@@ -5,15 +5,15 @@ import {
 import axios from "axios";
 
 export const getDetailVendor = (id) => {
-  return (dispatch,getState) => {
+  return (dispatch, getState) => {
     dispatch(fetchStart);
     const state = getState()
-    const token = state.userInfo.token
-    console.log("token in getDetail ",token)
+    const token = localStorage.getItem("token")
+    console.log("token in getDetail ", token)
     axios({
       method: "get",
       url: `${process.env.REACT_APP_API_URL}/vendors/getById?id=${id}`,
-      headers: { "Content-Type": "multipart/form-data",Authorization:`Bearer ${token}`}
+      headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` }
     })
       .then((res) => {
         console.log("response in detail vendor", res);

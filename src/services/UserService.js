@@ -1,5 +1,7 @@
+import { $api } from "../http";
+
 export default class UserService {
-  static async login(
+  static login(
     email,
     firstName,
     lastName,
@@ -60,5 +62,9 @@ export default class UserService {
         user,
       },
     };
+  }
+
+  static getCurrentUser() {
+    return $api.get('/user/current')
   }
 }

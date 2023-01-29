@@ -3,19 +3,18 @@ import SwiperCore, { Navigation, Pagination, Virtual } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { AuthContext } from "../context/AuthContext";
 import { connect } from "react-redux";
-import {useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import axios from "axios"
 SwiperCore.use([Pagination, Navigation, Virtual]);
 
-const MatchListSlider = ({ files = [], vendorId, triggerStories, data }) => {
-  console.log("files in slider",data)
+const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendorIndex }) => {
   const [swiperRef, setSwiperRef] = useState(null);
   // const [flagLast, setFlagLast] = useState(false)
   // const [flagFirst, setFlagFirst] = useState(true)
-  const {token} = useSelector(state=>state.userInfo)
+  const token = localStorage.getItem('token')
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  console.log("props in slider",files,data)
+  console.log("props in slider", files, data)
   const auth = useContext(AuthContext);
 
   useEffect(() => {
@@ -40,16 +39,18 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data }) => {
         },
       },
     });
+
     axios({
       method: "put",
       url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorId}&status=true`,
-      headers: { "Content-Type": "multipart/form-data","Access-Control-Allow-Origin":"*",Authorization:`Bearer ${token}`},
+      headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${token}` },
     }).then((res) => {
-      console.log("response in vendor like",res)
+      setVendorIndex((prevState) => prevState + 1)
+      console.log("response in vendor like", res)
     })
-        .catch((err) => {
-          console.log(err)
-        })
+      .catch((err) => {
+        console.log(err)
+      })
     triggerStories();
   };
 
@@ -60,13 +61,14 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data }) => {
     axios({
       method: "put",
       url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorId}&status=false`,
-      headers: { "Content-Type": "multipart/form-data","Access-Control-Allow-Origin":"*",Authorization:`Bearer ${token}`},
+      headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${token}` },
     }).then((res) => {
-      console.log("response in vendor dis",res)
+      setVendorIndex((prevState) => prevState + 1)
+      console.log("response in vendor dis", res)
     })
-        .catch((err) => {
-          console.log(err)
-        })
+      .catch((err) => {
+        console.log(err)
+      })
     triggerStories();
   };
 

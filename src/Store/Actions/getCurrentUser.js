@@ -1,39 +1,34 @@
 import axios from "axios";
+import { getCurrentUserFailed, getCurrentUserStart, getCurrentUserSuccess } from "../Reducers/UserReducer";
 import {
-    GET_CURRENT,
-    GET_CURRENT_SUCCESS,
-    GET_CURRENT_FAILED,
+    GET_CURRENT_USER_START,
+    GET_CURRENT_USER_SUCCESS,
+    GET_CURRENT_USER_FAILED,
     VENDOR_SUCCESS, AUTH_USER_SUCCESS,
 } from "../types";
 
-export const getCurrentUser = (jwt) =>{
-    return (dispatch,getState)=>{
-        dispatch(fetchStart);
-
+export const getCurrentUser = (jwt) => {
+    return (dispatch, getState) => {
+        dispatch(getCurrentUserStart());
         axios({
             method: "get",
-            url: `${process.env.REACT_APP_API_URL}/user/current`,
-            headers: { "Content-Type": "multipart/form-data",Authorization:`Bearer ${jwt}`},
+            url: `${process.env.REACT_APP_URL_TEST}/user/current`,
+            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${jwt}` },
         }).then((res) => {
-            console.log(res)
-            console.log(res.data.result.roleModel.id)
-            if(res.data.result.roleModel.id == 2){
-                dispatch(fetchSuccess(AUTH_USER_SUCCESS,res,jwt));
-
+            if (res.data.result.roleModel.id == 2) {
+                dispatch(getCurrentUserSuccess(res.data.result));
             }
-            else if(res.data.result.roleModel.id == 3){
-                dispatch(fetchSuccess(VENDOR_SUCCESS,res,jwt));
-
-                console.log("vendor")
+            else if (res.data.result.roleModel.id == 3) {
+                dispatch(fetchSuccess(VENDOR_SUCCESS, res, jwt));
+                console.log("vendor", res)
             }
-            console.log("response in  getCurrent js",res)
         })
             .catch((err) => {
-                dispatch(fetchFailed(err.message));
+                dispatch(getCurrentUserFailed(err.message));
             });
     }
 }
-const fetchSuccess = (type,response,jwt) => {
+const fetchSuccess = (type, response, jwt) => {
     return {
         type: type,
         payload: {
@@ -43,13 +38,13 @@ const fetchSuccess = (type,response,jwt) => {
     };
 };
 
-const fetchStart = () => ({
-    type: GET_CURRENT,
-});
+// const fetchStart = () => ({
+//     type: GET_CURRENT,
+// });
 
-const fetchFailed = (error) => ({
-    type: GET_CURRENT_FAILED,
-    payload: {
-        error,
-    },
-});
+// const fetchFailed = (error) => ({
+//     type: GET_CURRENT_FAILED,
+//     payload: {
+//         error,
+//     },
+// });
