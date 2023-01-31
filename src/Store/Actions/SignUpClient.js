@@ -1,11 +1,10 @@
-import { SIGNIN_SUCCESS, SIGNIN_START, SIGNIN_FAILED } from "../types";
 import axios from "axios";
+import { signUpSuccess, signUpFailed, signUpStart } from "../Reducers/UserReducer";
 
 export const signUpAction = ({
   firstName,
   lastName,
   email,
-
   nickname,
   partnersFirstName,
   partnersLastName,
@@ -19,7 +18,7 @@ export const signUpAction = ({
 }) => {
 
   return (dispatch) => {
-    dispatch(LoginStart);
+    dispatch(signUpStart())
     const reqBody = new FormData();
 
 
@@ -31,24 +30,22 @@ export const signUpAction = ({
       email: email,
       engagementDate: engagementDate,
       engagementAddress: location.value,
-      weddingAddress:location.value,
+      weddingAddress: location.value,
       isEngagement: 1,
       amountOfGuests: countGuest,
       phoneNumber: "123123",
-      partnerFirstName:partnersFirstName,
-      partnerLastName:partnersLastName,
-      budget:customBudget,
+      partnerFirstName: partnersFirstName,
+      partnerLastName: partnersLastName,
+      budget: customBudget,
       city: location.value,
       username: nickname,
       description: partnersFirstName,
-
     };
     const json = JSON.stringify(obj);
     const blob = new Blob([json], {
       type: "application/json",
     });
     reqBody.append("createClientModel", blob);
-
     reqBody.append("avatar", avatar[0]);
 
     axios({
@@ -57,34 +54,14 @@ export const signUpAction = ({
       data: reqBody,
       headers: { "Content-Type": "multipart/form-data" },
     })
-   
       .then((res) => {
-        console.log(res, "res in create client");
-        dispatch(signInSuccess(res));
+        const token = res.data.result.jwt
+        localStorage.setItem("token", token)
+        dispatch(signUpSuccess(res.data.result))
       })
       .catch((err) => {
-        console.log("error  here", err.message);
-        dispatch(addTodoFailure(err.message));
+        console.log(err.message);
+        dispatch(signUpFailed(err))
       });
   };
 };
-const signInSuccess = (response) => {
-  return {
-    type: SIGNIN_SUCCESS,
-    payload: {
-      data: response.data?.result,
-      token: response.data?.result.jwt,
-    },
-  };
-};
-
-const LoginStart = () => ({
-  type: SIGNIN_START,
-});
-
-const addTodoFailure = (error) => ({
-  type: SIGNIN_FAILED,
-  payload: {
-    error,
-  },
-});

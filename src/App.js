@@ -23,31 +23,22 @@ const App = (props) => {
   const notify = useNotify();
   const sidebar = useSidebar();
   const theme = useTheme();
-
-  const state = useSelector(state => state.userInfo)
-  const isAuth = useSelector(state => state.userInfo.isAuth)
-  const role = useSelector(state => state.userInfo.userData?.roleModel?.role)
-
-  console.log('state', state)
-  console.log('isAuth', isAuth)
-  console.log('role', role)
-
   const dispatch = useDispatch()
 
-  const routes = Routes(auth.isAuth, auth.user?.role || auth.user?.roleModel?.role);
-  // const routes = Routes(isAuth, role);
+  const { isAuth, isLoading } = useSelector(state => state.userInfo)
+  const role = useSelector(state => state.userInfo.userData?.roleModel?.role)
+
+  const routes = Routes(isAuth, role);
 
   useEffect(() => {
-    console.log('app js')
     const token = localStorage.getItem("token")
     if (token) {
       dispatch(getCurrentUser(token))
       dispatch(getLikedVendors())
-      auth.check()
     }
   }, []);
 
-  if (auth.isLoading) {
+  if (isLoading) {
     return <>Loading</>;
   }
 

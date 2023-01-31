@@ -10,16 +10,13 @@ import Rules from "../pages/Rules";
 import Matchlist from "../pages/Matchlist";
 import Faq from "../pages/Faq";
 import UserQuotes from "../pages/Quotes/UserQuotes";
-import { useContext, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
 import UserOrders from "../pages/Orders/UserOrders";
 import VendorList from "../pages/VendorList";
 import VendorItem from "../pages/VendorItem";
 import UserChat from "../pages/Chat/UserChat";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 
 function UserRouter({ token, userDto, loading, chat }) {
-  const auth = useContext(AuthContext);
   const url = userDto.clientModel?.photoModel?.name
 
   return (

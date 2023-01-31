@@ -29,7 +29,6 @@ const storiesList = [
 // SwiperCore.use([Virtual])
 
 const Stories = ({ onCallback, triggerStories,dto }) => {
-  console.log("Oncallback", onCallback);
   const [stories, setStories] = useState([]);
 
   const [swiperRef, setSwiperRef] = useState(null);

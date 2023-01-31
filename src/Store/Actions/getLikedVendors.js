@@ -6,19 +6,19 @@ import {
 
 } from "../types";
 
-export const getLikedVendors = () =>{
-    return (dispatch,getState)=>{
+export const getLikedVendors = () => {
+    return (dispatch, getState) => {
         dispatch(fetchStart);
         const token = localStorage.getItem('token')
 
         axios({
             method: "get",
             url: `${process.env.REACT_APP_API_URL}/matches/liked-vendors`,
-            headers: { "Content-Type": "multipart/form-data",Authorization:`Bearer ${token}`},
-        }).then((res) => {
-            console.log("response in liked vendorsJs js",res)
-            dispatch(fetchSuccess(res));
+            headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
         })
+            .then((res) => {
+                dispatch(fetchSuccess(res));
+            })
             .catch((err) => {
                 dispatch(fetchFailed(err.message));
             });

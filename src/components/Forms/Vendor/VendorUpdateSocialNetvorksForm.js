@@ -12,6 +12,7 @@ const VendorUpdateSocialNetvorksForm = ({
   facebook,
   youtube,
   twitter,
+  tiktok
 }) => {
   const {
     register,
@@ -136,7 +137,7 @@ const VendorUpdateSocialNetvorksForm = ({
             <Input
               type="text"
               placeholder="Link"
-              defaultValue={auth.user.networks.tiktok}
+              defaultValue={tiktok}
               register={register(f.social.tiktok)}
               error={getErrorField(f.social.tiktok)}
               isValid={isValidField(f.social.tiktok)}

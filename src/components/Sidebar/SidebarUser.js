@@ -4,13 +4,7 @@ import { AuthContext } from "../../context/AuthContext"
 import { SidebarList } from "./SidebarList"
 
 export const SidebarUser = () => {
-
-  // const auth = useContext(AuthContext)
-
-  // const forbidden = Object.keys(auth.user.profile.likes.users).length < 10
-
   const likesCount = useSelector(state => state.myVendors.vendors).length
-  console.log('likesCount', likesCount)
 
   const forbidden = likesCount < 10
 

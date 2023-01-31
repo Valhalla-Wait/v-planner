@@ -1,10 +1,8 @@
 import GuestRouter from "./GuestRouter";
 import UserRouter from "./UserRouter";
 import VendorRouter from "./VendorRouter";
-import { connect } from "react-redux";
 
 export default function Routes(isAuth, role) {
-  console.log('role', role)
 
   if (!isAuth) {
     return <GuestRouter />;
@@ -20,6 +18,10 @@ export default function Routes(isAuth, role) {
 
   else {
     console.log('route: none was loaded')
+  }
+
+  if (isAuth) {
+    console.log("isAuth")
   }
   return <p>none was loaded</p>
 }

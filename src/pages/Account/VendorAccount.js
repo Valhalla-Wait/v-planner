@@ -7,11 +7,11 @@ import VendorUpdatePhotoAndVideoForm from "../../components/Forms/Vendor/VendorU
 import VendorUpdateServiceDetailsForm from "../../components/Forms/Vendor/VendorUpdateServiceDetailsForm";
 import VendorUpdateSocialNetvorksForm from "../../components/Forms/Vendor/VendorUpdateSocialNetvorksForm";
 import Security from "../../components/Security";
-import {connect, useSelector} from "react-redux";
+import { connect, useSelector } from "react-redux";
 
- function VendorAccount({vendorData}) {
+function VendorAccount({ vendorData }) {
   const { id } = useParams();
-  console.log(vendorData);
+  console.log(vendorData, 'vendorData');
   useEffect(() => {
     const selector = document.querySelector(`[data-to="${id}"]`);
     if (!selector) return;
@@ -35,10 +35,10 @@ import {connect, useSelector} from "react-redux";
       />
       <VendorUpdateCompanyInformationForm
         name={vendorData.vendorModel.companyName}
-            amount={vendorData.vendorModel.companyName}
+        amount={vendorData.vendorModel.companyName}
         img={vendorData.vendorModel.photos[1].name}
         country={vendorData.city}
-      />
+      />8
       <VendorUpdateServiceDetailsForm />
       <VendorUpdateAboutCompanyForm
         title={vendorData.companyTitle}
@@ -49,19 +49,20 @@ import {connect, useSelector} from "react-redux";
       />
       <VendorUpdatePhotoAndVideoForm />
       <VendorUpdateSocialNetvorksForm
-        instagram={vendorData.instagram}
-        facebook={vendorData.Facebook}
-        twitter={vendorData.Twitter}
-        youtube={vendorData.Youtube}
+        instagram={vendorData.vendorModel.instagram}
+        facebook={vendorData.vendorModel.facebook}
+        twitter={vendorData.vendorModel.twitter}
+        youtube={vendorData.vendorModel.youtube}
+        tiktok={vendorData.vendorModel.tiktok}
       />
       <Security />
     </section>
   );
 }
 const mapStateToProps = function (state) {
-    return {
-        vendorData:state.vendorInfo.vendorData,
+  return {
+    vendorData: state.userInfo.userData,
 
-    };
+  };
 };
-export default  connect(mapStateToProps)(VendorAccount);
+export default connect(mapStateToProps)(VendorAccount);

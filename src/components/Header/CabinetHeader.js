@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 import { ModalContext } from "../../context/ModalContext";
 import { NotifyContext } from "../../context/NotifyContext";
 import { SidebarContext } from "../../context/SidebarContext";
@@ -8,14 +7,10 @@ import { ThemeContext } from "../../context/ThemeContext";
 import useDevice from "../../hooks/useDevice";
 import LogoutModal from "../Modals/LogoutModal";
 import Logo from "../UI/Logo";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
-import axios from "axios";
 
 const CabinetHeader = ({ name, image }) => {
   const [menuActive, setMenuActive] = useState(false);
   const [notifyActive, setNotifyActive] = useState(false);
-  const auth = useContext(AuthContext);
   const modal = useContext(ModalContext);
   const notify = useContext(NotifyContext);
   const sidebar = useContext(SidebarContext);
@@ -24,11 +19,6 @@ const CabinetHeader = ({ name, image }) => {
   const device = useDevice();
 
   const navigate = useNavigate();
-  const { token } = useSelector((state) => state.userInfo);
-  const state = useSelector((state) => state.userInfo);
-
-  const { userInfo } = useSelector((state) => state);
-  // console.log("state in notlify",state)
   return (
     <header className="header header-shadow">
       <div className="container">
@@ -47,7 +37,7 @@ const CabinetHeader = ({ name, image }) => {
             >
               <div className="nav-header__text">Hi, {name}!</div>
               <div className="nav-header__icon border">
-                {auth.user.profile.avatar ? (
+                {image ? (
                   <img src={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${image}`} alt="Avatar" />
                 ) : (
                   <i className="icon-camera"></i>

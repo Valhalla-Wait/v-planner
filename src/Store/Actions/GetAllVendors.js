@@ -13,7 +13,6 @@ export const getAllVendorsAction = () => {
       url: `${process.env.REACT_APP_URL_TEST}/matches/vendors-from-match`,
       headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem('token')}` },
     }).then((res) => {
-      console.log("response in matchlist js", res)
       dispatch(fetchSuccess(res));
     })
       .catch((err) => {

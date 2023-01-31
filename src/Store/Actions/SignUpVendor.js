@@ -1,13 +1,9 @@
-import { VENDOR_SIGNIN, VENDOR_SUCCESS, VENDOR_FAILED } from "../types";
 import axios from "axios";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import { signUpFailed, signUpStart, signUpSuccess } from "../Reducers/UserReducer";
 
 export const signUpAction = (data) => {
-  // console.log("data in signUpAction", data);
   return (dispatch) => {
-
-    dispatch(LoginStart);
+    dispatch(signUpStart())
     const reqBody = new FormData();
     const obj = {
       aboutCompany: data.aboutCompany,
@@ -26,25 +22,15 @@ export const signUpAction = (data) => {
       photoStyle: data.type.value,
       priceFrom: data.priceRange.value.priceFrom,
       priceTo: data.priceRange.value.priceTo,
-      serviceModels: [
-        //   {
-        //     name: data.serviceModels[0].name,
-        //     price: data.serviceModels[0].price,
-        //   }
-        {
-          "name": "test_name",
-          "price": 0
-        },
-      ],
+      serviceModels: data.serviceModels,
       surname: data.lastName,
       tiktok: data.tiktok,
       twitter: data.twitter,
       username: data.name,
       // typeOfService: data.type.value,
       weddingActivity: data.activities.value,
+      youtube: data.youtube
     }
-
-    console.log('obj', obj)
 
     const json = JSON.stringify(obj)
     const blob = new Blob([json], {
@@ -58,46 +44,20 @@ export const signUpAction = (data) => {
       reqBody.append("photoAndVideos", image);
     }
 
-    for (var pair of reqBody.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
-
-    for (const value of reqBody.values()) {
-      console.log('value', value)
-    }
-
-
     axios({
       method: "post",
       url: `${process.env.REACT_APP_URL_TEST}/vendors/create`,
       data: reqBody,
       headers: { "Content-Type": "multipart/form-data" },
-    }).then((res) => {
-      console.log("response in vendro", res)
-      dispatch(signInSuccess(res));
     })
+      .then((res) => {
+        const token = res.data.result.jwt
+        localStorage.setItem("token", token)
+        dispatch(signUpSuccess(res.data.result))
+      })
       .catch((err) => {
-        dispatch(addTodoFailure(err.message));
+        console.log(err.message);
+        dispatch(signUpFailed(err))
       });
   };
 };
-const signInSuccess = (response) => {
-  return {
-    type: VENDOR_SUCCESS,
-    payload: {
-      data: response.data?.result,
-      token: response.data?.result.jwt,
-    },
-  };
-};
-
-const LoginStart = () => ({
-  type: VENDOR_SIGNIN,
-});
-
-const addTodoFailure = (error) => ({
-  type: VENDOR_FAILED,
-  payload: {
-    error,
-  },
-});

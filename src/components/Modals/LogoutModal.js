@@ -1,15 +1,18 @@
 import { useContext } from "react"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { AuthContext } from "../../context/AuthContext"
+
 import { ModalContext } from "../../context/ModalContext"
+import { logout } from "../../Store/Reducers/UserReducer"
 import Button from "../UI/Button"
 import ModalSmallContent from "../UI/Modal/ModalSmallContent"
 
 const LogoutModal = () => {
 
   const modal = useContext(ModalContext)
-  const auth = useContext(AuthContext)
+
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   return (
     <ModalSmallContent>
@@ -23,7 +26,8 @@ const LogoutModal = () => {
         <Button
           className="btn btn-accent d-block w-100"
           onClick={() => {
-            auth.logout()
+            localStorage.removeItem('token')
+            dispatch(logout())
             modal.destroy()
             navigate("/")
           }}

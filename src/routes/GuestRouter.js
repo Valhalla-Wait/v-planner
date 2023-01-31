@@ -7,9 +7,6 @@ import Home from "../pages/Home";
 import Policy from "../pages/Policy";
 import Rules from "../pages/Rules";
 
-import { useEffect } from "react";
-import { LOGIN_USER } from "../Store/types.js";
-
 export default function GuestRouter(props) {
   return (
     <Routes>

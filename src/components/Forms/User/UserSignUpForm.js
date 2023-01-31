@@ -7,16 +7,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FieldError } from "../../UI/FieldError";
 import Select from "react-select";
 import { ModalContext } from "../../../context/ModalContext";
-import { AuthContext } from "../../../context/AuthContext";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schemaUserSignUp } from "../../../validation/schemas";
 import f from "../../../validation/fieldName";
 import { allowerImageType } from "../../../utils/allowedFileTypes";
 import { customReactSelectOptions } from "../../../utils/customReactSelectOptions";
-import { signUpAction } from "../../../Store/Actions/SignUpAction";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { signUpAction } from "../../../Store/Actions/SignUpClient";
+import { useDispatch } from "react-redux";
 
 const optionsState = [
   { value: "Alabama", label: "Alabama" },
@@ -78,16 +76,12 @@ const UserSignUpForm = () => {
     resolver: yupResolver(schemaUserSignUp()),
   });
 
-  const auth = useContext(AuthContext);
   const modal = useContext(ModalContext);
   const theme = useContext(ThemeContext);
-  const { userData } = useSelector((state) => state.userInfo);
   const dispatch = useDispatch();
 
   const [src, setSrc] = useState(null);
-  console.log(src)
   const [isCustomBudget, setIsCustomBudget] = useState(false);
-  let { token } = useSelector((state) => state.userInfo);
 
   const addPhoto = (e) => {
     if (e.target.files && e.target.files.length) {
@@ -105,8 +99,6 @@ const UserSignUpForm = () => {
       ? watch(f.customBudget) && isValid
       : watch(f.budget) && isValid;
 
-  // useEffect
-
   const onSubmit = (data) => {
     dispatch(signUpAction({ ...data }));
     modal.destroy();
@@ -114,24 +106,7 @@ const UserSignUpForm = () => {
 
   const isValidField = (field) => !errors[field];
   const getErrorField = (field) => errors[field]?.message;
-  useEffect(() => {
 
-    if (token !== null) {
-      console.log("token in useEffect", token);
-      console.log("userData in test", userData);
-      auth.login(
-        process.env.REACT_APP_ROLE_USER,
-        userData.mail,
-        userData.firstName,
-        userData.surname,
-
-        "avata  r",
-        userData.phone,
-        userData.nickname,
-        userData.partnersFirstName
-      );
-    }
-  }, [token]);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="photo-add">

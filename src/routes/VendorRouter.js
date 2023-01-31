@@ -15,18 +15,13 @@ import Reports from "../pages/Reports";
 import Rules from "../pages/Rules";
 import VendorChat from "../pages/Chat/VendorChat";
 import Quote from "../pages/Quote/Quote";
-import f from "../validation/fieldName";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import QuoteForm from "../pages/QuoteForm/QuoteForm";
 
 
- function VendorRouter({vendorData}) {
-  console.log("data in forms in prive", f);
-     // console.log("photos",vendorData.vendorModel.photos[0].name)
-    //vendorData.vendorModel.photos[0].name
-     console.log("vendor Data",vendorData)
+function VendorRouter({ vendorData }) {
 
-     const url = vendorData.vendorModel?.photoModel?.name
+  const url = vendorData.vendorModel?.photos && vendorData.vendorModel.photos.find((obj => obj.type === "AVATAR")).name
   return (
     <Routes>
       <Route
@@ -66,10 +61,9 @@ import QuoteForm from "../pages/QuoteForm/QuoteForm";
 }
 const mapStateToProps = function (state) {
   return {
-    vendorData:state.vendorInfo.vendorData,
-
+    vendorData: state.userInfo.userData,
   };
 };
 
 
-export default  connect(mapStateToProps)(VendorRouter);
+export default connect(mapStateToProps)(VendorRouter);

@@ -16,8 +16,8 @@ import { getTimeFromDate } from "../../utils/getTimeFromDate"
 function VendorChat({getMessages,userId,userName, stateMessages}) {
 
   const chatState = useSelector(state => state.chat)
-  const currentUserId = useSelector(state => state.vendorInfo?.vendorData?.id)
-  const currentUserData = useSelector(state => state.vendorInfo?.vendorData)
+  const currentUserId = useSelector(state => state.userInfo?.userData?.id)
+  const currentUserData = useSelector(state => state.userInfo?.userData)
 
   const { id } = useParams()
 
@@ -141,8 +141,8 @@ function VendorChat({getMessages,userId,userName, stateMessages}) {
 const mapStateToProps = function (state) {
   return {
     chatState:state.chat,
-    userId:state.vendorInfo.vendorData.id,
-    userName:state.vendorInfo.vendorData.firstName,
+    userId:state.userInfo.userData.id,
+    userName:state.userInfo.userData.firstName,
     stateMessages: state.chat.messages
   };
 };

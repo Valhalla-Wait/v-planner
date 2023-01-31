@@ -14,7 +14,6 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
   const token = localStorage.getItem('token')
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  console.log("props in slider", files, data)
   const auth = useContext(AuthContext);
 
   useEffect(() => {
@@ -46,7 +45,6 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
       headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${token}` },
     }).then((res) => {
       setVendorIndex((prevState) => prevState + 1)
-      console.log("response in vendor like", res)
     })
       .catch((err) => {
         console.log(err)
@@ -64,7 +62,6 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
       headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${token}` },
     }).then((res) => {
       setVendorIndex((prevState) => prevState + 1)
-      console.log("response in vendor dis", res)
     })
       .catch((err) => {
         console.log(err)

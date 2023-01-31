@@ -363,21 +363,16 @@ const marks = [{ value: 0 }, { value: 50 }, { value: 100 }];
 
 function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
   // const [data, setData] = useState(dto.result[0]);
-
   const [vendorIndex, setVendorIndex] = useState(0);
   const data = useSelector((state) => state.matchList.allVendors.result[vendorIndex])
-  console.log('data', data)
-  console.log('vendorIndex', vendorIndex)
-
   const [filterActive, setFilterActive] = useState(false);
-
   const navigate = useNavigate();
-  // console.log("data photos ебучий",data.photos)
   const dispatch = useDispatch();
   const [triggerStoriesSlide, setTriggerStoriesSlide] = useState(false);
   const theme = useContext(ThemeContext);
   const auth = useContext(AuthContext);
   const device = useDevice();
+  const likes = useSelector(state => state.myVendors.vendors.length)
 
 
   const [tags, setTags] = useState([
@@ -423,17 +418,12 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
   const triggerStories = () => {
     setTriggerStoriesSlide(!triggerStoriesSlide);
   };
-  const [story,setStory] = useState("")
-  console.log("all vendors",dto)
-   useEffect(() => {
-     getAll()
-     getMessages()
+  const [story, setStory] = useState("")
+  useEffect(() => {
+    getAll()
+    getMessages()
 
   }, [token]);
-  // console.log("chatState after changing",chatState)
-
-  // console.log("Загрузка при рендере компоненты",loading)
-  // console.log(token)
 
   return (
     <>
@@ -582,15 +572,15 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
                       </p>
                       <div className="info-matchlist__subtitle">Services</div>
                       {
-                        data?.services.map((service =>
-                          <p className="italic">{service.name}</p>
+                        data?.services.map(((service, index) =>
+                          <p className="italic" key={index}>{service.name}</p>
                         ))
                       }
                       <div className="info-matchlist__subtitle">About</div>
                       <p>{data?.aboutCompany}</p>
                     </div>
                     <div className="info-matchlist__footer">
-                      {Object.keys(auth.user.profile.likes.users).length >= 10 && (
+                      {likes >= 10 && (
                         <Button
                           className="btn btn-go-chat d-block w-100"
                           onClick={() => {

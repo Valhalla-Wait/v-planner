@@ -16,7 +16,7 @@ import { useState } from "react";
 import SignInVendorModal from "./SignInVendorModal";
 import SignUpUserModal from "./SignUpUserModal";
 import { useDispatch, useSelector } from "react-redux";
-import { signUpAction } from "../../Store/Actions/VendorSignUp";
+import { signUpAction } from "../../Store/Actions/SignUpVendor";
 
 const SignUpVendorModal = () => {
   const auth = useContext(AuthContext);
@@ -38,8 +38,6 @@ const SignUpVendorModal = () => {
     step.nextStep(number);
   };
 
-  const vendorData = useSelector((state) => state.vendorInfo.vendorData);
-  
   const signIn = (data) => {
     const req = {
       ...step1,
@@ -50,19 +48,9 @@ const SignUpVendorModal = () => {
       ...step6,
       ...data,
     };
-    console.log('SIGNIN DATA', req)
     dispatch(signUpAction(req));
-    
     modal.destroy();
   };
-
-  console.log(step3)
-
-  useEffect(() => {
-    if (vendorData.id) {
-      auth.login(vendorData.email, vendorData.password, process.env.REACT_APP_ROLE_VENDOR);
-    }
-  }, [vendorData])
 
   const titleList = [
     "Personal Information",
