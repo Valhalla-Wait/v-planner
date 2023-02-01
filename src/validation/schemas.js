@@ -38,19 +38,19 @@ export const schemaUserSignIn = () => yup.object().shape({
 
 export const schemaUserSignUp = () => yup.object().shape({
   [f.avatar]: yup.mixed()
-  .test(f.file.required, e.file.required,
-    value => value.length
-  )
-  .test(f.file.size, e.file.size(1),
-    value => value.length && value[0].size <= 1 * 1000 * 1024
-  )
-  .test(f.file.format, e.file.format(allowerImageType),
-    value => value.length && allowerImageType.includes(value[0].type)
-  ),
+    .test(f.file.required, e.file.required,
+      value => value.length
+    )
+    .test(f.file.size, e.file.size(1),
+      value => value.length && value[0].size <= 1 * 1000 * 1024
+    )
+    .test(f.file.format, e.file.format(allowerImageType),
+      value => value.length && allowerImageType.includes(value[0].type)
+    ),
   [f.firstName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.lastName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.email]: yup.string().typeError(e.string).required().matches(regexpEmail, { message: e.email }),
-  
+
   [f.nickname]: yup.string().typeError(e.string),
   [f.partners.firstName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.partners.lastName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
@@ -71,14 +71,14 @@ export const schemaUserSignUp = () => yup.object().shape({
 // User update schemas
 export const schemaUserUpdatePersonalInformation = () => yup.object().shape({
   [f.avatar]: yup.mixed()
-  .test(f.file.size, e.file.size(1), value => {
-    if(!value || !value.length) return true
-    return value[0].size <= 1 * 1000 * 1024
-  })
-  .test(f.file.format, e.file.format(allowerImageType), value => {
-    if(!value || !value.length) return true
-    return allowerImageType.includes(value[0].type)
-  }),
+    .test(f.file.size, e.file.size(1), value => {
+      if (!value || !value.length) return true
+      return value[0].size <= 1 * 1000 * 1024
+    })
+    .test(f.file.format, e.file.format(allowerImageType), value => {
+      if (!value || !value.length) return true
+      return allowerImageType.includes(value[0].type)
+    }),
   [f.firstName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.lastName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.email]: yup.string().typeError(e.string).required().matches(regexpEmail, { message: e.email }),
@@ -92,8 +92,8 @@ export const schemaUserUpdateWeddingInformation = () => yup.object().shape({
   [f.date.wedding]: yup.date().required().min(new Date(), e.date),
   [f.location.default]: yup.mixed().required(),
   [f.count.guest]: yup.number().typeError(e.number.default).required().positive(),
-  [f.budget]: yup.mixed().required(),
-  [f.customBudget]: yup.number().typeError(e.number.default).required().positive()
+  [f.budget]: yup.mixed(),
+  [f.customBudget]: yup.number().typeError(e.number.default).positive()
 })
 
 // Vendor schemas
@@ -104,15 +104,15 @@ export const schemaVendorSignIn = () => yup.object().shape({
 
 export const schemaVendorPersonalInformation = () => yup.object().shape({
   [f.avatar]: yup.mixed()
-  .test(f.file.required, e.file.required,
-    value => value.length
-  )
-  .test(f.file.size, e.file.size(1),
-    value => value.length && value[0].size <= 1 * 1000 * 1024
-  )
-  .test(f.file.format, e.file.format(allowerImageType),
-    value => value.length && allowerImageType.includes(value[0].type)
-  ),
+    .test(f.file.required, e.file.required,
+      value => value.length
+    )
+    .test(f.file.size, e.file.size(1),
+      value => value.length && value[0].size <= 1 * 1000 * 1024
+    )
+    .test(f.file.format, e.file.format(allowerImageType),
+      value => value.length && allowerImageType.includes(value[0].type)
+    ),
   [f.firstName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.lastName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.email]: yup.string().typeError(e.string).required().matches(regexpEmail, { message: e.email }),
@@ -137,14 +137,14 @@ export const schemaVendorServiceDetails = () => yup.object().shape({
 
 export const schemaVendorAboutCompany = () => yup.object().shape({
   [f.file.default]: yup.mixed()
-  .test(f.file.size, e.file.size(1), value => {
-    if(!value || !value.length) return true
-    return value[0].size <= 1 * 1000 * 1024
-  })
-  .test(f.file.format, e.file.format([...allowerImageType, ...allowerVideoType]), value => {
-    if(!value || !value.length) return true
-    return [...allowerImageType, ...allowerVideoType].includes(value[0].type)
-  }),
+    .test(f.file.size, e.file.size(1), value => {
+      if (!value || !value.length) return true
+      return value[0].size <= 1 * 1000 * 1024
+    })
+    .test(f.file.format, e.file.format([...allowerImageType, ...allowerVideoType]), value => {
+      if (!value || !value.length) return true
+      return [...allowerImageType, ...allowerVideoType].includes(value[0].type)
+    }),
   [f.title]: yup.string().typeError(e.string),
   [f.description]: yup.string().typeError(e.string),
   [f.about.company]: yup.string().typeError(e.string),
@@ -171,14 +171,14 @@ export const schemaVendorCreatePassword = () => yup.object().shape({
 // Vendor update schemas
 export const schemaVendorUpdatePersonalInformation = () => yup.object().shape({
   [f.avatar]: yup.mixed()
-  .test(f.file.size, e.file.size(1), value => {
-    if(!value || !value.length) return true
-    return value[0].size <= 1 * 1000 * 1024
-  })
-  .test(f.file.format, e.file.format(allowerImageType), value => {
-    if(!value || !value.length) return true
-    return allowerImageType.includes(value[0].type)
-  }),
+    .test(f.file.size, e.file.size(1), value => {
+      if (!value || !value.length) return true
+      return value[0].size <= 1 * 1000 * 1024
+    })
+    .test(f.file.format, e.file.format(allowerImageType), value => {
+      if (!value || !value.length) return true
+      return allowerImageType.includes(value[0].type)
+    }),
   [f.firstName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.lastName]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
   [f.email]: yup.string().typeError(e.string).required().matches(regexpEmail, { message: e.email }),
@@ -188,14 +188,14 @@ export const schemaVendorUpdatePersonalInformation = () => yup.object().shape({
 
 export const schemaVendorUpdateCompanyInformation = () => yup.object().shape({
   [f.photo.default]: yup.mixed()
-  .test(f.file.size, e.file.size(1), value => {
-    if(!value || !value.length) return true
-    return value[0].size <= 1 * 1000 * 1024
-  })
-  .test(f.file.format, e.file.format(allowerImageType), value => {
-    if(!value || !value.length) return true
-    return allowerImageType.includes(value[0].type)
-  }),
+    .test(f.file.size, e.file.size(1), value => {
+      if (!value || !value.length) return true
+      return value[0].size <= 1 * 1000 * 1024
+    })
+    .test(f.file.format, e.file.format(allowerImageType), value => {
+      if (!value || !value.length) return true
+      return allowerImageType.includes(value[0].type)
+    }),
   [f.name]: yup.string().typeError(e.string).required(),
   [f.type]: yup.mixed().required(),
   [f.amount]: yup.number().typeError(e.number.default).required().positive(e.number.positive),
@@ -214,14 +214,14 @@ export const schemaVendorUpdateServiceDetails = () => yup.object().shape({
 
 export const schemaVendorUpdateAboutCompany = () => yup.object().shape({
   [f.file.default]: yup.mixed()
-  .test(f.file.size, e.file.size(1), value => {
-    if(!value || !value.length) return true
-    return value[0].size <= 1 * 1000 * 1024
-  })
-  .test(f.file.format, e.file.format([...allowerImageType, ...allowerVideoType]), value => {
-    if(!value || !value.length) return true
-    return [...allowerImageType, ...allowerVideoType].includes(value[0].type)
-  }),
+    .test(f.file.size, e.file.size(1), value => {
+      if (!value || !value.length) return true
+      return value[0].size <= 1 * 1000 * 1024
+    })
+    .test(f.file.format, e.file.format([...allowerImageType, ...allowerVideoType]), value => {
+      if (!value || !value.length) return true
+      return [...allowerImageType, ...allowerVideoType].includes(value[0].type)
+    }),
   [f.title]: yup.string().typeError(e.string),
   [f.description]: yup.string().typeError(e.string),
   [f.about.company]: yup.string().typeError(e.string),

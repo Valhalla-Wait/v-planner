@@ -1,28 +1,29 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../../UI/Input";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../../context/AuthContext";
+import { useState } from "react";
 import { allowerImageType } from "../../../utils/allowedFileTypes";
 import { FieldError } from "../../UI/FieldError";
 import f from "../../../validation/fieldName";
 import Button from "../../UI/Button";
 import { schemaUserUpdatePersonalInformation } from "../../../validation/schemas";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser } from "../../../Store/Actions/updateUser";
 
 const UserUpdatePersonalInformation = () => {
   const {
     register,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     handleSubmit,
   } = useForm({
     mode: "all",
     resolver: yupResolver(schemaUserUpdatePersonalInformation()),
   });
 
-  const auth = useContext(AuthContext);
+  const dispatch = useDispatch()
   const [src, setSrc] = useState(null);
-  const { userInfo } = useSelector((state) => state);
+  const user = useSelector(state => state.userInfo.userData)
+
   const addPhoto = (e) => {
     if (e.target.files && e.target.files.length) {
       var reader = new FileReader();
@@ -38,25 +39,27 @@ const UserUpdatePersonalInformation = () => {
   const getErrorField = (field) => errors[field]?.message;
 
   const onSubmit = (data) => {
-    auth.setUser({
-      ...auth.user,
-      profile: {
-        ...auth.user.profile,
-        ...data,
-        avatar: src || auth.user.profile.avatar,
-      },
-    });
+    const updatedUserData = {
+      firstName: data.firstName,
+      surname: data.lastName,
+      username: data.nickname,
+      partnerFirstName: data.partnersFirstName,
+      partnerLastName: data.partnersLastName,
+      id: user.id,
+      phoneNumber: user.phoneNumber,
+      city: user.city,
+      weddingDate: user.clientModel.weddingDate,
+      weddingAddress: user.clientModel.weddingAddress,
+      amountOfGuests: user.clientModel.amountOfGuests,
+      engagementDate: user.clientModel.engagementDate,
+      engagementAddress: user.clientModel.engagementAddress,
+      description: user.clientModel.description
+    }
+    dispatch(updateUser(updatedUserData, data.avatar[0]))
   };
 
   const removeAvatar = () => {
     setSrc(null);
-    auth.setUser({
-      ...auth.user,
-      profile: {
-        ...auth.user.profile,
-        avatar: null,
-      },
-    });
   };
 
   return (
@@ -64,14 +67,14 @@ const UserUpdatePersonalInformation = () => {
       <h4>Personal Informaton</h4>
       <div className="photo-upload m-t-24">
         <div className="photo-upload__photo">
-          {(src || auth.user.profile.avatar) && (
+          {(src || user.clientModel?.photoModel?.name) && (
             <img
               className="photo-upload__img"
-              src={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${userInfo.userData.clientModel?.photoModel?.name}`}
+              src={src || `https://images-and-videos.fra1.digitaloceanspaces.com/images/${user.clientModel?.photoModel?.name}`}
               alt=""
             />
           )}
-          {!src && !auth.user.profile.avatar && <i className="icon-camera"></i>}
+          {!src && !user.clientModel?.photoModel?.name && <i className="icon-camera"></i>}
         </div>
         <label className="photo-upload__label">
           <Input
@@ -86,6 +89,7 @@ const UserUpdatePersonalInformation = () => {
           </div>
         </label>
         <Button
+          type="button"
           className="btn btn-photo-delete"
           disabled={!isValid}
           onClick={removeAvatar}
@@ -100,7 +104,7 @@ const UserUpdatePersonalInformation = () => {
             type="text"
             placeholder="First Name"
             label="First Name"
-            defaultValue={auth.user.profile.firstName}
+            defaultValue={user.firstName}
             register={register(f.firstName)}
             error={getErrorField(f.firstName)}
             isValid={isValidField(f.firstName)}
@@ -111,7 +115,7 @@ const UserUpdatePersonalInformation = () => {
             type="text"
             placeholder="Last Name"
             label="Last Name"
-            defaultValue={auth.user.profile.lastName}
+            defaultValue={user.surname}
             register={register(f.lastName)}
             error={getErrorField(f.lastName)}
             isValid={isValidField(f.lastName)}
@@ -122,7 +126,7 @@ const UserUpdatePersonalInformation = () => {
         type="email"
         placeholder="Email"
         label="Email"
-        defaultValue={auth.user.profile.email}
+        defaultValue={user.email}
         register={register(f.email)}
         error={getErrorField(f.email)}
         isValid={isValidField(f.email)}
@@ -131,7 +135,7 @@ const UserUpdatePersonalInformation = () => {
         type="text"
         placeholder="Nickname"
         label="Nickname"
-        defaultValue={userInfo.userData.username}
+        defaultValue={user.username}
         register={register(f.nickname)}
         error={getErrorField(f.nickname)}
         isValid={isValidField(f.nickname)}
@@ -140,7 +144,7 @@ const UserUpdatePersonalInformation = () => {
         type="text"
         placeholder="Partners First Name"
         label="Partners First Name"
-        defaultValue={userInfo.userData.partnerFirstName}
+        defaultValue={user.clientModel.partnerFirstName}
         register={register(f.partners.firstName)}
         error={getErrorField(f.partners.firstName)}
         isValid={isValidField(f.partners.firstName)}
@@ -149,12 +153,12 @@ const UserUpdatePersonalInformation = () => {
         type="text"
         placeholder="Partners Last Name"
         label="Partners Last Name"
-        defaultValue={userInfo.userData.partnerSecondName}
+        defaultValue={user.clientModel.partnerLastName}
         register={register(f.partners.lastName)}
         error={getErrorField(f.partners.lastName)}
         isValid={isValidField(f.partners.lastName)}
       />
-      <Button className="btn btn-accent m-t-8" disabled={!isValid}>
+      <Button className="btn btn-accent m-t-8" disabled={!isValid || !isDirty}>
         Save
       </Button>
     </form>

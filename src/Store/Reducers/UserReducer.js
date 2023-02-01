@@ -8,7 +8,10 @@ import {
   GET_CURRENT_USER_START,
   GET_CURRENT_USER_SUCCESS,
   GET_CURRENT_USER_FAILED,
-  LOGOUT
+  LOGOUT,
+  UPDATE_USER_START,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAILED
 } from "../types";
 
 const initialState = {
@@ -84,6 +87,21 @@ export default function userReducer(state = initialState, action) {
         isAuth: false,
       };
 
+    case UPDATE_USER_START:
+      return {
+        ...state,
+      };
+    case UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        userData: action.payload,
+      }
+    case UPDATE_USER_FAILED:
+      return {
+        ...state,
+        error: action.payload,
+      }
+
     case LOGOUT:
       return {
         ...state,
@@ -109,3 +127,7 @@ export const logout = () => ({ type: LOGOUT })
 export const getCurrentUserStart = () => ({ type: GET_CURRENT_USER_START })
 export const getCurrentUserSuccess = (user) => ({ type: GET_CURRENT_USER_SUCCESS, payload: user })
 export const getCurrentUserFailed = (err) => ({ type: GET_CURRENT_USER_FAILED, payload: err })
+
+export const updateUserStart = () => ({ type: UPDATE_USER_START })
+export const updateUserSuccess = (user) => ({ type: UPDATE_USER_SUCCESS, payload: user })
+export const updateUserFailed = (err) => ({ type: UPDATE_USER_FAILED, payload: err })
