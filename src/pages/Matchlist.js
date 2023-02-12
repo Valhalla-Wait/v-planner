@@ -7,7 +7,6 @@ import Select from "react-select";
 import { customReactSelectOptions } from "../utils/customReactSelectOptions";
 import { Slider } from "@mui/material";
 import { ThemeContext } from "../context/ThemeContext";
-import { AuthContext } from "../context/AuthContext";
 import useDevice from "../hooks/useDevice";
 import { LabelLike } from "../components/Sidebar/LabelLike";
 import { useNavigate } from "react-router-dom";
@@ -370,7 +369,6 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
   const dispatch = useDispatch();
   const [triggerStoriesSlide, setTriggerStoriesSlide] = useState(false);
   const theme = useContext(ThemeContext);
-  const auth = useContext(AuthContext);
   const device = useDevice();
   const likes = useSelector(state => state.myVendors.vendors.length)
 
@@ -523,7 +521,7 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
           </div>
         </div>
         {device.isMobile &&
-          Object.keys(auth.user.profile.likes.users).length < 10 && <LabelLike />}
+          likes < 10 && <LabelLike />}
         <div className="matchlist__stories stories">
           <Stories
             onCallback={(story) => {
