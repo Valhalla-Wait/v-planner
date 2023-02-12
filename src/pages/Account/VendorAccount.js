@@ -34,7 +34,7 @@ function VendorAccount({ vendorData }) {
       />
       <VendorUpdateCompanyInformationForm
         name={vendorData.vendorModel.companyName}
-        amount={vendorData.vendorModel.companyName}
+        amount={vendorData.vendorModel.yearsOnMarket}
         file={vendorData.vendorModel.photos.find(photo => photo.type === "COMPANY_AVATAR")}
         city={vendorData.city}
         serviceType={vendorData.vendorModel.fieldOfActivity}

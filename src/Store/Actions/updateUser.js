@@ -70,7 +70,6 @@ export const updateVendor = (vendor) => {
             ...oldData,
             ...vendor
         }
-
         const reqBody = new FormData();
         const token = localStorage.getItem('token')
         const json = JSON.stringify(updatedData);

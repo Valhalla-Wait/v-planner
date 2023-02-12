@@ -61,7 +61,12 @@ const optionsPriceRange = [
       priceTo: 3999
     }, label: "$3,000-$4,999"
   },
-  { value: "$5,000+", label: "$5,000+" }
+  {
+    value: {
+      priceFrom: 5000,
+      priceTo: 100000
+    }, label: "$5,000+"
+  }
 ]
 
 const optionsActivities = [
@@ -69,6 +74,8 @@ const optionsActivities = [
 ]
 
 const VendorUpdateServiceDetailsForm = () => {
+
+  const user = useSelector(state => state.userInfo.userData)
 
   const {
     formState: { errors, isValid, isDirty },
@@ -79,11 +86,10 @@ const VendorUpdateServiceDetailsForm = () => {
   } = useForm({
     mode: "all",
     defaultValues: {
-      serviceModels: [{ id: 0, name: "", price: 0 }]
+      serviceModels: user.vendorModel.services
     }
   })
 
-  const user = useSelector(state => state.userInfo.userData)
   const theme = useContext(ThemeContext)
   const modal = useContext(ModalContext)
   const dispatch = useDispatch()
@@ -99,8 +105,8 @@ const VendorUpdateServiceDetailsForm = () => {
       })),
       serviceType: data.types_1?.map(el => el.value).join(", "),
       photoStyle: data.types_3?.map(el => el.value).join(", "),
-      priceFrom: data.priceRange.value?.priceFrom,
-      priceTo: data.priceRange.value?.priceTo,
+      priceFrom: data.priceRange.value.priceFrom,
+      priceTo: data.priceRange.value.priceTo,
       weddingActivity: data.activities.value
     }
     dispatch(updateVendor(updatedVendorFields))
