@@ -7,7 +7,7 @@ const Input = ({ error, isValid, className = "", register = {}, label, ...props}
   const inputTemp = () => {
     return (
       <>
-        <input {...props} {...register} className={classes} />
+        <input {...register} {...props} className={classes} />
         { error && <FieldError text={error} />}
       </>
     )

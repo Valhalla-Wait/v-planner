@@ -5,10 +5,11 @@ export const signUpAction = (data) => {
   return (dispatch) => {
     dispatch(signUpStart())
     const reqBody = new FormData();
-    const obj = {
+    let obj = {
       aboutCompany: data.aboutCompany,
       aboutTeam: data.aboutTeam,
       city: data.state.value,
+      country: data.country,
       companyDescription: data.description,
       companyName: data.name,
       companyTitle: data.title,
@@ -19,7 +20,6 @@ export const signUpAction = (data) => {
       instagram: data.instagram,
       password: data.password,
       phoneNumber: data.phone,
-      photoStyle: data.type.value,
       priceFrom: data.priceRange.value.priceFrom,
       priceTo: data.priceRange.value.priceTo,
       serviceModels: data.serviceModels,
@@ -27,9 +27,11 @@ export const signUpAction = (data) => {
       tiktok: data.tiktok,
       twitter: data.twitter,
       username: data.name,
-      // typeOfService: data.type.value,
       weddingActivity: data.activities.value,
-      youtube: data.youtube
+      yearsOnMarket: data.amount,
+      youtube: data.youtube,
+      photoStyle: data.types_3.map(el => el.value).join(", "),
+      serviceType: data.types_1.map(el => el.value).join(", ")
     }
 
     const json = JSON.stringify(obj)

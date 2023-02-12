@@ -19,7 +19,7 @@ const fieldName = {
     default: "file"
   },
   state: "state",
-  country: "country",
+  county: "county",
   photo: {
     types: "types",
     types_1: "types_1",
@@ -35,8 +35,9 @@ const fieldName = {
     team: "aboutTeam",
   },
   services: [
-    {title: 'serviceTitle', description: 'serviceDecription'}
+    { title: 'serviceTitle', description: 'serviceDecription' }
   ],
+  serviceModels: "serviceModels",
   social: {
     facebook: "facebook",
     instagram: "instagram",

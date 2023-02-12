@@ -11,7 +11,7 @@ import { schemaUserUpdateWeddingInformation } from "../../../validation/schemas"
 import { useContext, useState } from "react"
 import { ThemeContext } from "../../../context/ThemeContext"
 import { useDispatch, useSelector } from "react-redux"
-import { updateUser } from "../../../Store/Actions/updateUser"
+import { updateClient } from "../../../Store/Actions/updateUser"
 
 const optionsBudget = [
   { value: "Budget", label: "Budget" },
@@ -107,7 +107,7 @@ const UserUpdateWeddingInformation = () => {
       description: user.clientModel.description
     }
 
-    dispatch(updateUser(updatedUserData))
+    dispatch(updateClient(updatedUserData))
   }
 
   return (

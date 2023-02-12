@@ -11,7 +11,6 @@ import { connect, useSelector } from "react-redux";
 
 function VendorAccount({ vendorData }) {
   const { id } = useParams();
-  console.log(vendorData, 'vendorData');
   useEffect(() => {
     const selector = document.querySelector(`[data-to="${id}"]`);
     if (!selector) return;
@@ -30,22 +29,24 @@ function VendorAccount({ vendorData }) {
         name={vendorData.firstName}
         surname={vendorData.surname}
         mail={vendorData.email}
-        img={vendorData.vendorModel.photos[0].name}
+        img={vendorData.vendorModel.photos.find(photo => photo.type === "AVATAR")}
         phone={vendorData.phoneNumber}
       />
       <VendorUpdateCompanyInformationForm
         name={vendorData.vendorModel.companyName}
         amount={vendorData.vendorModel.companyName}
-        img={vendorData.vendorModel.photos[1].name}
-        country={vendorData.city}
-      />8
+        file={vendorData.vendorModel.photos.find(photo => photo.type === "COMPANY_AVATAR")}
+        city={vendorData.city}
+        serviceType={vendorData.vendorModel.fieldOfActivity}
+        county={vendorData.vendorModel.country}
+      />
       <VendorUpdateServiceDetailsForm />
       <VendorUpdateAboutCompanyForm
-        title={vendorData.companyTitle}
-        description={vendorData.companyDescription}
-        aboutCompany={vendorData.aboutCompany}
-        aboutTeam={vendorData.aboutTeam}
-        img={vendorData.companyAvatar}
+        title={vendorData.vendorModel.companyTitle}
+        description={vendorData.vendorModel.companyDescription}
+        aboutCompany={vendorData.vendorModel.aboutCompany}
+        aboutTeam={vendorData.vendorModel.aboutTeam}
+        file={vendorData.vendorModel.photos.find(file => file.type === "COMPANY_AVATAR")}
       />
       <VendorUpdatePhotoAndVideoForm />
       <VendorUpdateSocialNetvorksForm

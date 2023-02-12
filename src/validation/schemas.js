@@ -29,6 +29,10 @@ export const schemaChangePassword = () => yup.object().shape({
   [f.confirmPassword]: yup.string().typeError(e.string).oneOf([yup.ref(f.password), null], e.password),
 })
 
+export const schemaInputPassword = () => yup.object().shape({
+  [f.password]: yup.string().typeError(e.string).required().min(6, e.min(6)),
+})
+
 
 // User schemas
 export const schemaUserSignIn = () => yup.object().shape({
@@ -124,19 +128,28 @@ export const schemaVendorCompanyInformation = () => yup.object().shape({
   [f.type]: yup.mixed().required(),
   [f.amount]: yup.number().typeError(e.number.default).required().positive(e.number.positive),
   [f.state]: yup.mixed().required(),
-  [f.country]: yup.string().typeError(e.string).required()
+  [f.county]: yup.string().typeError(e.string).required()
 })
 
 export const schemaVendorServiceDetails = () => yup.object().shape({
-  [f.photo.types]: yup.mixed(),
-  [f.photo.types_1]: yup.mixed(),
-  [f.photo.types_3]: yup.mixed(),
-  [f.priceRange]: yup.mixed(),
-  [f.activities]: yup.mixed(),
+  [f.serviceModels]: yup.array().of(yup.object({
+    name: yup.string().required(),
+    price: yup.string().required()
+  })).min(1),
+  [f.photo.types_1]: yup.mixed().required(),
+  [f.photo.types_3]: yup.mixed().required(),
+  [f.priceRange]: yup.mixed().required(),
+  [f.activities]: yup.mixed().required(),
 })
 
 export const schemaVendorAboutCompany = () => yup.object().shape({
   [f.file.default]: yup.mixed()
+    .test('required', 'You need to provide a file', (value) => {
+      if (value.length > 0) {
+        return true;
+      }
+      return false;
+    })
     .test(f.file.size, e.file.size(1), value => {
       if (!value || !value.length) return true
       return value[0].size <= 1 * 1000 * 1024
@@ -145,10 +158,10 @@ export const schemaVendorAboutCompany = () => yup.object().shape({
       if (!value || !value.length) return true
       return [...allowerImageType, ...allowerVideoType].includes(value[0].type)
     }),
-  [f.title]: yup.string().typeError(e.string),
-  [f.description]: yup.string().typeError(e.string),
-  [f.about.company]: yup.string().typeError(e.string),
-  [f.about.team]: yup.string().typeError(e.string),
+  [f.title]: yup.string().typeError(e.string).required(),
+  [f.description]: yup.string().typeError(e.string).required(),
+  [f.about.company]: yup.string().typeError(e.string).required(),
+  [f.about.team]: yup.string().typeError(e.string).required(),
 })
 
 export const schemaVendorPhotoAndVideo = () => yup.object().shape({})
@@ -200,7 +213,7 @@ export const schemaVendorUpdateCompanyInformation = () => yup.object().shape({
   [f.type]: yup.mixed().required(),
   [f.amount]: yup.number().typeError(e.number.default).required().positive(e.number.positive),
   [f.state]: yup.mixed().required(),
-  [f.country]: yup.string().typeError(e.string).required()
+  [f.county]: yup.string().typeError(e.string).required()
 })
 
 export const schemaVendorUpdateServiceDetails = () => yup.object().shape({
@@ -216,7 +229,7 @@ export const schemaVendorUpdateAboutCompany = () => yup.object().shape({
   [f.file.default]: yup.mixed()
     .test(f.file.size, e.file.size(1), value => {
       if (!value || !value.length) return true
-      return value[0].size <= 1 * 1000 * 1024
+      return value[0].size <= 10 * 1000 * 1024
     })
     .test(f.file.format, e.file.format([...allowerImageType, ...allowerVideoType]), value => {
       if (!value || !value.length) return true

@@ -8,7 +8,7 @@ import f from "../../../validation/fieldName";
 import Button from "../../UI/Button";
 import { schemaUserUpdatePersonalInformation } from "../../../validation/schemas";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser } from "../../../Store/Actions/updateUser";
+import { updateClient } from "../../../Store/Actions/updateUser";
 
 const UserUpdatePersonalInformation = () => {
   const {
@@ -55,7 +55,7 @@ const UserUpdatePersonalInformation = () => {
       engagementAddress: user.clientModel.engagementAddress,
       description: user.clientModel.description
     }
-    dispatch(updateUser(updatedUserData, data.avatar[0]))
+    dispatch(updateClient(updatedUserData, data.avatar[0]))
   };
 
   const removeAvatar = () => {

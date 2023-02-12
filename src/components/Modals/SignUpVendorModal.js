@@ -1,5 +1,4 @@
 import { useContext, useEffect } from "react";
-import { AuthContext } from "../../context/AuthContext";
 import { ModalContext } from "../../context/ModalContext";
 import useStep from "../../hooks/useStep";
 import VendorAboutCompanyForm from "../Forms/Vendor/VendorAboutCompanyForm";
@@ -15,11 +14,10 @@ import { Step, StepProgress, StepContent, StepTab } from "../UI/Step";
 import { useState } from "react";
 import SignInVendorModal from "./SignInVendorModal";
 import SignUpUserModal from "./SignUpUserModal";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signUpAction } from "../../Store/Actions/SignUpVendor";
 
 const SignUpVendorModal = () => {
-  const auth = useContext(AuthContext);
   const modal = useContext(ModalContext);
   const dispatch = useDispatch();
   const step = useStep();
@@ -31,8 +29,6 @@ const SignUpVendorModal = () => {
   const [step6, setStep6] = useState("");
   const signInVendor = () => modal.setContent(<SignInVendorModal />);
   const signUpUser = () => modal.setContent(<SignUpUserModal />);
-
-  console.log(step3)
 
   const nextStep = (number) => {
     step.nextStep(number);
@@ -106,7 +102,6 @@ const SignUpVendorModal = () => {
             <StepTab stepNumber={2} currentStep={step.currentStep}>
               <VendorServiceDetailsForm
                 onCallback={(data) => {
-                  console.log("data in step 3", data);
                   setStep3(data);
                   nextStep(3);
                 }}
@@ -117,7 +112,6 @@ const SignUpVendorModal = () => {
             <StepTab stepNumber={3} currentStep={step.currentStep}>
               <VendorAboutCompanyForm
                 onCallback={(data) => {
-                  console.log("data in step 3", data);
                   setStep4(data);
                   nextStep(4);
                 }}
@@ -128,8 +122,6 @@ const SignUpVendorModal = () => {
               <VendorPhotoAndVideoForm
                 onCallback={(data) => {
                   setStep5(data);
-
-                  console.log("data in step 4", data);
                   nextStep(5);
                 }}
                 onBack={() => nextStep(3)}
@@ -139,8 +131,6 @@ const SignUpVendorModal = () => {
               <VendorSocialNetvorksForm
                 onCallback={(data) => {
                   setStep6(data);
-
-                  console.log("data in step 5", data);
                   nextStep(6);
                 }}
                 onBack={() => nextStep(4)}

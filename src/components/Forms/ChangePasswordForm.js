@@ -7,6 +7,10 @@ import Input from "../UI/Input"
 import { schemaChangePassword } from "../../validation/schemas"
 import f from "../../validation/fieldName"
 import { ModalContext } from "../../context/ModalContext"
+import { useSelector } from "react-redux"
+
+import AuthService from "../../services/AuthService"
+import VendorService from "../../services/VendorService"
 
 const ChangePasswordForm = () => {
 
@@ -21,9 +25,25 @@ const ChangePasswordForm = () => {
     resolver: yupResolver(schemaChangePassword())
   })
 
+  const email = useSelector(state => state.userInfo.userData.email)
+
   const onSubmit = data => {
-    modal.start()
-    modal.setContent(<TextModal text="Your password has been successfully changed" />)
+    AuthService.login(email, data.oldPassword)
+      .then(() => {
+        VendorService.changeCredentials(email, data.password)
+          .then(() => {
+            modal.start()
+            modal.setContent(<TextModal text="Your password has been successfully changed" />)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      })
+      .catch((err) => {
+        console.log(err)
+        modal.start()
+        modal.setContent(<TextModal text={err.message} />)
+      })
   }
 
   const isValidField = field => !errors[field]

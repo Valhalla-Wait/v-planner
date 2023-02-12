@@ -4,8 +4,11 @@ import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schemaVendorUpdateSocialNetvorks } from "../../../validation/schemas";
+import { useDispatch } from "react-redux";
+import { updateVendor } from "../../../Store/Actions/updateUser";
 import { useContext } from "react";
-import { AuthContext } from "../../../context/AuthContext";
+import { ModalContext } from "../../../context/ModalContext";
+import TextModal from "../../Modals/TextModal";
 
 const VendorUpdateSocialNetvorksForm = ({
   instagram,
@@ -16,34 +19,30 @@ const VendorUpdateSocialNetvorksForm = ({
 }) => {
   const {
     register,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     handleSubmit,
   } = useForm({
     mode: "all",
     resolver: yupResolver(schemaVendorUpdateSocialNetvorks()),
   });
 
-  const auth = useContext(AuthContext);
+  const dispatch = useDispatch()
+  const modal = useContext(ModalContext)
 
   const isValidField = (field) => !errors[field];
   const getErrorField = (field) => errors[field]?.message;
 
   const onSubmit = (data) => {
-    auth.setUser({
-      ...auth.user,
-      profile: {
-        ...auth.user.profile,
-        blocks: {
-          ...auth.user.profile.blocks,
-          networks: !!Object.keys(data)
-            .filter((i) => data[i].length)
-            .filter(Boolean).length,
-        },
-      },
-      networks: {
-        ...data,
-      },
-    });
+    dispatch(updateVendor(data))
+      .then(() => {
+        modal.start()
+        modal.setContent(<TextModal text="Changes have been saved" />)
+      })
+      .catch((err) => {
+        console.log(err)
+        modal.start()
+        modal.setContent(<TextModal text={err.message} />)
+      })
   };
 
   return (
@@ -145,7 +144,7 @@ const VendorUpdateSocialNetvorksForm = ({
           </div>
         </div>
       </div>
-      <Button className="btn btn-accent m-t-16" disabled={!isValid}>
+      <Button className="btn btn-accent m-t-16" disabled={!isValid || !isDirty}>
         Save
       </Button>
     </form>

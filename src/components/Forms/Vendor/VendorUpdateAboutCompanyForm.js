@@ -11,28 +11,33 @@ import {
 } from "../../../utils/allowedFileTypes";
 import f from "../../../validation/fieldName";
 import { FieldError } from "../../UI/FieldError";
-import { AuthContext } from "../../../context/AuthContext";
+import { checkFileType } from "../../../utils/checkFileType";
+import { useDispatch } from "react-redux";
+import { updateVendor } from "../../../Store/Actions/updateUser";
+import { replaceVendorPhoto } from "../../../Store/Actions/vendorPhotoAction";
+import { ModalContext } from "../../../context/ModalContext";
+import TextModal from "../../Modals/TextModal";
 
 const VendorUpdateAboutCompanyForm = ({
   title,
   description,
   aboutCompany,
   aboutTeam,
-  img,
+  file,
 }) => {
+  const modal = useContext(ModalContext)
   const [src, setSrc] = useState(null);
   const [srcType, setSrcType] = useState(null);
+  const dispatch = useDispatch()
 
   const {
     register,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     handleSubmit,
   } = useForm({
     mode: "all",
     resolver: yupResolver(schemaVendorUpdateAboutCompany()),
   });
-
-  const auth = useContext(AuthContext);
 
   const addPhoto = (e) => {
     if (e.target.files && e.target.files.length) {
@@ -52,38 +57,28 @@ const VendorUpdateAboutCompanyForm = ({
   const getErrorField = (field) => errors[field]?.message;
 
   const onSubmit = (data) => {
-    let isFilled = false;
-
-    if (
-      data.title &&
-      data.description &&
-      data.aboutCompany &&
-      data.aboutTeam &&
-      (data.file.length || auth.user.about.file.src)
-    ) {
-      isFilled = true;
+    const updatedVendorFields = {
+      companyTitle: data.title,
+      companyDescription: data.description,
+      aboutCompany: data.aboutCompany,
+      aboutTeam: data.aboutTeam,
+    }
+    let promises = [];
+    promises.push(dispatch(updateVendor(updatedVendorFields)))
+    if (data.file.length) {
+      promises.push(dispatch(replaceVendorPhoto(file.id, data.file)))
     }
 
-    auth.setUser({
-      ...auth.user,
-      profile: {
-        ...auth.user.profile,
-        blocks: {
-          ...auth.user.profile.blocks,
-          about: isFilled,
-        },
-      },
-      about: {
-        ...auth.user.about,
-        ...data,
-        file: {
-          type:
-            (src && srcType && srcType.split("/")[0]) ||
-            auth.user.about.file.type,
-          src: src || auth.user.about.file.src,
-        },
-      },
-    });
+    Promise.all(promises)
+      .then(() => {
+        modal.start()
+        modal.setContent(<TextModal text="Changes have been saved" />)
+      })
+      .catch((err) => {
+        console.log(err)
+        modal.start()
+        modal.setContent(<TextModal text={err.message} />)
+      })
   };
 
   return (
@@ -96,8 +91,8 @@ const VendorUpdateAboutCompanyForm = ({
               {srcType.indexOf("image") === 0 && (
                 <img
                   className="file-upload__file"
-                  src={`http://localhost:7000/${img}`}
-                  alt=""
+                  src={src}
+                  alt="image"
                 />
               )}
               {srcType.indexOf("video") === 0 && (
@@ -112,19 +107,19 @@ const VendorUpdateAboutCompanyForm = ({
             </>
           ) : (
             <>
-              {auth.user.about.file.src ? (
+              {file.url ? (
                 <>
-                  {auth.user.about.file.type === "image" && (
+                  {checkFileType(file.url) === "image" && (
                     <img
                       className="file-upload__file"
-                      src={auth.user.about.file.src}
+                      src={file.url}
                       alt=""
                     />
                   )}
-                  {auth.user.about.file.type === "video" && (
+                  {checkFileType(file.url) === "video" && (
                     <video
                       className="file-upload__file"
-                      src={auth.user.about.file.src}
+                      src={file.url}
                       autoPlay
                       muted
                       loop
@@ -194,7 +189,7 @@ const VendorUpdateAboutCompanyForm = ({
           isValid={isValidField(f.about.team)}
         />
       </div>
-      <Button className="btn btn-accent m-t-24" disabled={!isValid}>
+      <Button className="btn btn-accent m-t-24" disabled={!isValid || !isDirty}>
         Save
       </Button>
     </form>

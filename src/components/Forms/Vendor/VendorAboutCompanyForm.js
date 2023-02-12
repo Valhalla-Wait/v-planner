@@ -24,7 +24,7 @@ const VendorAboutCompanyForm = ({ onCallback, onBack }) => {
   })
 
   const addPhoto = (e) => {
-    if(e.target.files && e.target.files.length){
+    if (e.target.files && e.target.files.length) {
       setSrcType(e.target.files[0].type)
       const reader = new FileReader();
       reader.onload = function (e) {
@@ -36,23 +36,22 @@ const VendorAboutCompanyForm = ({ onCallback, onBack }) => {
     setSrc(null)
     setSrcType(null)
   }
-console.log("data in form ",f)
   const isValidField = field => !errors[field]
   const getErrorField = field => errors[field]?.message
- 
+
   return (
     <form onSubmit={handleSubmit(onCallback)}>
       <label className="file-upload">
-        { src && srcType && (srcType.indexOf("image") === 0) && <img className="file-upload__file" src={src} alt="" /> }
-        { src && srcType && (srcType.indexOf("video") === 0) && <video className="file-upload__file" src={src} autoPlay loop></video> }
-        { !src && (
-            <>
-              <div className="file-upload__icon">
-                <i className="icon-photo-add"></i>
-              </div>
-              <div className="file-upload__title">Upload Cover Photo or Video</div>
-            </>
-          )
+        {src && srcType && (srcType.indexOf("image") === 0) && <img className="file-upload__file" src={src} alt="" />}
+        {src && srcType && (srcType.indexOf("video") === 0) && <video className="file-upload__file" src={src} autoPlay loop></video>}
+        {!src && (
+          <>
+            <div className="file-upload__icon">
+              <i className="icon-photo-add"></i>
+            </div>
+            <div className="file-upload__title">Upload Cover Photo or Video</div>
+          </>
+        )
         }
         <Input
           type="file"
@@ -62,7 +61,7 @@ console.log("data in form ",f)
           onInput={addPhoto}
         />
       </label>
-      { !isValidField(f.file.default) &&  <FieldError text={getErrorField(f.file.default)} /> }
+      {!isValidField(f.file.default) && <FieldError text={getErrorField(f.file.default)} />}
       <Input
         type="text"
         placeholder="Company Title"

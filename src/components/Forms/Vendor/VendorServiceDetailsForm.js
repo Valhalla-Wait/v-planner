@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
 import { Controller, useForm } from "react-hook-form"
 import Button from "../../UI/Button"
 import { FieldError } from "../../UI/FieldError"
@@ -6,71 +6,45 @@ import Select from "react-select"
 import { customReactSelectOptions } from "../../../utils/customReactSelectOptions"
 import f from "../../../validation/fieldName"
 import { ThemeContext } from "../../../context/ThemeContext"
-import Input from "../../UI/Input"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { schemaVendorServiceDetails } from "../../../validation/schemas"
-import { ServiceForm } from "./VendorServiceForm"
+import VendorInputService from "../../VendorInputService"
 
 
-const VendorServiceDetailsForm = ({ onCallback, onBack, onNext }) => {
+const VendorServiceDetailsForm = ({ onCallback, onBack }) => {
 
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
     control,
+    setValue
   } = useForm({
     mode: "all",
     resolver: yupResolver(schemaVendorServiceDetails()),
+    defaultValues: {
+      serviceModels: [{ id: 0, name: "", price: 0 }]
+    }
   });
+
 
   const theme = useContext(ThemeContext)
 
   const isValidField = field => !errors[field]
   const getErrorField = field => errors[field]?.message
 
-  const setService = (service) => {
-    if(service) {
-        console.log(serviceInputsData, service)
-      const data = [...serviceInputsData]
-      const index = data.findIndex((s) => s.id === service.id)
-      if (index !== -1) {
-        console.log(index, data)
-        data[index].title = service.title
-      }else{
-        data.push(service)
-      }
-      console.log(data)
-      setServiceInputsData(data)
-    } 
-  }
-
-  const [serviceInputsData, setServiceInputsData] = useState([
-    {id: 0, title: '', price: 0}
-  ])
-
-  console.log(serviceInputsData)
-
   return (
     <form onSubmit={handleSubmit((data) => {
-      data.serviceModels = serviceInputsData.map(s => ({
-        name: s.title,
+      data.serviceModels = data.serviceModels.map(s => ({
+        name: s.name,
         price: s.price
       }))
       onCallback(data)
     })}>
+      <VendorInputService register={register} control={control} setValue={setValue} isValidField={isValidField} getErrorField={getErrorField} />
+      {!isValidField(f.serviceModels) && <FieldError text={getErrorField(f.serviceModels)} />}
 
-      {serviceInputsData.map((input) => <ServiceForm key={input.id} id={input.id} services={serviceInputsData} title={input.title} callback={setService} />)}
-
-      <div
-        className="btn btn-light add-btn" onClick={() => setServiceInputsData(prev => [
-          ...prev,
-          {id: serviceInputsData.length, title: '', price: 0}
-        ])}
-      >Add item</div>
-      <br />
-
-      <label className="input-label">
+      < label className="input-label">
         Type of services
         <Controller
           control={control}
@@ -174,7 +148,6 @@ const VendorServiceDetailsForm = ({ onCallback, onBack, onNext }) => {
           className="btn btn-accent w-100 m-t-24"
           style={{ flex: 1 }}
           disabled={!isValid}
-          // onClick={onNext}
         >Next</Button>
       </div>
     </form>

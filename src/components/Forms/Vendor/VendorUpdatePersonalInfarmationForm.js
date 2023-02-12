@@ -9,7 +9,13 @@ import { schemaVendorUpdatePersonalInformation } from "../../../validation/schem
 import f from "../../../validation/fieldName";
 import { allowerImageType } from "../../../utils/allowedFileTypes";
 import { FieldError } from "../../UI/FieldError";
-import { AuthContext } from "../../../context/AuthContext";
+import { useDispatch } from "react-redux";
+import { updateVendor } from "../../../Store/Actions/updateUser";
+import { replaceVendorPhoto } from "../../../Store/Actions/vendorPhotoAction";
+import { ModalContext } from "../../../context/ModalContext";
+import InputPasswordModal from "../../Modals/InputPasswordModal"
+import TextModal from "../../Modals/TextModal";
+import VendorService from "../../../services/VendorService"
 
 const VendorUpdatePersonalInfarmationForm = ({
   img,
@@ -20,16 +26,18 @@ const VendorUpdatePersonalInfarmationForm = ({
 }) => {
   const {
     register,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     handleSubmit,
     control,
+    resetField
   } = useForm({
     mode: "all",
     resolver: yupResolver(schemaVendorUpdatePersonalInformation()),
   });
 
-  const auth = useContext(AuthContext);
+  const modal = useContext(ModalContext)
 
+  const dispatch = useDispatch()
   const [src, setSrc] = useState(null);
 
   const addPhoto = (e) => {
@@ -46,26 +54,50 @@ const VendorUpdatePersonalInfarmationForm = ({
   const isValidField = (field) => !errors[field];
   const getErrorField = (field) => errors[field]?.message;
 
+  const handlePasswordInput = (password, data) => {
+    postChanges(data, password)
+  }
+
+  const postChanges = (data, password) => {
+    const updatedVendorFields = {
+      firstName: data.firstName,
+      surname: data.lastName,
+      phoneNumber: data.phone
+    }
+
+    let promises = [];
+    promises.push(dispatch(updateVendor(updatedVendorFields)))
+    if (data.avatar.length) {
+      promises.push(dispatch(replaceVendorPhoto(img.id, data.avatar)))
+    }
+    if (password) {
+      promises.push(VendorService.changeCredentials(data.email, password))
+    }
+
+    Promise.all(promises)
+      .then(() => {
+        modal.start()
+        modal.setContent(<TextModal text="Changes have been saved" />)
+      })
+      .catch((err) => {
+        console.log(err)
+        modal.start()
+        modal.setContent(<TextModal text={err.message} />)
+      })
+  }
+
   const onSubmit = (data) => {
-    auth.setUser({
-      ...auth.user,
-      profile: {
-        ...auth.user.profile,
-        ...data,
-        avatar: src || auth.user.profile.avatar,
-      },
-    });
+    if (data.email !== mail) {
+      modal.start()
+      modal.setContent(<InputPasswordModal handlePasswordInput={handlePasswordInput} vendor={data} />)
+    } else {
+      postChanges(data)
+    }
   };
 
   const removeAvatar = () => {
     setSrc(null);
-    auth.setUser({
-      ...auth.user,
-      profile: {
-        ...auth.user.profile,
-        avatar: null,
-      },
-    });
+    resetField(f.avatar)
   };
 
   return (
@@ -73,14 +105,14 @@ const VendorUpdatePersonalInfarmationForm = ({
       <h4>Personal Information</h4>
       <div className="photo-upload m-t-24">
         <div className="photo-upload__photo">
-          {(src || auth.user.profile.avatar) && (
+          {(src || img.name) && (
             <img
               className="photo-upload__img"
-              src={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${img}`}
+              src={src || `https://images-and-videos.fra1.digitaloceanspaces.com/images/${img.name}`}
               alt=""
             />
           )}
-          {!src && !auth.user.profile.avatar && <i className="icon-camera"></i>}
+          {!src && !img.name && <i className="icon-camera"></i>}
         </div>
         <label className="photo-upload__label">
           <Input
@@ -98,6 +130,7 @@ const VendorUpdatePersonalInfarmationForm = ({
           className="btn btn-photo-delete"
           disabled={!isValid}
           onClick={removeAvatar}
+          type="button"
         >
           Delete
         </Button>
@@ -133,6 +166,7 @@ const VendorUpdatePersonalInfarmationForm = ({
         label="Email"
         defaultValue={mail}
         register={register(f.email)}
+        name="email"
         error={getErrorField(f.email)}
         isValid={isValidField(f.email)}
       />
@@ -148,7 +182,7 @@ const VendorUpdatePersonalInfarmationForm = ({
         />
         {!isValidField(f.phone) && <FieldError text={getErrorField(f.phone)} />}
       </label>
-      <Button className="btn btn-accent m-t-8" disabled={!isValid}>
+      <Button className="btn btn-accent m-t-8" disabled={!isValid || !isDirty}>
         Save
       </Button>
     </form>

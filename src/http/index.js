@@ -1,21 +1,19 @@
 import axios from "axios"
 
 const $api = axios.create({
-  withCredentials: true,
   baseURL: process.env.REACT_APP_URL_TEST,
-  headers: { "Content-Type": "multipart/form-data" },
 })
 
-const $host = axios.create({
-  withCredentials: true,
-  baseURL: process.env.REACT_APP_URL_TEST,
-  headers: { "Content-Type": "multipart/form-data" },
-})
-
-// $api.interceptors.request.use(config => {
-//   config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`
-//   return config
+// const $host = axios.create({
+//   withCredentials: true,
+//   baseURL: process.env.REACT_APP_URL_TEST,
+//   headers: { "Content-Type": "multipart/form-data" },
 // })
+
+$api.interceptors.request.use(config => {
+  config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`
+  return config
+})
 
 // $api.interceptors.response.use(config => config, async error => {
 //   const originalRequest = error.config
@@ -32,4 +30,7 @@ const $host = axios.create({
 //   throw error
 // })
 
-export { $api, $host }
+export {
+  $api,
+  // $host 
+}

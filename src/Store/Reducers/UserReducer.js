@@ -11,7 +11,9 @@ import {
   LOGOUT,
   UPDATE_USER_START,
   UPDATE_USER_SUCCESS,
-  UPDATE_USER_FAILED
+  UPDATE_USER_FAILED,
+  CHANGE_CREDENTIALS_SUCCESS,
+  CHANGE_CREDENTIALS_FAILED
 } from "../types";
 
 const initialState = {
@@ -102,6 +104,21 @@ export default function userReducer(state = initialState, action) {
         error: action.payload,
       }
 
+    case CHANGE_CREDENTIALS_SUCCESS:
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          email: action.payload
+        }
+      }
+
+    case CHANGE_CREDENTIALS_FAILED:
+      return {
+        ...state,
+        error: action.payload
+      }
+
     case LOGOUT:
       return {
         ...state,
@@ -131,3 +148,6 @@ export const getCurrentUserFailed = (err) => ({ type: GET_CURRENT_USER_FAILED, p
 export const updateUserStart = () => ({ type: UPDATE_USER_START })
 export const updateUserSuccess = (user) => ({ type: UPDATE_USER_SUCCESS, payload: user })
 export const updateUserFailed = (err) => ({ type: UPDATE_USER_FAILED, payload: err })
+
+export const changeCredentialsSuccess = (email) => ({ type: CHANGE_CREDENTIALS_SUCCESS, payload: email })
+export const changeCredentialsFailed = (err) => ({ type: CHANGE_CREDENTIALS_FAILED, payload: err })

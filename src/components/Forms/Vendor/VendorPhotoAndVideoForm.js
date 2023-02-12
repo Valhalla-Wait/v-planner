@@ -127,7 +127,7 @@ const VendorPhotoAndVideoForm = ({ onCallback, onBack }) => {
         <Button
           className="btn btn-accent w-100 m-t-24"
           style={{ flex: 1 }}
-          disabled={!isValid}
+          disabled={!isValid || files.length == 0}
         >Next</Button>
       </div>
     </form>

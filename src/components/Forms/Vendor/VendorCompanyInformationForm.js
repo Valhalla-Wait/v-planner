@@ -161,11 +161,11 @@ const VendorCompanyInformationForm = ({ onCallback, onBack }) => {
         <div>
           <Input
             type="text"
-            placeholder="Country"
+            placeholder="County"
             label="County"
-            register={register(f.country)}
-            error={getErrorField(f.country)}
-            isValid={isValidField(f.country)}
+            register={register(f.county)}
+            error={getErrorField(f.county)}
+            isValid={isValidField(f.county)}
           />
         </div>
       </div>

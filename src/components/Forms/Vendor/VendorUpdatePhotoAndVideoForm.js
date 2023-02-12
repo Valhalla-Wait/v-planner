@@ -1,7 +1,14 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useDispatch, useSelector } from "react-redux"
+import { v4 as uuid } from 'uuid';
 import { AuthContext } from "../../../context/AuthContext"
+import { ModalContext } from "../../../context/ModalContext";
+import { addVendorPhoto } from "../../../Store/Actions/vendorPhotoAction";
+import { deleteVendorPhoto } from "../../../Store/Actions/vendorPhotoAction";
 import { allowerImageType, allowerVideoType } from "../../../utils/allowedFileTypes"
+import { checkFileType } from "../../../utils/checkFileType"
+import TextModal from "../../Modals/TextModal";
 import Button from "../../UI/Button"
 import Input from "../../UI/Input"
 
@@ -17,9 +24,14 @@ const VendorUpdatePhotoAndVideoForm = () => {
 
   const auth = useContext(AuthContext)
 
-  const [files, setFiles] = useState([])
-  const [readFiles, setReadFiles] = useState(auth.user.files)
-  const [firstRender, setFirstRender] = useState(true)
+  const modal = useContext(ModalContext)
+  const user = useSelector(user => user.userInfo.userData)
+  const photosAndVideos = user.vendorModel.photos.filter(el => el.type === "PHOTO_AND_VIDEOS")
+  const [files, setFiles] = useState(photosAndVideos)
+  const [newFiles, setNewFiles] = useState([])
+  const [filesToDelete, setFilesToDelete] = useState([])
+  const [filesToUpload, setFilesToUpload] = useState([])
+  const dispatch = useDispatch()
 
   const onDragStart = e => e.preventDefault()
   const onDragLeave = e => e.preventDefault()
@@ -27,37 +39,50 @@ const VendorUpdatePhotoAndVideoForm = () => {
 
   const onDrop = e => {
     e.preventDefault()
-    const sliceLength = readFiles.length - 10
-    if(!sliceLength) return
+    const sliceLength = files.length - 10
+    if (!sliceLength) return
     const result = [...e.dataTransfer.files].slice(0, -sliceLength)
-    setFiles(prev => [...prev, ...result])
+    result.forEach(file => readFile(file, result => {
+      setNewFiles(prev => [...prev, result])
+    }))
   }
 
   const addFiles = e => {
-    const sliceLength = readFiles.length - 10
-    if(!sliceLength) return
+    const sliceLength = files.length + newFiles.length - 10
+    if (!sliceLength) return
     const result = [...e.target.files].slice(0, -sliceLength)
-    setFiles(prev => [...prev, ...result])
+    result.forEach(file => {
+      const id = uuid();
+      setFilesToUpload(prev => [...prev, { id: id, file: file }])
+      readFile(id, file, result => {
+        setNewFiles(prev => [...prev, result])
+      })
+    })
+
   }
 
-  useEffect(() => {
-    if(!firstRender && readFiles.length < 10) setReadFiles([])
-    setFirstRender(false)
-    let count = 0
-    if(readFiles.length >= 10) return
-    files.forEach(file => readFile(file, result => {
-      if(count < 10){
-        setReadFiles(prev => [...prev, result])
-      }
-      count++
-    }))
-  }, [files])
+  // useEffect(() => {
+  //   if (!firstRender && readFiles.length < 10) {
+  //     console.log('files:', files)
+  //     setReadFiles([])
+  //   }
+  //   setFirstRender(false)
+  //   let count = 0
+  //   if (readFiles.length >= 10) return
+  //   files.forEach(file => readFile(file, result => {
+  //     if (count < 10) {
+  //       setReadFiles(prev => [...prev, result])
+  //     }
+  //     count++
+  //   }))
+  // }, [files])
 
-  const readFile = (file, callback) => {
-    if(file instanceof File){
+  const readFile = (id, file, callback) => {
+    if (file instanceof File) {
       const reader = new FileReader()
       reader.onload = function (e) {
         callback({
+          id: id,
           src: e.target.result,
           type: file.type.split("/")[0],
           name: file.name,
@@ -65,30 +90,27 @@ const VendorUpdatePhotoAndVideoForm = () => {
         })
       }
       reader.readAsDataURL(file)
-      return
     }
-    callback({
-      src: file.src,
-      type: file.type
-    })
   }
-  
-  const onSubmit = () => {
-    auth.setUser({
-      ...auth.user,
-      profile: {
-        ...auth.user.profile,
-        blocks: {
-          ...auth.user.profile.blocks,
-          files: !!readFiles.length
-        }
-      },
-      files: [...readFiles]
-    })
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    const promises = filesToUpload.map(item => dispatch(addVendorPhoto(item.file, "PHOTO_AND_VIDEOS")))
+    promises.push(...filesToDelete.map(id => dispatch(deleteVendorPhoto(id))))
+    Promise.all(promises)
+      .then(() => {
+        modal.start()
+        modal.setContent(<TextModal text="Changes have been saved" />)
+      })
+      .catch((err) => {
+        console.log(err)
+        modal.start()
+        modal.setContent(<TextModal text={err.message} />)
+      })
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} data-to="files">
+    <form onSubmit={onSubmit} data-to="files">
       <h4>Photo and Video</h4>
       <div className="m-t-24">
         <label
@@ -96,7 +118,7 @@ const VendorUpdatePhotoAndVideoForm = () => {
           onDragStart={onDragStart}
           onDragLeave={onDragLeave}
           onDragOver={onDragOver}
-          onDrop={readFiles.length < 10 ? onDrop : e => e.preventDefault()}
+          onDrop={files.length < 10 ? onDrop : e => e.preventDefault()}
         >
           <div className="file-upload__icon">
             <i className="icon-photo-add"></i>
@@ -109,24 +131,20 @@ const VendorUpdatePhotoAndVideoForm = () => {
             multiple
             accept={[...allowerImageType, ...allowerVideoType]}
             id="company_photos_and_videos"
-            register={{...register("company_photos_and_videos")}}
+            register={{ ...register("company_photos_and_videos") }}
             onInput={addFiles}
           />
         </label>
         <div className="file-upload__content">
           <div className="file-upload__list">
             {
-              readFiles.map((file, i) => (
+              files.map((file, i) => (
                 <div className="file-upload__item active" key={i}>
-                  { (file.type === "image") && <img className="file-upload__file" src={file.src} alt="" /> }
-                  { (file.type === "video") && <video className="file-upload__file" src={file.src}></video> }
+                  {(checkFileType(file.url) === "image") && <img className="file-upload__file" src={file.url} alt="" />}
+                  {(checkFileType(file.url) === "video") && <video className="file-upload__file" src={file.url}></video>}
                   <div className="file-upload__remove" onClick={() => {
-                    if(file.id){
-                      setReadFiles(readFiles.filter(_ => _.id !== file.id))
-                    }else{
-                      setReadFiles(readFiles.filter(_ => _.name !== file.name && _.size !== file.size))
-                      setFiles(files.filter(_ => _.name !== file.name && _.size !== file.size))
-                    }
+                    setFiles(prevState => prevState.filter(item => item.id !== file.id))
+                    setFilesToDelete(prev => [...prev, file.id])
                   }}>
                     <i className="icon-trash"></i>
                   </div>
@@ -134,7 +152,21 @@ const VendorUpdatePhotoAndVideoForm = () => {
               ))
             }
             {
-              readFiles.length < 10 && (
+              newFiles.map((file, i) => (
+                <div className="file-upload__item active" key={i}>
+                  {file.type.includes("image") && <img className="file-upload__file" src={file.src} alt="" />}
+                  {file.type.includes("video") && <video className="file-upload__file" src={file.src}></video>}
+                  <div className="file-upload__remove" onClick={() => {
+                    setNewFiles(prev => prev.filter(item => item.id !== file.id))
+                    setFilesToUpload(prev => prev.filter(item => item.id !== file.id))
+                  }}>
+                    <i className="icon-trash"></i>
+                  </div>
+                </div>
+              ))
+            }
+            {
+              files.length + newFiles.length < 10 && (
                 <div className="file-upload__item">
                   <label className="file-upload__plus" htmlFor="company_photos_and_videos"><i className="icon-times"></i></label>
                 </div>

@@ -21,7 +21,7 @@ import QuoteForm from "../pages/QuoteForm/QuoteForm";
 
 function VendorRouter({ vendorData }) {
 
-  const url = vendorData.vendorModel?.photos && vendorData.vendorModel.photos.find((obj => obj.type === "AVATAR")).name
+  const url = vendorData.vendorModel?.photos.length && vendorData.vendorModel.photos.find((obj => obj.type === "AVATAR")).name
   return (
     <Routes>
       <Route
