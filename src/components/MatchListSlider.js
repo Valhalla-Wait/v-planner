@@ -2,8 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import SwiperCore, { Navigation, Pagination, Virtual } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { AuthContext } from "../context/AuthContext";
-import { connect } from "react-redux";
-import { useSelector } from "react-redux";
+import { likeVendor } from "../Store/Actions/likeVendor"
+import { connect, useDispatch } from "react-redux";
 import axios from "axios"
 SwiperCore.use([Pagination, Navigation, Virtual]);
 
@@ -14,7 +14,7 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
   const token = localStorage.getItem('token')
   const prevRef = useRef(null);
   const nextRef = useRef(null);
-  const auth = useContext(AuthContext);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (swiperRef) {
@@ -25,25 +25,7 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
   }, []);
 
   const like = () => {
-    auth.setUser({
-      ...auth.user,
-      profile: {
-        ...auth.user.profile,
-        likes: {
-          ...auth.user.profile.likes,
-          users: {
-            ...auth.user.profile.likes.users,
-            [vendorId]: true,
-          },
-        },
-      },
-    });
-
-    axios({
-      method: "put",
-      url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorId}&status=true`,
-      headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${token}` },
-    }).then((res) => {
+    dispatch(likeVendor(vendorId, data)).then(() => {
       setVendorIndex((prevState) => prevState + 1)
     })
       .catch((err) => {
@@ -53,9 +35,6 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
   };
 
   const dislike = () => {
-    const user = auth.user;
-    delete auth.user.profile.likes.users[vendorId];
-    auth.setUser({ ...user });
     axios({
       method: "put",
       url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorId}&status=false`,
