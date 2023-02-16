@@ -1,10 +1,11 @@
 import {
-    GET_ALL_MESSAGES_FAILED, GET_ALL_MESSAGES_SUCCESS, GET_ALL_MESSAGES, GET_ALL_CHAT_MESSAGES_FAILED, GET_ALL_CHAT_MESSAGES_SUCCESS, GET_ALL_CHAT_MESSAGES, UPDATE_CHAT_MESSAGES_SUCCESS, UPDATE_CHAT_MESSAGES, UPDATE_CHAT_MESSAGES_FAILED,
+    GET_ALL_MESSAGES_FAILED, GET_ALL_MESSAGES_SUCCESS, GET_ALL_MESSAGES, GET_ALL_CHAT_MESSAGES_FAILED, GET_ALL_CHAT_MESSAGES_SUCCESS, GET_ALL_CHAT_MESSAGES, UPDATE_CHAT_MESSAGES_SUCCESS, UPDATE_CHAT_MESSAGES, UPDATE_CHAT_MESSAGES_FAILED, SELECT_CONNECT_CHAT, SET_CONNECT_CHAT, UNSET_CONNECT_CHAT,
 } from "../types";
 
 const initialState = {
     loading: false,
     chats: [],
+    chatConnect: false,
     error: null,
 };
 
@@ -84,6 +85,16 @@ export default function chatReducer(state = initialState, action) {
                 ],
                 loading:false,
                 error: action.payload.error
+            }
+        case SET_CONNECT_CHAT:
+            return {
+                ...state,
+                chatConnect: true
+            }
+        case UNSET_CONNECT_CHAT:
+            return {
+                ...state,
+                chatConnect: false
             }
 
         default:

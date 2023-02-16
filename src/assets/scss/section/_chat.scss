@@ -8,6 +8,22 @@
   }
 }
 
+.await-accept-quote {
+  color: #3EAF3F;
+  text-decoration: underline;
+}
+.declined-quote {
+  color: #EB2D24;
+  text-decoration: underline;
+}
+.err-chat-msg {
+  margin: 0 25%;
+}
+.quote-status {
+  font-weight: 600;
+  font-size: 14px;
+}
+
 .err-msg {
   font-size: 24px;
   text-align: center;
@@ -169,6 +185,7 @@
   &__actions{
     display: flex;
     margin: 0 -8px;
+    align-items: center;
   }
   &__action.quote{
     margin: 0 8px;

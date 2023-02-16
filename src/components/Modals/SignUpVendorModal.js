@@ -56,7 +56,7 @@ const SignUpVendorModal = () => {
     modal.destroy();
   };
 
-  console.log(step3)
+  console.log(step1)
 
   useEffect(() => {
     if (vendorData.id) {
@@ -101,6 +101,7 @@ const SignUpVendorModal = () => {
             <StepTab stepNumber={0} currentStep={step.currentStep}>
               <VendorPersonalInfarmationForm
                 onCallback={(data) => {
+                  console.log(data)
                   setStep1(data);
                   nextStep(1);
                 }}

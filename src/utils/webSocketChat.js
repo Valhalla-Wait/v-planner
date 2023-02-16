@@ -1,29 +1,26 @@
 var stompClient = null;
 
-export const connectToChat = async (userId, onMsgCallback) => {
-    // const headers = {
-    //     "Access-Control-Allow-Origin": "*"
-    //     // "Authorization": `Bearer ${token}`
-    // }
+export const connectToChat = async (userId, onMsgCallback, updateChat) => {
     const Stomp = require("stompjs");
     var SockJS = require("sockjs-client");
 
     SockJS = new SockJS("http://142.93.15.46:8080/ws");
     stompClient = Stomp.over(SockJS);
 
-    // console.log(headers)
-
-    // await stompClient.connect(JSON.stringify({'X-Authorization': `Bearer ${token}`}),  onConnected, onError);
-    await stompClient.connect({},  () => onConnected(userId, onMsgCallback), onError);
+    await stompClient.connect({},  () => onConnected(userId, onMsgCallback, updateChat), onError);
     
 };
-const onConnected = async (id, onMsgCallback) => {
+const onConnected = async (id, onMsgCallback, updateChat) => {
         await stompClient.subscribe(
             `/user/${id}/queue/messages`, onMsgCallback
         );
+        await updateChat()
         console.log("connected");
-
-    // sendMessage("hello 2",id,2,'Ivan','Mikhail')
+        // if (createRoomData) {
+        //     console.log(createRoomData)
+        //     await sendMessage('Room created', createRoomData.userId, Number(createRoomData.vendorId), createRoomData.userFirstName, createRoomData.vendorFirstName)
+        // }
+    
 };
 
 const onError = (err) => {
@@ -33,7 +30,7 @@ export const sendMessage = async (msg,senderId,recipientId,senderName,recipientN
     if (msg.trim() !== "") {
         const message = {
             senderId: senderId,
-            recipientId: recipientId,
+            recipientId: Number(recipientId),
             senderName:senderName,
             recipientName: recipientName,
             content: msg,

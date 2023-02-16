@@ -16,6 +16,7 @@ import { getDetailVendor } from "../Store/Actions/getVendorAction.js";
 import { connect } from "react-redux";
 import { getAllVendorsAction } from "../Store/Actions/GetAllVendors.js";
 import { getMessages as getMessagesAction } from "../Store/Actions/getAllMessages";
+import { connectToChat, sendMessage } from "../utils/webSocketChat";
 
 
 SwiperCore.use([Lazy, Virtual]);
@@ -365,8 +366,23 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
   // const [data, setData] = useState(dto.result[0]);
 
   const [vendorIndex, setVendorIndex] = useState(0);
-  const data = useSelector((state) => state.matchList.allVendors.result[vendorIndex])
-  console.log('data', data)
+
+  const currentUserData = useSelector(state => state.userInfo?.userData)
+  const likedVendors = useSelector((state) => state.myVendors.vendors)
+  const vendors = useSelector((state) => state.matchList.allVendors.result)
+  const allVendors = [...likedVendors, ...vendors]
+  const selectVendor = allVendors[vendorIndex]
+
+  useEffect(() => {
+    if (vendorIndex < 0) {
+      setVendorIndex(allVendors.length-1)
+    }
+    if (vendorIndex > allVendors.length-1) {
+      setVendorIndex(0)
+    }
+  }, [vendorIndex])
+
+  console.log(selectVendor,likedVendors)
   console.log('vendorIndex', vendorIndex)
 
   const [filterActive, setFilterActive] = useState(false);
@@ -427,7 +443,7 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
   console.log("all vendors",dto)
    useEffect(() => {
      getAll()
-     getMessages()
+    //  getMessages()
 
   }, [token]);
   // console.log("chatState after changing",chatState)
@@ -548,7 +564,7 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
             triggerStories={triggerStoriesSlide}
           />
         </div>
-        {data === undefined
+        {selectVendor === undefined
           ? <>MatchList is empty</>
           : <div className="matchlist__content content-matchlist">
             <div className="content-matchlist__wrapper">
@@ -559,10 +575,11 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
                       "Loading..."
                     ) : (
                       <MatchListSlider
-                        files={data?.photos}
-                        vendorId={data?.id}
+                        files={selectVendor?.photos}
+                        vendorData={selectVendor}
                         triggerStories={triggerStories}
-                        data={data}
+                        data={selectVendor}
+                        likedVendors={likedVendors}
                         setVendorIndex={setVendorIndex}
                       />
                     )}
@@ -574,27 +591,33 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
                   "Loading..."
                 ) : (
                   <>
-                    <h3 className="info-matchlist__title">{data?.companyTitle}</h3>
+                    <h3 className="info-matchlist__title">{selectVendor?.companyName}</h3>
                     <div className="info-matchlist__content">
-                      <div className="info-matchlist__price">{data?.price}</div>
+                      <div className="info-matchlist__price">{selectVendor?.price}</div>
                       <p className="info-matchlist__description">
-                        {data?.companyDescription}
+                        {selectVendor?.companyDescription}
                       </p>
                       <div className="info-matchlist__subtitle">Services</div>
                       {
-                        data?.services.map((service =>
+                        selectVendor?.services.map((service =>
                           <p className="italic">{service.name}</p>
                         ))
                       }
                       <div className="info-matchlist__subtitle">About</div>
-                      <p>{data?.aboutCompany}</p>
+                      <p>{selectVendor?.aboutCompany}</p>
                     </div>
                     <div className="info-matchlist__footer">
-                      {Object.keys(auth.user.profile.likes.users).length >= 10 && (
+                      {likedVendors.length >= 10 && (
                         <Button
                           className="btn btn-go-chat d-block w-100"
-                          onClick={() => {
-                            navigate(`/chat/${data?.id}`);
+                          onClick={async () => {
+                            // await connectToChat(currentUserData.id, () => console.log(`go chat with ${commonVendors?.firstName}`), {
+                            //   userId: currentUserData.id,
+                            //   vendorId: commonVendors?.id,
+                            //   userFirstName: currentUserData.firstName,
+                            //   vendorFirstName: commonVendors.firstName
+                            // })
+                            navigate(`/chat/${selectVendor?.userModel?.id}`);
                           }}
                         >
                           Go Chat
@@ -604,8 +627,8 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
                       <Button
                         className="btn btn-light d-block w-100"
                         onClick={() => {
-                          dispatch(getDetailVendor(data?.id));
-                          navigate(`/vendor/${data?.id}`);
+                          dispatch(getDetailVendor(selectVendor?.userModel?.id));
+                          navigate(`/vendor/${selectVendor?.userModel?.id}`);
                         }}
                       >
                         View Vendor

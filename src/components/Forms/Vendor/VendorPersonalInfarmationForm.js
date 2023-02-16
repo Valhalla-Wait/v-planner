@@ -30,16 +30,24 @@ const VendorPersonalInfarmationForm = ({ onCallback }) => {
       reader.onload = function (e) {
         setSrc(e.target.result)
       }
+      console.log(e.target.files[0])
       reader.readAsDataURL(e.target.files[0]);
     }
     setSrc(null)
   }
 
+  console.log(src)
+
   const isValidField = field => !errors[field]
   const getErrorField = field => errors[field]?.message
 
+  const testFunc = (e) => {
+    // debugger
+    console.log(e)
+  }
+
   return (
-    <form onSubmit={handleSubmit(onCallback)}>
+    <form onSubmit={handleSubmit(testFunc)}>
       <div className="photo-add">
         <label className="photo-add__label">
           <div className="photo-add__header">
@@ -52,7 +60,7 @@ const VendorPersonalInfarmationForm = ({ onCallback }) => {
             type="file"
             className="photo-add__input"
             accept={allowerImageType}
-            register={register(f.avatar)}
+            register={register(f.budget)}
             onInput={addPhoto}
           />
         </label>

@@ -25,10 +25,11 @@ const CabinetHeader = ({ name, image }) => {
 
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.userInfo);
-  const state = useSelector((state) => state.userInfo);
-
-  const { userInfo } = useSelector((state) => state);
-  // console.log("state in notlify",state)
+  const avatarUrl = useSelector((state) => {
+    if(state.vendorInfo.vendorData.id) return state.vendorInfo.vendorData.vendorModel.photos[0].url
+    if(state.userInfo.userData.id)return state.userInfo.userData.clientModel.photoModel.url
+    return null
+  });
   return (
     <header className="header header-shadow">
       <div className="container">
@@ -47,8 +48,8 @@ const CabinetHeader = ({ name, image }) => {
             >
               <div className="nav-header__text">Hi, {name}!</div>
               <div className="nav-header__icon border">
-                {auth.user.profile.avatar ? (
-                  <img src={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${image}`} alt="Avatar" />
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="Avatar" />
                 ) : (
                   <i className="icon-camera"></i>
                 )}

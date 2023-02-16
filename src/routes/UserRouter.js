@@ -17,6 +17,7 @@ import VendorList from "../pages/VendorList";
 import VendorItem from "../pages/VendorItem";
 import UserChat from "../pages/Chat/UserChat";
 import { connect } from "react-redux";
+import Quote from "../pages/Quote/Quote";
 
 function UserRouter({ token, userDto, loading, chat }) {
   const auth = useContext(AuthContext);
@@ -50,6 +51,7 @@ function UserRouter({ token, userDto, loading, chat }) {
           <Route path="/faq" element={<Faq />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Route>
+        <Route path="/quote" element={<Quote />} />
         <Route path="/account" element={<AccountPageLayout />}>
           <Route path="/account" element={<UserAccount />} />
           <Route path="/account/:id" element={<UserAccount />} />

@@ -3,11 +3,13 @@ import SwiperCore, { Navigation, Pagination, Virtual } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { AuthContext } from "../context/AuthContext";
 import { connect } from "react-redux";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios"
+import { sendMessage } from "../utils/webSocketChat";
+import { getLikedVendors } from "../Store/Actions/getLikedVendors";
 SwiperCore.use([Pagination, Navigation, Virtual]);
 
-const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendorIndex }) => {
+const MatchListSlider = ({ files = [], vendorData, triggerStories, data, setVendorIndex, likedVendors }) => {
   const [swiperRef, setSwiperRef] = useState(null);
   // const [flagLast, setFlagLast] = useState(false)
   // const [flagFirst, setFlagFirst] = useState(true)
@@ -16,6 +18,9 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
   const nextRef = useRef(null);
   console.log("props in slider", files, data)
   const auth = useContext(AuthContext);
+  const dispatch = useDispatch()
+
+  console.log(auth.user.profile.likes)
 
   useEffect(() => {
     if (swiperRef) {
@@ -25,7 +30,7 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
     }
   }, []);
 
-  const like = () => {
+  const like = async () => {
     auth.setUser({
       ...auth.user,
       profile: {
@@ -34,15 +39,15 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
           ...auth.user.profile.likes,
           users: {
             ...auth.user.profile.likes.users,
-            [vendorId]: true,
+            [vendorData.userModel.id]: true,
           },
         },
       },
     });
 
-    axios({
+    await axios({
       method: "put",
-      url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorId}&status=true`,
+      url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorData.id}&status=true`,
       headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${token}` },
     }).then((res) => {
       setVendorIndex((prevState) => prevState + 1)
@@ -51,16 +56,19 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
       .catch((err) => {
         console.log(err)
       })
+
+    dispatch(getLikedVendors())
+
     triggerStories();
   };
 
   const dislike = () => {
     const user = auth.user;
-    delete auth.user.profile.likes.users[vendorId];
+    delete auth.user.profile.likes.users[vendorData.userModel.id];
     auth.setUser({ ...user });
     axios({
       method: "put",
-      url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorId}&status=false`,
+      url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorData.id}&status=false`,
       headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${token}` },
     }).then((res) => {
       setVendorIndex((prevState) => prevState + 1)
@@ -98,9 +106,10 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
         <SwiperSlide key={file.id} virtualIndex={idx}>
           <img src={`https://images-and-videos.fra1.digitaloceanspaces.com/images/${file.name}`} alt="" />
           <div className="slider-matchlist__actions">
-            <div className="slider-matchlist__like" onClick={like}>
+            {!likedVendors.find((v) => v.id === vendorData.id) && <div className="slider-matchlist__like" onClick={like}>
               <i className="icon-like"></i>
-            </div>
+            </div>}
+            
             <div className="slider-matchlist__times" onClick={dislike}>
               <i className="icon-times"></i>
             </div>
@@ -110,14 +119,15 @@ const MatchListSlider = ({ files = [], vendorId, triggerStories, data, setVendor
       <div
         className="slider-matchlist__prev"
         // onClick={prevStoriesSlide}
-        ref={prevRef}
+        onClick={() => setVendorIndex((prevState) => prevState - 1)}
       >
         <i className="icon-arrow"></i>
       </div>
       <div
         className="slider-matchlist__next"
         // onClick={nextStoriesSlide}
-        ref={nextRef}
+        // ref={nextRef}
+        onClick={() => setVendorIndex((prevState) => prevState + 1)}
       >
         <i className="icon-arrow"></i>
       </div>

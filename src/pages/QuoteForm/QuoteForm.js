@@ -3,31 +3,45 @@ import { QuoteLightButton } from "../../components/Quote/QuoteDeclineButton";
 import { QuoteFormInput } from "../../components/QuoteForm/QuoteFormInput";
 import Input from "../../components/UI/Input";
 import { allowerImageType } from "../../utils/allowedFileTypes";
-import { useState } from "react";
-import { Link, Navigate } from "react-router-dom"
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
+import Select from 'react-select'
 import axios from "axios";
 import Button from "../../components/UI/Button";
+import { setCurrentQuote } from "../../Store/Actions/quoteActions";
 
 export default function QuoteForm() {
+
+  const dispatch = useDispatch()
 
   const [src, setSrc] = useState(null);
 
   const service = useSelector(state => state.vendorInfo.vendorData.vendorModel.services)[0].name
   const { token } = useSelector((state) => state.vendorInfo);
+  const services = useSelector((state) => state.vendorInfo.vendorData.vendorModel.services)
 
+  const [selectedServices, setSelectedServices] = useState([])
+  const { id } = useParams()
+
+  useEffect(() => setOffers(), [selectedServices])
+
+  
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     services: [
-      {
-        name: service,
-        price: 0
-      }
+      // {
+      //   name: service,
+      //   price: 0,
+      //   type: 'main'
+      // }
     ],
-    clientId: 2,
-    quoteNumber: 228,
-    comment: 'some comment',
+    logo: null,
+    clientId: Number(id),
+    quoteNumber: 0,
+    comment: '',
     createDate: new Date().toLocaleString("sv-SE", {
       year: 'numeric',
       month: 'numeric',
@@ -38,13 +52,42 @@ export default function QuoteForm() {
     })
   })
 
+  // useEffect(() => {
+
+  // }, [])
+
+  // const getClientId = async () => {
+  //   const client = await axios({
+  //     method: "get",
+  //     url: `${process.env.REACT_APP_API_URL}/clients/getById?id=${id}`,
+  //      headers: {Authorization: `Bearer ${token}` },
+  //   })
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     clientId: client?.clientModel?.id
+  //   }))
+  // }
+  
+  console.log('formdata', formData)
+
   // const [vendorServices, setVendorServices] = useState(services.map(s => ({value: s.name, label: s.name})))
+
+  const [offerData, setOfferData] = useState([
+    {id: 0, title: '', price: 0, type: 'main'},
+    {id: 1, title: '', price: 0, type: 'optional'}
+  ])
 
   const sendQuote = async () => {
 
     try {
-
-
+      dispatch(setCurrentQuote({
+        ...formData,
+        logo: src,
+        createDate: new Date(),
+        isPreview: true
+      }))
+      setOffers()
+      console.log(formData)
       const reqBody = new FormData();
 
       const json = JSON.stringify(formData)
@@ -53,16 +96,17 @@ export default function QuoteForm() {
       });
 
       reqBody.append("createQuoteModel",blob);
-      reqBody.append("logo", src);
+      reqBody.append("logo", formData.logo);
 
-      const chatRoomData = await axios({
+      const createQuote = await axios({
         method: "post",
         url: `${process.env.REACT_APP_API_URL}/quotes/save`,
         data: reqBody,
         headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
       })
-  
-      alert(chatRoomData)
+  console.log(reqBody)
+      // alert(createQuote)
+      // console.log(reqBody)
     } catch (e) {
       console.log(e)
     }
@@ -104,30 +148,68 @@ export default function QuoteForm() {
     }))
   }
 
-  const setPrice = (e) => {
+  // const setPrice = (e) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     services: [
+  //       {
+  //         name: service,
+  //         price: e
+  //       }
+  //     ]
+  //   }))
+  // }
+
+  const setOffers = () => {
     setFormData(prev => ({
       ...prev,
       services: [
-        {
-          name: service,
-          price: e
-        }
+        ...selectedServices
       ]
     }))
   }
 
-  const setOptionalOffer = (e) => {
+  const setQuoteNumber = (number) => {
     setFormData(prev => ({
       ...prev,
-      title: [
-        ...prev.optionalOffers,
-        {
-          id: 2,
-          name: 'asd2',
-        }
-      ]
+      quoteNumber: Number(number)
     }))
   }
+
+  const setComment = (text) => {
+    setFormData(prev => ({
+      ...prev,
+      comment: text
+    }))
+  }
+
+  // const setMainOffer = (service) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     services: [
+  //       ...prev.services,
+  //       {
+  //         id: service.id,
+  //         name:  service.name,
+  //         type: 'main'
+  //       }
+  //     ]
+  //   }))
+  // }
+
+  // const setOptionalOffer = (service) => {
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     services: [
+  //       ...prev.services,
+  //       {
+  //         id: service.id,
+  //         name: service.name,
+  //         type: 'optional'
+  //       }
+  //     ]
+  //   }))
+  // }
 
   const addPhoto = (e) => {
     if (e.target.files && e.target.files.length) {
@@ -135,20 +217,23 @@ export default function QuoteForm() {
       reader.onload = function (e) {
         setSrc(e.target.result);
       };
+      setFormData(prev => ({
+        ...prev,
+        logo: e.target.files[0]
+      }))
       reader.readAsDataURL(e.target.files[0]);
     }
+    // debugger
     setSrc(null);
   };
 
   console.log(src)
-
   return (
     <div className="quote-form">
 
       <div className="section-title">
         Offer
       </div>
-
       <div className="quote-form_logo">
         <div className="photo-add">
           <label className="photo-add__label">
@@ -159,62 +244,95 @@ export default function QuoteForm() {
                 <i className="icon-camera"></i>
               )}
             </div>
+            <div className="photo-add__title">Add Logotype</div>
             <Input
               type="file"
               className="photo-add__input"
               accept={allowerImageType}
-              onInput={addPhoto}
+              onInput={(e) => {
+                addPhoto(e)
+                console.log(e)
+              }}
             />
           </label>
         </div>
-        <QuoteLightButton title="Upload New Logo" />
+        {/* <QuoteLightButton title="Upload New Logo" />
         <button className="delete-logo-btn" onClick={() => setSrc(null)}>
           Delete
-        </button>
+        </button> */}
       </div>
 
+      <Input label="Quote number" isValid placeholder="number" onChange={(e) => setQuoteNumber(e.currentTarget.value)} />
+
       {/* <QuoteFormInput on title="Title" /> */}
-      <Input label="Title" placeholder="text" onChange={(e) => setTitle(e.currentTarget.value)} />
+      <Input label="Title" isValid placeholder="text" onChange={(e) => setTitle(e.currentTarget.value)} />
 
       {/* <QuoteFormInput title="Description" /> */}
-      <Input label="Description" placeholder="text" onChange={(e) => setDesc(e.currentTarget.value)} />
+      <Input label="Description" isValid placeholder="text" onChange={(e) => setDesc(e.currentTarget.value)} />
+
+      <Input label="Comment" isValid placeholder="text" onChange={(e) => setComment(e.currentTarget.value)} />
 
       <div className="section-title">
         Main Offer
       </div>
-
-      <div className="offer-input">
+      {offerData.map(offer => {
+              if(offer.type === 'main') {
+                return <div key={offer.id} className="offer-input">
+                <QuoteFormInput key={offer.id} title="Main Offer" value={service} isOffer offerCallback={setSelectedServices} selectedServices={selectedServices}/>
+            </div>
+              }
+            })}
+      {/* <div className="offer-input">
         <QuoteFormInput title="Main Offer" onCallback={setPrice} value={service} isOffer />
-      </div>
+      </div> */}
 
-      {/* <div className="add-btn-conteiner">
-                <QuoteLightButton title="Add Offer"/>
-            </div> */}
+      <div className="add-btn-conteiner">
+                <QuoteLightButton callback={() => setOfferData(prev => [
+          ...prev,
+          {id: offerData.length, title: '', price: 0, type: 'main'}
+        ])} title="Add Offer"/>
+            </div>
 
 
-      {/* <div className="section-title">
+      <div className="section-title">
                 Optional
             </div>
 
-            <div className="offer-input">
-                <QuoteFormInput title="Optional" isOffer />
+            
+            {offerData.map(offer => {
+              if(offer.type === 'optional') {
+                return <div key={offer.id} className="offer-input">
+                <QuoteFormInput key={offer.id} title="Optional" value={service} isOffer offerCallback={setSelectedServices} selectedServices={selectedServices}/>
             </div>
+              }
+            })}
+            {/* <div className="offer-input">
+                <QuoteFormInput title="Optional" isOffer />
+            </div> */}
             
             <div className="add-btn-conteiner">
-            <QuoteLightButton title="Add Optional"/>
-            </div> */}
+            <QuoteLightButton callback={() => setOfferData(prev => [
+          ...prev,
+          {id: offerData.length, title: '', price: 0, type: 'optional'}
+        ])} title="Add Optional"/>
+            </div>
 
-<Button onClick={sendQuote}>Отправитьсмету</Button>
-      <Link to="/quote">
+{/* <Button onClick={sendQuote}>Отправитьсмету</Button> */}
+      {/* <Link to={`/quote`}> */}
         <QuoteBlueButton onClick={sendQuote} title="Save" />
-      </Link>
+      {/* </Link> */}
 
 
-      <Link to="/quote">
+      <Link to={`/quote`} onClick={() =>
+        dispatch(setCurrentQuote({
+          ...formData,
+          logo: src,
+          createDate: new Date(),
+          isPreview: true
+        }))
+      }>
         <QuoteLightButton title="Preview" />
       </Link>
-
-
     </div>
   )
 }

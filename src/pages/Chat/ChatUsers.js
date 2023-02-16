@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import Loader from "../../components/UI/Loader/Loader"
 import { getMessages } from "../../Store/Actions/getAllMessages"
 import { sendMessage } from "../../utils/webSocketChat"
 
@@ -8,14 +9,16 @@ export default function ChatUsers({ onCallback }) {
   const navigate = useNavigate()
 
   const users = useSelector(state => state.chat.chats)
+  const loading = useSelector(state => state.chat.loading)
 
   console.log('USERS IN CHAT', users)
 
   return (
     <div className="user-sidebar-chat__list">
+      {(!loading && users.length === 0) && <div className="err-chat-msg">Chats not found</div>}
       {
-        !users || users.length === 0 ? 
-        'Chats not found'
+        loading ? 
+        <Loader />
         :
         users.map(user => (
           <div className="user-sidebar-chat__item" key={user.id} onClick={() => {

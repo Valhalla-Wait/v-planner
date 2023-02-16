@@ -19,18 +19,22 @@ a>button {
 .quote-form_logo {
     gap: 17px;
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    align-items: center;
-    justify-items: start;
 }
 
 .photo-add {
     margin-bottom: 0 !important;
 }
 
+.add-btn-conteiner {
+    margin-bottom: 16px;
+}
+
 .text-input {
-    display: flex;
+    width: 352px;
+    display: grid;
     gap: 16px;
+    grid-template-columns: 3fr 1fr;
+    align-items: start;
     &__conteiner {
         display: grid;
         width: 100%;

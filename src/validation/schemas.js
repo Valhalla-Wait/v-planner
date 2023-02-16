@@ -3,6 +3,7 @@ import { allowerImageType, allowerVideoType } from "../utils/allowedFileTypes"
 import { regexpEmail } from "../utils/regexp"
 import e from "./fieldError"
 import f from "./fieldName"
+import {quoteFormField} from "./quoteFormField"
 
 yup.setLocale({
   mixed: {
@@ -67,6 +68,26 @@ export const schemaUserSignUp = () => yup.object().shape({
   [f.confirmPassword]: yup.string().typeError(e.string).oneOf([yup.ref(f.password), null], e.password),
 })
 
+//Quote create schemas
+
+export const schemaQuoteCreate = () => yup.object().shape({
+  [quoteFormField.logo]: yup.mixed()
+  .test(f.file.required, e.file.required,
+    value => value.length
+  )
+  .test(f.file.size, e.file.size(1),
+    value => value.length && value[0].size <= 1 * 1000 * 1024
+  )
+  .test(f.file.format, e.file.format(allowerImageType),
+    value => value.length && allowerImageType.includes(value[0].type)
+  ),
+  [quoteFormField.quoteNumber]: yup.number().typeError(e.number.default).required().positive(),
+  [quoteFormField.title]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
+  [quoteFormField.description]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
+  [quoteFormField.comment]: yup.string().typeError(e.string).required().min(2, e.min(2)).max(20, e.max(20)),
+  [quoteFormField.mainServieces]: yup.mixed().required(),
+  [quoteFormField.optionServices]: yup.mixed().required(),
+})
 
 // User update schemas
 export const schemaUserUpdatePersonalInformation = () => yup.object().shape({

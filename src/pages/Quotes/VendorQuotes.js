@@ -1,65 +1,33 @@
 import React, { Fragment, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Button from "../../components/UI/Button"
 import useDevice from "../../hooks/useDevice"
 import { getQuotes } from "../../Store/Actions/getAllQuotes"
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { quoteStatuses } from "../../Store/Actions/quoteActions"
+import { getFormateDate, listMonths } from "../../utils/getFormatDate"
 
-function VendorQuotes({getQuotes, quotesList}) {
+function VendorQuotes({quotesList}) {
 
-  const token = useSelector(state => state.userInfo.token)
+  const ordersList = useSelector(state => {
+    if(state.quotes.quotesList) {
+      return state.quotes.quotesList.filter((quote) => quote.status === quoteStatuses.NEW.value || quote.status === quoteStatuses.VIEWED.value)
+    }else{ 
+      return null
+    }
+  })
+
+  const [orders, setOrders] = useState([])
+
+  if((ordersList && ordersList.length) && !orders.length) setOrders(ordersList)
+
+  const dispatch = useDispatch()
+
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
-    if(token) getQuotes(token)
+    if(token) dispatch(getQuotes(token))
   }, [])
-
-
-  console.log(quotesList)
-
-  const [quotes, setQuotes] = useState()
-
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      company: {id: 1, name: "Vendor", type: "Wedding Bakey", avatar: "/assets/images/vendor.png"},
-      services: [{title: "Service Name", price: 5000}],
-      date: "Dec 10, 2022",
-      price: 10000,
-      status: 4
-    },
-    {
-      id: 2,
-      company: {id: 1, name: "Vendor", type: "Wedding Bakey", avatar: "/assets/images/vendor.png"},
-      services: [{title: "Service Name", price: 1000}, {title: "Service Name", price: 3000}],
-      date: "Dec 10, 2022",
-      price: 10000,
-      status: 3
-    },
-    {
-      id: 3,
-      company: {id: 1, name: "Vendor", type: "Wedding Bakey", avatar: "/assets/images/vendor.png"},
-      services: [{title: "Service Name", price: 2000}, {title: "Service Name", price: 8000}, {title: "Service Name", price: 2500}, {title: "Service Name", price: 3000}, {title: "Service Name", price: 5500}, {title: "Service Name", price: 500}, {title: "Service Name", price: 10000}, {title: "Service Name", price: 15000}, {title: "Service Name", price: 6300}, {title: "Service Name", price: 4700}],
-      date: "Dec 10, 2022",
-      price: 10000,
-      status: 3
-    },
-    {
-      id: 4,
-      company: {id: 1, name: "Vendor", type: "Wedding Bakey", avatar: "/assets/images/vendor.png"},
-      services: [{title: "Service Name", price: 1000}, {title: "Service Name", price: 3000}],
-      date: "Dec 10, 2022",
-      price: 10000,
-      status: 4
-    },
-    {
-      id: 5,
-      company: {id: 1, name: "Vendor", type: "Wedding Bakey", avatar: "/assets/images/vendor.png"},
-      services: [{title: "Service Name", price: 2000}, {title: "Service Name", price: 500}, {title: "Service Name", price: 800}, {title: "Service Name", price: 7100}],
-      date: "Dec 10, 2022",
-      price: 10000,
-      status: 3
-    }
-  ])
 
   const navigate = useNavigate()
   const device = useDevice()
@@ -118,7 +86,7 @@ function VendorQuotes({getQuotes, quotesList}) {
             <div className="table__header"></div>
           </div>
           {
-            orders.map(order => (
+            orders && orders.map(order => (
               <Fragment  key={order.id}>
                 <div className={ order.open ? "table__row active" : "table__row" }>
                   <div className="table__cell cell-arrow">
@@ -132,32 +100,34 @@ function VendorQuotes({getQuotes, quotesList}) {
                   <div className="table__cell cell-company">
                     <div className="cell-company__content">
                       <div className="cell-company__img">
-                        <img src={order.company.avatar} alt={order.company.name} />
+                        <img src={order.client.clientModel.photoModel.url} alt={order.client.firstName} />
                       </div>
                       <div className="cell-company__info">
-                        <div className="cell-company__name">{ order.company.name }</div>
+                        <div className="cell-company__name">{ order.client.firstName } {order.client.surname}</div>
                       </div>
                     </div>
                   </div>
                   <div className="table__cell cell-service">
-                    <div className="cell-service__content">{ order.services.length } Services</div>
+                    <div className="cell-service__content">{ order.selectedServices.length } Services</div>
                   </div>
                   <div className="table__cell cell-date">
-                    <div className="cell-date__content">{ order.date }</div>
+                    <div className="cell-date__content">{ getFormateDate(order.createDate, listMonths) }</div>
                   </div>
                   <div className="table__cell cell-price">
-                    <div className="cell-price__content">{ order.price }$</div>
+                    <div className="cell-price__content">{ order.selectedServices.reduce((sum, service) => sum + service.price, 0) }$</div>
                   </div>
                   <div className="table__cell cell-status">
                     <div className="cell-status__content">
-                      <span className={ statusData[order.status].class }>{ statusData[order.status].title }</span>
+                      <span className={ quoteStatuses[order.status].class }>{ quoteStatuses[order.status].title }</span>
                     </div>
                   </div>
                   <div className="table__cell cell-chat">
-                    <div className="cell-chat__content">
-                      <i className="icon-chat-outline"></i>
-                      <span className="cell-chat__text">Chat</span>
-                    </div>
+                  <Link to={`/chat/${order.client.id}`}>
+                      <div className="cell-chat__content">
+                        <i className="icon-chat-outline"></i>
+                        <span className="cell-chat__text">Chat</span>
+                      </div>
+                    </Link>
                   </div>
                 </div>
                 <div className="table__row">
@@ -165,15 +135,15 @@ function VendorQuotes({getQuotes, quotesList}) {
                   <div className="table__cell"></div>
                   <div className="table__cell">
                     {
-                      device.isMobile && <div className="cell-service__text">{ order.services.length } Services</div>
+                      device.isMobile && <div className="cell-service__text">{ order.selectedServices.length } Services</div>
                     }
                     {
-                      order.services.map((service, idx) => <div className="cell-service__text" key={idx}>{service.title}</div>)
+                      order.selectedServices.map((service, idx) => <div className="cell-service__text" key={idx}>{service.name}</div>)
                     }
                   </div>
                   <div className="table__cell">
                     {
-                      device.isMobile && <div className="cell-date__text">{ order.date }</div>
+                      device.isMobile && <div className="cell-date__text">{ getFormateDate(order.createDate, listMonths) }</div>
                     }
                   </div>
                   <div className="table__cell">
@@ -181,7 +151,7 @@ function VendorQuotes({getQuotes, quotesList}) {
                       device.isMobile && <div className="cell-price__text">{ order.price }$</div>
                     }
                     {
-                      order.services.map((service, idx) => <div className="cell-price__text" key={idx}>{service.price}$</div>)
+                      order.selectedServices.map((service, idx) => <div className="cell-price__text" key={idx}>{service.price}$</div>)
                     }
                   </div>
                   <div className="table__cell"></div>
@@ -204,10 +174,4 @@ const mapStateToProps = function (state) {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return{
-    getQuotes: () => dispatch(getQuotes())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(VendorQuotes);
+export default connect(mapStateToProps)(VendorQuotes);

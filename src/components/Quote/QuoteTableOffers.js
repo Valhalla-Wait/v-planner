@@ -1,13 +1,27 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { numberWithCommas } from "../../utils/numberWithCommas"
 import { QuoteCheckBox } from "./QuoteCheckBox"
 import { QuoteRadioButton } from "./QuoteRadioButton"
 
 export const QuoteTableOffers = ({ optional, offers, setTotal }) => {
-    const [mainOfferActive, setMainOfferActive] = useState(1)
+
+    const [mainOfferActive, setMainOfferActive] = useState(offers.length && !optional ? offers[0].id : 0)
     const [checkBoxToggle, setCheckBoxToggle] = useState([])
 
-    console.log(checkBoxToggle)
+    useEffect(() => {
+        // console.log(offers.find(offer => offer.id === mainOfferActive))
+        // debugger
+        setTotal((prev) => {
+            const findMainOffer = offers.find(offer => offer.id === mainOfferActive)
+            if(findMainOffer) {
+                return findMainOffer.price
+            }else{
+                return prev
+            }
+        })
+    }, [mainOfferActive])
+
+    console.log(mainOfferActive)
     return (
         <table className="grid-table">
             <tr className="grid-table__title">
@@ -30,23 +44,25 @@ export const QuoteTableOffers = ({ optional, offers, setTotal }) => {
                 <tr key={offer.id} className="inside-light-line">
                     <td className="first">
                             {optional ?
-                                <QuoteCheckBox offerId={offer.id} offerPrice={offer.unitPrice} offersActive={checkBoxToggle} setOffer={setCheckBoxToggle} setTotal={setTotal} />
+                                <QuoteCheckBox offerId={offer.id} offerPrice={offer.price} offersActive={checkBoxToggle} setOffer={setCheckBoxToggle} setTotal={setTotal} />
                             :
-                                <QuoteRadioButton offerId={offer.id} offerPrice={offer.unitPrice} offerActive={mainOfferActive} setOffer={setMainOfferActive} setTotal={setTotal} />
+                                <QuoteRadioButton offerId={offer.id} offerPrice={offer.price} offerActive={mainOfferActive} setOffer={setMainOfferActive} setTotal={setTotal} />
                             }
                     </td>
                     <td className="grid-table__content second">
-                        <div className="grid-table__content-title">{offer.title}</div>
-                        <div className="grid-table__content-desc">{offer.description}</div>
+                        <div className="grid-table__content-title">{offer.name}</div>
+                        {/* <div className="grid-table__content-desc">{offer.description}</div> */}
                     </td>
                     <td className="third">
-                        {offer.qty}
+                        {/* {offer.qty} */}
+                        1
                     </td>
                     <td className="fourth price">
-                        ${numberWithCommas(offer.unitPrice)}
+                        ${numberWithCommas(offer.price)}
                     </td>
                     <td className="fifth price amount">
-                        ${numberWithCommas(offer.qty * offer.unitPrice)}
+                        {/* ${numberWithCommas(offer.qty * offer.price)} */}
+                        ${numberWithCommas(offer.price)}
                     </td>
                 </tr>
             )}

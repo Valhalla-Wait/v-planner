@@ -1,11 +1,11 @@
 export const QuoteRadioButton = ({offerId, offerPrice, offerActive, setOffer, setTotal}) => {
     const btnHandler = () => {
         
-        setTotal(prev => prev + offerPrice)
+        setTotal(offerPrice)
         setOffer(offerId)
     }
     return (
-        <button onClick={() => setOffer(offerId)}>
+        <button onClick={btnHandler}>
             {offerActive === offerId ?
                 <img src="./assets/images/icon/radio-active.svg" />
                 :

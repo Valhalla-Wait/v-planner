@@ -8,22 +8,29 @@ export default function ChatHistory({ messages, user, currentUser }) {
     
   // }
 
-  // const findMsg = messages.findIndex((m) => m.content == "createRoom")
 
   const chats = useSelector(state => state.chat.chats)
 
   const currentChatMessages = chats.find((chat) => chat.id === user.id)?.messageHistory
 
-  // if(findMsg !== -1) {
-  //   messages.splice(findMsg, 1)
-  // }
+  const filterServiceMessages = currentChatMessages.filter((msg) => msg.message !== 'Room created')
+  const serviceMessages = currentChatMessages.filter((msg) => msg.message === 'Room created')
+  filterServiceMessages.unshift(serviceMessages[0])
+  // useEffect(() => {
+  //   const findMsg = messages.findIndex((m) => m.content == "createRoom")
+  //   if(findMsg !== -1) {
+  //     messages.splice(findMsg, 1)
+  //   }
+  // })
 
   console.log(currentUser,user)
-  console.log("MESAGES", messages)
+  console.log("MESAGES", currentChatMessages)
 
   const auth = useContext(AuthContext)
 
   console.log("AUTH USER", auth)
+
+  const currentUserAvatar = currentUser.clientModel ? currentUser.clientModel?.photoModel?.url : currentUser.vendorModel?.photos[0].url
 
   const serviceMessage = ({ id, message }) => {
     return <div className="message-body-chat__service" key={id}>{ message }</div>
@@ -33,7 +40,7 @@ export default function ChatHistory({ messages, user, currentUser }) {
     return (
       <div className="message-body-chat__user" key={id}>
         <div className="message-body-chat__avatar">
-          <img src={ isRecipient ? user.avatar : auth.user.profile.avatar } alt="Vendor" />
+          <img src={ isRecipient ? user.avatar : currentUserAvatar } alt="Vendor" />
         </div>
         <div className="message-body-chat__info">
           <div className="message-body-chat__name">{ isRecipient ? `${user.firstName}` : `${currentUser.firstName}` }</div>
@@ -48,7 +55,7 @@ export default function ChatHistory({ messages, user, currentUser }) {
     return (
       <div className="message-body-chat__user" key={id}>
         <div className="message-body-chat__avatar">
-          <img src={ isRecipient ? user.avatar : auth.user.profile.avatar } alt="Vendor" />
+          <img src={ isRecipient ? user.avatar : user.avatar} alt="Vendor" />
         </div>
         <div className="message-body-chat__info">
           <div className="message-body-chat__name">{ isRecipient ? user.name : `${auth.user.profile.firstName} ${auth.user.profile.lastName}` }</div>
@@ -76,13 +83,13 @@ export default function ChatHistory({ messages, user, currentUser }) {
       top: history.scrollHeight,
       behavior: "smooth"
     })
-  }, [currentChatMessages])
+  }, [filterServiceMessages])
   
 
   return (
     <div className="body-chat__message message-body-chat">
       {
-        currentChatMessages.map(message => types[message.type](message))
+        filterServiceMessages && filterServiceMessages.map(message => types[message.type](message))
       }
     </div>
   )

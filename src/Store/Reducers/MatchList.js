@@ -83,7 +83,7 @@ const initialState = {
       },
     ],
   },
-
+  likedVendors: [],
   detailLoading: false,
   error: null,
 };

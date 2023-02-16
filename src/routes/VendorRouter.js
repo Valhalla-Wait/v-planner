@@ -50,7 +50,7 @@ import QuoteForm from "../pages/QuoteForm/QuoteForm";
           <Route path="/history" element={<VendorHistory />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/chat" element={<VendorChat />} />
-          <Route path="/quote-form" element={<QuoteForm />} />
+          <Route path="/quote-form/:id" element={<QuoteForm />} />
           <Route path="/chat/:id" element={<VendorChat />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Route>

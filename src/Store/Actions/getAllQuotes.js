@@ -8,7 +8,7 @@ export const getQuotes = (token) => {
         axios({
             method: "get",
             url: `${process.env.REACT_APP_API_URL}/quotes/get-all`,
-            headers: { "Content-Type": "multipart/form-data",Authorization:`Bearer ${token}`},
+            headers: { "Content-Type": "multipart/form-data",Authorization:`Bearer ${localStorage.getItem('token')}`},
         }).then((res) => {
             dispatch(getQuotesSuccess(res));
 
