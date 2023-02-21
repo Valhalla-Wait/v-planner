@@ -18,16 +18,15 @@ export default function UserQuotes() {
   }, [])
 
   const quoteList = useSelector(state => {
-    if(state.quotes.quotesList) {
-      return state.quotes.quotesList.filter((quote) => quote.status === 'NEW' || quote.status === 'VIEWED')
-    }else{ 
-      return null
+    if(state.quotes.quotesList.length) {
+      const filteredQuotes = state.quotes.quotesList.filter((quote) => quote.status === 'NEW' || quote.status === 'VIEWED')
+      if (filteredQuotes.length) return filteredQuotes
+      else return []
     }
+    return state.quotes.quotesList
   })
 
-  const [quotes, setQuotes] = useState([])
-
-  if(quoteList && !quotes.length) setQuotes(quoteList)
+  const [quotes, setQuotes] = useState(quoteList)
 
   const navigate = useNavigate()
   const device = useDevice()

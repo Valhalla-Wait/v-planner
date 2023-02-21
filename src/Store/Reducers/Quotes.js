@@ -2,7 +2,11 @@ import {
     GET_ALL_QUOTES_FAILED, GET_ALL_QUOTES_SUCCESS, GET_ALL_QUOTES,
 } from "../types";
 
-const initialState = [];
+const initialState = {
+    loading: false,
+    error: null,
+    quotesList: []
+};
 
 export default function quotesReducer(state = initialState, action) {
 
