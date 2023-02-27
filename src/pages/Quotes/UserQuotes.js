@@ -36,6 +36,7 @@ export default function UserQuotes() {
 
   if((quoteList && quoteList.length) && !quotes.length) setQuotes(quoteList)
 
+
   const navigate = useNavigate()
   const device = useDevice()
 
@@ -80,7 +81,21 @@ export default function UserQuotes() {
     }
   }
 
-  debugger
+  const selectQuote = (quote) => {
+    const findQuote = compareQuotes.find(q => q.id === quote.id)
+
+    if(!findQuote && compareQuotes.length < 2) setCompareQuotes(prev => [...prev, quote])
+
+    if(findQuote) {
+      const index = compareQuotes.findIndex(q => q.id === quote.id)
+      setCompareQuotes(prev => {
+        prev.splice(index, 1)
+        return prev
+      })
+    }
+  }
+
+  // debugger
 
   return (
     <section className="quotes shadow">
@@ -132,18 +147,7 @@ export default function UserQuotes() {
                   <div className="table__cell cell-checkbox">
                     <div className="cell-checkbox__content">
                       <label className="check option">
-                        <input onClick={
-                          () => {
-                          // const find = compareQuotes.find(q => q.id === quote.id)                          
-                          // if(find && compareQuotes.length < 2) return setCompareQuotes(prev => [...prev, quote.id]) 
-                          // else{
-                          //   const index = compareQuotes.findIndex(q => q.id === quote.id)
-                          //   const copy = [...compareQuotes]
-                          //   copy.splice(index, 1)
-                          //   setCompareQuotes(copy)
-                          // }
-                        }
-                        } className="check__input" type="checkbox" />
+                        <input checked={!!compareQuotes.find(q => q.id === quote.id)} onChange={() => selectQuote(quote)} className="check__input" type="checkbox" />
                         <span className="check__box"></span>
                       </label>
                     </div>

@@ -1,0 +1,38 @@
+.compare-conteiner {
+    max-width: 896px;
+    max-height: 584px;
+    display: grid;
+    gap: 16px;
+}
+
+.middle-modal{
+    &__content{
+      max-width: 928px;
+    }
+  }
+.middle-modal__content {
+    padding: 24px 23px 16px;
+}
+
+.compare-title {
+    font-weight: 600;
+    font-size: 18px;
+    font-family: $fontFamily;
+    color: black;
+}
+
+.compare-sections {
+    display: flex;
+    gap: 16px;
+    &__section {
+        display: grid;
+        gap: 8px;
+        max-width: 433px;
+    width: 100%;
+    }
+}
+.compare-pdf{
+    width: 100%;
+    height:  472px;
+    background-color: #DEE1E6;
+}
