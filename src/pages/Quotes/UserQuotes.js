@@ -17,6 +17,8 @@ export default function UserQuotes() {
 
   const modal = useContext(ModalContext);
 
+  const [compareQuotes, setCompareQuotes] = useState([])
+
   useEffect(() => {
     if(token) dispatch(getQuotes(token))
   }, [])
@@ -94,13 +96,13 @@ export default function UserQuotes() {
           >My Orders</Button>
         </div>
         <div className="quotes__compare">
-          {/* <Button
+          <Button
           onClick={()=>{
             modal.start();
-            modal.setContent(<CompareModal />);
+            modal.setContent(<CompareModal quotes={compareQuotes}/>);
           }}
             className="btn btn-light btn-compare"
-          >Compare <i className="icon-compare"></i></Button> */}
+          >Compare <i className="icon-compare"></i></Button>
         </div>
       </div>
       <div className="quotes__table">
@@ -130,7 +132,18 @@ export default function UserQuotes() {
                   <div className="table__cell cell-checkbox">
                     <div className="cell-checkbox__content">
                       <label className="check option">
-                        <input className="check__input" type="checkbox" />
+                        <input onClick={
+                          () => {
+                          // const find = compareQuotes.find(q => q.id === quote.id)                          
+                          // if(find && compareQuotes.length < 2) return setCompareQuotes(prev => [...prev, quote.id]) 
+                          // else{
+                          //   const index = compareQuotes.findIndex(q => q.id === quote.id)
+                          //   const copy = [...compareQuotes]
+                          //   copy.splice(index, 1)
+                          //   setCompareQuotes(copy)
+                          // }
+                        }
+                        } className="check__input" type="checkbox" />
                         <span className="check__box"></span>
                       </label>
                     </div>

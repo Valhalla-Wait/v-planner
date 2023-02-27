@@ -4,15 +4,21 @@ import DeleteAccoutForm from "../Forms/DeleteAccountForm"
 import Button from "../UI/Button"
 import ModalSmallContent from "../UI/Modal/ModalSmallContent"
 import { Document, Page } from 'react-pdf';
+import axios from "axios"
 
-const CompareModal = () => {
+const CompareModal = ({quotes}) => {
 
   const modal = useContext(ModalContext)
 
   const getPdf = async() => {
-    const user = await axios({
+
+    const reqBody = new FormData();
+    reqBody.append("createPdfModel", {});
+
+    const pdf = await axios({
       method: "get",
       url: `${process.env.REACT_APP_API_URL}/quotes/create-pdf`,
+      data: '',
       headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
   }
@@ -26,12 +32,12 @@ const CompareModal = () => {
       <div className="compare-modal">
         <h3>compare</h3>
         <div className="compare-pdf">
-          <Document file="somefile.pdf" onLoadSuccess={onDocumentLoadSuccess}>
+          {/* <Document file="somefile.pdf" onLoadSuccess={onDocumentLoadSuccess}>
             <Page pageNumber={pageNumber} />
           </Document>
           <Document file="somefile.pdf" onLoadSuccess={onDocumentLoadSuccess}>
             <Page pageNumber={pageNumber} />
-          </Document>
+          </Document> */}
         </div>
         <Button
           className="btn btn-light m-t-8 d-block w-100"
