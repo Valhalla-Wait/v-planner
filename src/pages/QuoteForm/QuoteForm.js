@@ -18,7 +18,7 @@ export default function QuoteForm() {
   const [src, setSrc] = useState(null);
 
   // const service = useSelector(state => state.vendorInfo.vendorData.vendorModel.services)[0].name
-  const { token } = useSelector((state) => state.vendorInfo);
+  const { token } = localStorage.getItem("token")
   const generalServices = useSelector((state) => state.vendorInfo.vendorData.vendorModel.generalServices)
   const individualServices = useSelector((state) => state.vendorInfo.vendorData.vendorModel.individualServices)
 

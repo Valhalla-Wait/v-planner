@@ -32,9 +32,7 @@ export default function UserQuotes() {
 
   const [quotes, setQuotes] = useState([])
 
-  useEffect(() => {
-    setQuotes(quoteList)
-  }, [quoteList])
+  if((quoteList && quoteList.length) && !quotes.length) setQuotes(quoteList)
 
   const navigate = useNavigate()
   const device = useDevice()
@@ -80,6 +78,8 @@ export default function UserQuotes() {
     }
   }
 
+  debugger
+
   return (
     <section className="quotes shadow">
       <h3 className="quotes__title">Quotes and Orders</h3>
@@ -94,13 +94,13 @@ export default function UserQuotes() {
           >My Orders</Button>
         </div>
         <div className="quotes__compare">
-          <Button
+          {/* <Button
           onClick={()=>{
             modal.start();
             modal.setContent(<CompareModal />);
           }}
             className="btn btn-light btn-compare"
-          >Compare <i className="icon-compare"></i></Button>
+          >Compare <i className="icon-compare"></i></Button> */}
         </div>
       </div>
       <div className="quotes__table">
