@@ -12,25 +12,35 @@ import UnlikeModal from "../components/Modals/UnlikeModal";
 import Button from "../components/UI/Button";
 import { ModalContext } from "../context/ModalContext";
 import useDevice from "../hooks/useDevice";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { getDetailVendor } from "../Store/Actions/getVendorAction";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+import { getLikedVendors } from "../Store/Actions/getLikedVendors";
 
 SwiperCore.use([Navigation]);
 
-function VendorItem({ vendorMore, isLoading }) {
+function VendorItem({ isLoading }) {
 
   const { id } = useParams();
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
+  const likedVendors = useSelector(state => state.myVendors.vendors)
+
+  const vendorData = useSelector(state => {
+   return state.myVendors.vendors.find(vendor => vendor.id === Number(id))
+  })
+
   const modal = useContext(ModalContext);
   const device = useDevice();
+
+  // debugger
 
   useEffect(() => {
     dispatch(getDetailVendor(id))
   }, [])
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(!!likedVendors.find(vendor => vendor.id === vendorData.id));
 
   const [swiperRef, setSwiperRef] = useState(null);
 
@@ -63,10 +73,19 @@ function VendorItem({ vendorMore, isLoading }) {
 
   const unlike = () => {
     modal.start();
-    modal.setContent(<UnlikeModal onCallback={() => setLike(false)} />);
+    modal.setContent(<UnlikeModal onCallback={async () => {
+      setLike(false)
+      await axios({
+        method: "put",
+        url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorData.id}&status=false`,
+        headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }).catch((err) => {
+        console.log(err)
+      })
+    }} />);
   };
-  const images = vendorMore.vendorData.vendorModel.photos
-  console.log("vendor more", vendorMore)
+  const images = vendorData.photos
+  console.log("vendor more", vendorData)
   console.log("images", images)
   return (
     <>
@@ -74,7 +93,10 @@ function VendorItem({ vendorMore, isLoading }) {
         <div>loading...</div>
       ) : (
         <section className="vendor">
-          <div className="page__back" onClick={() => navigate("/vendor")}>
+          <div className="page__back" onClick={() => {
+            dispatch(getLikedVendors())
+            navigate("/vendor")
+            }}>
             <i className="icon-arrow page__back-icon"></i>
             <div className="page__back-text">Back to Vendors</div>
           </div>
@@ -90,7 +112,7 @@ function VendorItem({ vendorMore, isLoading }) {
                 <div className="header-vendor__content">
                   <h3 className="header-vendor__title">
                     <span className="header-vendor__title-text">
-                      {vendorMore.vendorData.vendorModel.companyTitle}
+                      {vendorData.companyName}
                     </span>
                     {like ? (
                       <i
@@ -115,10 +137,10 @@ function VendorItem({ vendorMore, isLoading }) {
                     )}
                   </h3>
                   <h4 className="header-vendor__price">
-                    {vendorMore.vendorData.vendorModel.companyDescription}
+                  {vendorData.priceFrom}-{vendorData.priceTo}$
                   </h4>
                   <div className="header-vendor__text">
-                    {vendorMore.vendorData.vendorModel.companyDescription}
+                    {vendorData.companyDescription}
                   </div>
                 </div>
                 <div className="header-vendor__actions">
@@ -169,7 +191,7 @@ function VendorItem({ vendorMore, isLoading }) {
               <div className="vendor__about about-vendor">
                 <h4 className="about-vendor__title">About</h4>
                 <p className="about-vendor__text">
-                  {vendorMore.vendorData.vendorModel.aboutCompany}
+                  {vendorData.aboutCompany}
                 </p>
               </div>
               <div className="vendor__services services-vendor">
@@ -177,30 +199,28 @@ function VendorItem({ vendorMore, isLoading }) {
                 <div className="services-vendor__list">
                   <div className="services-vendor__item">
                     <div className="services-vendor__subtitle">
-                      {vendorMore.vendorData.vendorModel.fieldOfActivity}
+                      {vendorData.fieldOfActivity}
                     </div>
-                    <p>{vendorMore.vendorData.vendorModel.typeOfService}</p>
+                    <p>{vendorData.typeOfService}</p>
                   </div>
                   <div className="services-vendor__item">
                     <div className="services-vendor__subtitle"></div>
-                    <p>{vendorMore.vendorData.vendorModel.weddingActivity}</p>
+                    <p>{vendorData.weddingActivity}</p>
                   </div>
                   <div className="services-vendor__item">
                     <div className="services-vendor__subtitle">
-                      Service Name
+                      Wedding Activity
                     </div>
                     <p>
-                      Detail, Detail, Detail, Detail, Detail, Detail, Detail,
-                      Detail, Detail
+                      {vendorData.weddingActivity}
                     </p>
                   </div>
                   <div className="services-vendor__item">
                     <div className="services-vendor__subtitle">
-                      Service Name
+                      Starting Price Range
                     </div>
                     <p>
-                      Detail, Detail, Detail, Detail, Detail, Detail, Detail,
-                      Detail, Detail
+                      {vendorData.priceFrom} - {vendorData.priceTo}$
                     </p>
                   </div>
                 </div>
@@ -228,7 +248,7 @@ function VendorItem({ vendorMore, isLoading }) {
               >
                 <h4 className="about-vendor__title">About Team</h4>
                 <p className="about-vendor__text">
-                  {vendorMore.vendorData.vendorModel.aboutTeam}
+                  {vendorData.aboutTeam}
                 </p>
               </div>
               <GalleryGrid>

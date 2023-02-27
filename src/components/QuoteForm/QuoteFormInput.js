@@ -4,39 +4,43 @@ import Input from "../UI/Input"
 import Select from 'react-select'
 import {useSelector} from 'react-redux'
 
-export const QuoteFormInput = ({ title, isOffer, value, offerCallback, selectedServices, ...props }) => {
+export const QuoteFormInput = ({ title, isOffer, offerData, value, offerCallback, selectedServices, ...props }) => {
 
-    const [price, setPrice] = useState(null)
-    const [offerData, setOfferData] = useState({
+    const [offerPrice, setPrice] = useState(offerData.price)
+    const [offerTitle, setOfferTitle] = useState(offerData.name)
+    // const [offerData, setOfferData] = useState({
             // id: id,
             // title: e.currentTarget.value,
             // price: 0
-    })
-    
+    // })
     const [currentServiceId, setCurrentServiceId] = useState(null)
-    const services = useSelector((state) => state.vendorInfo.vendorData.vendorModel.services)
+    // const services = useSelector((state) => state.vendorInfo.vendorData.vendorModel.services)
 
     const setPriceHandler = (e) => {
         setPrice(e.currentTarget.value)
+    }
+
+    const setTitleHandler = (e) => {
+        setOfferTitle(e.currentTarget.value)
     }
 
     const isNumber = (n) => {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
-    const filterServices = () => {
-        if (selectedServices) {
-            const idsArr = services.map((service) => service.id)
-        const selectIds = selectedServices.map((service) => service.id)
-        const filter = idsArr.filter(item => !selectIds.includes(item))
-        const filteredServices = [...services.filter(service => filter.includes(service.id)).map(s => ({ value: s, label: s.name }))]
-        // filteredServices.unshift({value: {name: 'Select service'}, label: 'Select service'})
-        return filteredServices
-        }else{
-            return null
-        }
+    // const filterServices = () => {
+    //     if (selectedServices) {
+    //         const idsArr = services.map((service) => service.id)
+    //     const selectIds = selectedServices.map((service) => service.id)
+    //     const filter = idsArr.filter(item => !selectIds.includes(item))
+    //     const filteredServices = [...services.filter(service => filter.includes(service.id)).map(s => ({ value: s, label: s.name }))]
+    //     // filteredServices.unshift({value: {name: 'Select service'}, label: 'Select service'})
+    //     return filteredServices
+    //     }else{
+    //         return null
+    //     }
         
-      }
+    //   }
 
     // const filterServices = services.map(s => {
     //     if(selectedServices.find(selectService => selectService.id !== s.id)) return { value: s, label: s.name }         
@@ -50,7 +54,16 @@ export const QuoteFormInput = ({ title, isOffer, value, offerCallback, selectedS
                 <div className="text-input__title">
                         {title}
                     </div>
-                    <Select
+
+                    <Input isValid={true} value={offerTitle} onChange={setTitleHandler} placeholder="title" onBlur={() => {
+                                    offerCallback({
+                                        id: offerData.id,
+                                        name: offerTitle ? offerTitle : '',
+                                        price: offerPrice ? offerPrice : 0
+                                    })
+                                    // debugger
+                            }} />
+                    {/* <Select
                     {...props}
                     // placeholder="Service"
                     options={filterServices()}
@@ -61,8 +74,8 @@ export const QuoteFormInput = ({ title, isOffer, value, offerCallback, selectedS
                     //         ...prev,
                     //         e.value
                     //     ])
-                    // }}
-                    onChange={(e) => {
+                    // }} */}
+                    {/* onChange={(e) => {
                         if(!e) {    
                             const removeService = [...selectedServices]
                             removeService.pop()
@@ -86,7 +99,7 @@ export const QuoteFormInput = ({ title, isOffer, value, offerCallback, selectedS
                             ]
                         })
                     }}
-                />
+                /> */}
                 </>
                 
                 :
@@ -108,17 +121,13 @@ export const QuoteFormInput = ({ title, isOffer, value, offerCallback, selectedS
                         </div>
                         <div className="text-input__input">
 
-                            <Input isValid={true} onChange={setPriceHandler} placeholder="number" onBlur={() => {
-                                if(price) {
-                                    const copy = [...selectedServices]
-                                        const findService = copy.find(s => s.id === currentServiceId)
-                                        if(findService) {
-                                            const serviceIndex = copy.findIndex(s => s.id === findService.id)
-                                            copy[serviceIndex].price = Number(price)
-                                            return offerCallback(copy)
-                                        }
+                            <Input isValid={true} value={offerPrice} onChange={setPriceHandler} placeholder="number" onBlur={() => {
+                                    offerCallback({
+                                        id: offerData.id,
+                                        name: offerTitle ? offerTitle : '',
+                                        price: offerPrice ? Number(offerPrice) : 0
+                                    })
                                     
-                                }
                             }} />
                             {/* <input type="text" onChange={setPriceHandler} className="price-input" placeholder="price" /> */}
                         </div>

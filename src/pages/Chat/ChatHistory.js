@@ -14,7 +14,8 @@ export default function ChatHistory({ messages, user, currentUser }) {
   const currentChatMessages = chats.find((chat) => chat.id === user.id)?.messageHistory
 
   const filterServiceMessages = currentChatMessages.filter((msg) => msg.message !== 'Room created')
-  const serviceMessages = currentChatMessages.filter((msg) => msg.message === 'Room created')
+  const serviceMessages = currentChatMessages.filter((msg) => msg.message === 'Room created' || msg.message === 'User requested a quote')
+  // debugger
   filterServiceMessages.unshift(serviceMessages[0])
   // useEffect(() => {
   //   const findMsg = messages.findIndex((m) => m.content == "createRoom")

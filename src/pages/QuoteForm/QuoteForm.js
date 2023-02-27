@@ -17,27 +17,19 @@ export default function QuoteForm() {
 
   const [src, setSrc] = useState(null);
 
-  const service = useSelector(state => state.vendorInfo.vendorData.vendorModel.services)[0].name
+  // const service = useSelector(state => state.vendorInfo.vendorData.vendorModel.services)[0].name
   const { token } = useSelector((state) => state.vendorInfo);
-  const services = useSelector((state) => state.vendorInfo.vendorData.vendorModel.services)
+  const generalServices = useSelector((state) => state.vendorInfo.vendorData.vendorModel.generalServices)
+  const individualServices = useSelector((state) => state.vendorInfo.vendorData.vendorModel.individualServices)
 
   const [selectedServices, setSelectedServices] = useState([])
   const { id } = useParams()
-
-  useEffect(() => setOffers(), [selectedServices])
-
-  
   
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    services: [
-      // {
-      //   name: service,
-      //   price: 0,
-      //   type: 'main'
-      // }
-    ],
+    generalServiceIds: [generalServices[0].serviceType.id],
+    individualServices: [],
     logo: null,
     clientId: Number(id),
     quoteNumber: 0,
@@ -51,6 +43,22 @@ export default function QuoteForm() {
       second: 'numeric'
     })
   })
+
+  useEffect(() =>{
+    getClientId()
+  }, [])
+
+  const getClientId = async () => {
+    const user = await axios({
+      method: "get",
+      url: `${process.env.REACT_APP_API_URL}/clients/getById?id=${id}`,
+      headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` }
+    })
+    setFormData(prev => ({
+      ...prev,
+      clientId: user.data.result.clientModel.id
+    }))
+  }
 
   // useEffect(() => {
 
@@ -73,20 +81,22 @@ export default function QuoteForm() {
   // const [vendorServices, setVendorServices] = useState(services.map(s => ({value: s.name, label: s.name})))
 
   const [offerData, setOfferData] = useState([
-    {id: 0, title: '', price: 0, type: 'main'},
-    {id: 1, title: '', price: 0, type: 'optional'}
+    ...individualServices,
+    {id: individualServices.length ? individualServices.length+1 : 0, name: '', price: 0}
   ])
+
+  useEffect(() => setOffers(), [offerData])
 
   const sendQuote = async () => {
 
     try {
+      setOffers()
       dispatch(setCurrentQuote({
         ...formData,
         logo: src,
         createDate: new Date(),
         isPreview: true
       }))
-      setOffers()
       console.log(formData)
       const reqBody = new FormData();
 
@@ -161,10 +171,11 @@ export default function QuoteForm() {
   // }
 
   const setOffers = () => {
+    const filterOffers = offerData.filter(offer => offer.name && offer.price)
     setFormData(prev => ({
       ...prev,
-      services: [
-        ...selectedServices
+      individualServices: [
+        ...filterOffers
       ]
     }))
   }
@@ -181,6 +192,14 @@ export default function QuoteForm() {
       ...prev,
       comment: text
     }))
+  }
+
+  const setOptionalOffer = (offer) => {
+    const index = offerData.findIndex(o => o.id === offer.id)
+    const copy = [...offerData]
+    copy[index].name = offer.name
+    copy[index].price = offer.price
+    setOfferData(copy)
   }
 
   // const setMainOffer = (service) => {
@@ -272,7 +291,7 @@ export default function QuoteForm() {
 
       <Input label="Comment" isValid placeholder="text" onChange={(e) => setComment(e.currentTarget.value)} />
 
-      <div className="section-title">
+      {/* <div className="section-title">
         Main Offer
       </div>
       {offerData.map(offer => {
@@ -281,17 +300,17 @@ export default function QuoteForm() {
                 <QuoteFormInput key={offer.id} title="Main Offer" value={service} isOffer offerCallback={setSelectedServices} selectedServices={selectedServices}/>
             </div>
               }
-            })}
+            })} */}
       {/* <div className="offer-input">
         <QuoteFormInput title="Main Offer" onCallback={setPrice} value={service} isOffer />
       </div> */}
 
-      <div className="add-btn-conteiner">
+      {/* <div className="add-btn-conteiner">
                 <QuoteLightButton callback={() => setOfferData(prev => [
           ...prev,
           {id: offerData.length, title: '', price: 0, type: 'main'}
         ])} title="Add Offer"/>
-            </div>
+            </div> */}
 
 
       <div className="section-title">
@@ -299,13 +318,10 @@ export default function QuoteForm() {
             </div>
 
             
-            {offerData.map(offer => {
-              if(offer.type === 'optional') {
-                return <div key={offer.id} className="offer-input">
-                <QuoteFormInput key={offer.id} title="Optional" value={service} isOffer offerCallback={setSelectedServices} selectedServices={selectedServices}/>
+            {offerData.map(offer => <div key={offer.id} className="offer-input">
+                <QuoteFormInput key={offer.id} title="Optional" isOffer offerData={offer} offerCallback={setOptionalOffer} selectedServices={offerData}/>
             </div>
-              }
-            })}
+              )}
             {/* <div className="offer-input">
                 <QuoteFormInput title="Optional" isOffer />
             </div> */}
@@ -313,7 +329,7 @@ export default function QuoteForm() {
             <div className="add-btn-conteiner">
             <QuoteLightButton callback={() => setOfferData(prev => [
           ...prev,
-          {id: offerData.length, title: '', price: 0, type: 'optional'}
+          {id: offerData.length+1, name: '', price: 0}
         ])} title="Add Optional"/>
             </div>
 

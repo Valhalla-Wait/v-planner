@@ -68,6 +68,12 @@ function UserChat({ getMessages, userId, userName }) {
     await getMessages()
     // debugger
   }
+
+  const requestQuote = async () => {
+    await sendMessage('User requested a quote', currentUserData.id, Number(id), currentUserData.firstName, 'none')
+    await getMessages()
+  }
+
   useEffect(() => {
     // debugger
     const findCurrentRoom = id ? chatState.chats.find((c) => c.id === Number(id)) : chatState.chats[0]
@@ -191,7 +197,7 @@ function UserChat({ getMessages, userId, userName }) {
                       <span>See Quote</span>
                     </Link>
                     :
-                    <span>Request Quote</span>}
+                    <span onClick={requestQuote}>Request Quote</span>}
 
                   <i className="icon-quote"></i>
                 </div>

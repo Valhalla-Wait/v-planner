@@ -373,6 +373,8 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
   const allVendors = [...likedVendors, ...vendors]
   const selectVendor = allVendors[vendorIndex]
 
+  // debugger
+
   useEffect(() => {
     if (vendorIndex < 0) {
       setVendorIndex(allVendors.length-1)
@@ -598,11 +600,11 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
                         {selectVendor?.companyDescription}
                       </p>
                       <div className="info-matchlist__subtitle">Services</div>
-                      {
+                      {/* {
                         selectVendor?.services.map((service =>
                           <p className="italic">{service.name}</p>
                         ))
-                      }
+                      } */}
                       <div className="info-matchlist__subtitle">About</div>
                       <p>{selectVendor?.aboutCompany}</p>
                     </div>

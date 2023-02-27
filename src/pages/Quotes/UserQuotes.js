@@ -1,7 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react"
+import React, { Fragment, useContext, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
+import CompareModal from "../../components/Modals/CompareModal"
 import Button from "../../components/UI/Button"
+import { ModalContext } from "../../context/ModalContext"
 import useDevice from "../../hooks/useDevice"
 import { getQuotes } from "../../Store/Actions/getAllQuotes"
 import { quoteStatuses } from "../../Store/Actions/quoteActions"
@@ -12,6 +14,8 @@ export default function UserQuotes() {
   const dispatch = useDispatch()
 
   const token = localStorage.getItem("token")
+
+  const modal = useContext(ModalContext);
 
   useEffect(() => {
     if(token) dispatch(getQuotes(token))
@@ -26,7 +30,11 @@ export default function UserQuotes() {
     return state.quotes.quotesList
   })
 
-  const [quotes, setQuotes] = useState(quoteList)
+  const [quotes, setQuotes] = useState([])
+
+  useEffect(() => {
+    setQuotes(quoteList)
+  }, [quoteList])
 
   const navigate = useNavigate()
   const device = useDevice()
@@ -87,6 +95,10 @@ export default function UserQuotes() {
         </div>
         <div className="quotes__compare">
           <Button
+          onClick={()=>{
+            modal.start();
+            modal.setContent(<CompareModal />);
+          }}
             className="btn btn-light btn-compare"
           >Compare <i className="icon-compare"></i></Button>
         </div>
@@ -104,7 +116,7 @@ export default function UserQuotes() {
             <div className="table__header cell-chat"></div>
           </div>
           {
-            quotes && quotes.map(quote => (
+            quotes.map(quote => (
               <Fragment  key={quote.id}>
                 <div className={ quotes.find(q => q.id === quote.id)?.open ? "table__row active" : "table__row" }>
                   <div className="table__cell cell-arrow">
@@ -135,7 +147,7 @@ export default function UserQuotes() {
                     </div>
                   </div>
                   <div className="table__cell cell-service">
-                    <div className="cell-service__content">{ quote.selectedServices.length } Services</div>
+                    <div className="cell-service__content">{ [...quote.selectedGeneralServices, ...quote.selectedIndividualServices].length } Services</div>
                   </div>
                   <div className="table__cell cell-date">
                     <div className="cell-date__content">
@@ -145,7 +157,7 @@ export default function UserQuotes() {
                     </div>
                   </div>
                   <div className="table__cell cell-price">
-                    <div className="cell-price__content">{ quote.selectedServices.reduce((sum, service) => sum + service.price, 0) }$</div>
+                    <div className="cell-price__content">{ [...quote.selectedGeneralServices, ...quote.selectedIndividualServices].reduce((sum, service) => sum + service.price, 0) }$</div>
                   </div>
                   <div className="table__cell cell-status">
                     <div className="cell-status__content">
@@ -167,10 +179,11 @@ export default function UserQuotes() {
                   <div className="table__cell"></div>
                   <div className="table__cell">
                     {
-                      device.isMobile && <div className="cell-service__text">{ quote.selectedServices.length } Services</div>
+                      device.isMobile && <div className="cell-service__text">{ [...quote.selectedGeneralServices, ...quote.selectedIndividualServices].length } Services</div>
                     }
                     {
-                      quote.selectedServices.map((service, idx) => <div className="cell-service__text" key={idx}>{service.name}</div>)
+                      
+                      [...quote.selectedGeneralServices, ...quote.selectedIndividualServices].map((service, idx) => <div className="cell-service__text" key={idx}>{service.name}</div>)
                     }
                   </div>
                   <div className="table__cell">
@@ -181,7 +194,7 @@ export default function UserQuotes() {
                       device.isMobile && <div className="cell-price__text">{ quote.price }$</div>
                     }
                     {
-                      quote.selectedServices.map((service, idx) => <div className="cell-price__text" key={idx}>{service.price}$</div>)
+                     [...quote.selectedGeneralServices, ...quote.selectedIndividualServices].map((service, idx) => <div className="cell-price__text" key={idx}>{service.price}$</div>)
                     }
                   </div>
                   <div className="table__cell"></div>

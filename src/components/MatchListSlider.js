@@ -48,7 +48,7 @@ const MatchListSlider = ({ files = [], vendorData, triggerStories, data, setVend
     await axios({
       method: "put",
       url: `${process.env.REACT_APP_API_URL}/matches/liked-or-not?vendorId=${vendorData.id}&status=true`,
-      headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${token}` },
+      headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${localStorage.getItem("token")}` },
     }).then((res) => {
       setVendorIndex((prevState) => prevState + 1)
       console.log("response in vendor like", res)

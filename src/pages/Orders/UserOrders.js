@@ -18,7 +18,7 @@ export default function UserOrders() {
 
   const [orders, setOrders] = useState([])
 
-  if(ordersList && !orders.length) setOrders(ordersList)
+  if((ordersList && ordersList.length) && !orders.length) setOrders(ordersList)
 
   const dispatch = useDispatch()
 

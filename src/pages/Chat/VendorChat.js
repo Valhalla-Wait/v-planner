@@ -103,7 +103,12 @@ function VendorChat({getMessages,userId,userName, stateMessages}) {
 
   }
 
-// debugger
+  const showSendBtn = () => {
+    if(!selectedUser.quote) return true
+    if(selectedUser.quote?.status === quoteStatuses.ACCEPTED.value || selectedUser.quote?.status === quoteStatuses.DECLINED.value) return true
+    else return false
+  }
+
   
   return (
     <section className="chat shadow">
@@ -122,7 +127,7 @@ function VendorChat({getMessages,userId,userName, stateMessages}) {
             selectedUser ? <div className="chat__body body-chat">
             <ChatHeader user={selectedUser}>
             
-              {(!selectedUser.quote || selectedUser.quote.status === quoteStatuses.ACCEPTED.value ) && <><Link to={`/quote-form/${selectedUser.id}`}><div className="header-body-chat__action quote">
+              {(!selectedUser.quote || selectedUser.quote?.status === quoteStatuses.ACCEPTED.value ) && <><Link to={`/quote-form/${selectedUser.id}`}><div className="header-body-chat__action quote">
                 
                 <span>Send Quote</span>
               
@@ -135,9 +140,9 @@ function VendorChat({getMessages,userId,userName, stateMessages}) {
             }
             
             
-              {(selectedUser.quote.status === quoteStatuses.NEW.value || selectedUser.quote.status === quoteStatuses.VIEWED.value) && <div className="quote-status">Quote Status: <span className="await-accept-quote">Awaiting Acceptance</span></div>}
+              {(selectedUser.quote?.status === quoteStatuses.NEW.value || selectedUser.quote?.status === quoteStatuses.VIEWED.value) && <div className="quote-status">Quote Status: <span className="await-accept-quote">Awaiting Acceptance</span></div>}
 
-              {selectedUser.quote.status === quoteStatuses.DECLINED.value && <div className="quote-status">Quote Status: <span className="declined-quote">Declined</span></div>}
+              {selectedUser.quote?.status === quoteStatuses.DECLINED.value && <div className="quote-status">Quote Status: <span className="declined-quote">Declined</span></div>}
               
 
             </ChatHeader>

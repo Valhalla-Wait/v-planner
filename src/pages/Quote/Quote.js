@@ -21,6 +21,7 @@ export default function Quote() {
 
     const dispatch = useDispatch()
     const currentQuote = useSelector(state => state.currentQuote)
+    const generalServices = useSelector((state) => state.vendorInfo.vendorData.vendorModel.generalServices)
 
     useEffect(() => {
         if(currentQuote?.status === 'NEW') dispatch(changeStatusQuote(currentQuote.id, quoteStatuses[currentQuote.status].value))
@@ -89,21 +90,11 @@ export default function Quote() {
 
                     <div className="quote__offer-data">
                         <div className="section-block">
-                            <QuoteBlockInfo title={currentQuote.title} description={currentQuote.description} />
+                            <QuoteBlockInfo title={currentQuote.name} description={currentQuote.description} />
 
-                            <QuoteTableOffers offers={
-                                currentQuote.services ?
-                                    currentQuote.services.filter((s) => s.serviceType === 'MAIN')
-                                :
-                                currentQuote.selectedServices.filter((s) => s.serviceType === 'MAIN')
-                                } optional={false}  setTotal={setMainOfferPrice} />
+                            <QuoteTableOffers offers={generalServices} optional={false}  setTotal={setMainOfferPrice} />
 
-                            <QuoteTableOffers offers={
-                                currentQuote.services ?
-                                currentQuote.services.filter((s) => s.serviceType === 'OPTIONAL')
-                            :
-                            currentQuote.selectedServices.filter((s) => s.serviceType === 'OPTIONAL')
-                            } optional setTotal={setOptionalOffersPrice} />
+                            <QuoteTableOffers offers={currentQuote.individualServices} optional setTotal={setOptionalOffersPrice} />
 
                             <div className="offer-data__total">
                                 <div className="item-conteiner">

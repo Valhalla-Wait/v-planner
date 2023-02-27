@@ -65,7 +65,7 @@ export const getMessages = () => {
                             isRecipient: currentUserId == m.recipientId,
                             message: m.content,
                             time: getTimeFromDate(m.timestamp),
-                            type: m.content === 'createRoom' || m.content === 'Room created' ? 'serviceMessage' : 'textMessage'
+                            type: m.content === 'createRoom' || m.content === 'Room created' || m.content === 'User requested a quote' ? 'serviceMessage' : 'textMessage'
                             }
                         })
 
