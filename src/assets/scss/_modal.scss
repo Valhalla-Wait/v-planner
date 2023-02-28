@@ -84,6 +84,52 @@
   }
 }
 
+.compare-modal{
+  &__content{
+    width: 100%;
+    position: relative;
+    padding: 48px $grid + px;
+    height: 82%;
+    & .modal__close{
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+  }
+  &__header{
+  }
+  &__logo{
+    width: 208px;
+    height: 48px;
+    margin: 0 auto 24px;
+  }
+  &__title{
+    font-size: 18px;
+    text-align: center;
+  }
+  &__title:not(:first-child){
+    margin-top: 32px;
+    margin-bottom: 24px;
+  }
+  &__subtitle{
+    width: max-content;
+    margin: 16px auto 24px;
+    text-decoration: underline;
+  }
+  &__footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & > *{
+      margin-top: 24px;
+    }
+  }
+  &__link{
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
 .small-modal{
   &__content{
     max-width: 352px;
@@ -126,12 +172,31 @@
       margin: 24px auto;
       max-width: 416px;
       border-radius: 24px;
+      height: 100%;
     }
   }
 }
 
 @media (min-width: $md) {
   .middle-modal{
+    &__content{
+    }
+  }
+}
+
+@media (min-width: $sm) {
+  .compare-modal{
+    &__content{
+      margin: 24px auto;
+      max-width: 928px;
+      padding: 24px 23px 16px;
+      border-radius: 24px;
+    }
+  }
+}
+
+@media (min-width: $md) {
+  .compare-modal{
     &__content{
     }
   }

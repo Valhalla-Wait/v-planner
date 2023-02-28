@@ -263,6 +263,8 @@ a{
   }
 }
 
+.react-pdf__Page__textContent {display: none;}
+
 @media (min-width: $md){
   #root{
     min-height: calc(100vh - 80px);

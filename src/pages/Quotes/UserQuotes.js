@@ -113,8 +113,10 @@ export default function UserQuotes() {
         <div className="quotes__compare">
           <Button
           onClick={()=>{
+           if(compareQuotes.length === 2) {
             modal.start();
             modal.setContent(<CompareModal quotes={compareQuotes}/>);
+           }
           }}
             className="btn btn-light btn-compare"
           >Compare <i className="icon-compare"></i></Button>
