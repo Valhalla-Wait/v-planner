@@ -103,13 +103,13 @@ export default function UserOrders() {
                     </div>
                   </div>
                   <div className="table__cell cell-service">
-                    <div className="cell-service__content">{ order.selectedServices.length } Services</div>
+                    <div className="cell-service__content">{ [...order.selectedGeneralServices, ...order.selectedIndividualServices].length } Services</div>
                   </div>
                   <div className="table__cell cell-date">
                     <div className="cell-date__content">{ order.date }</div>
                   </div>
                   <div className="table__cell cell-price">
-                    <div className="cell-price__content">{ order.selectedServices.reduce((sum, service) => sum + service.price, 0) }$</div>
+                    <div className="cell-price__content">{[...order.selectedGeneralServices, ...order.selectedIndividualServices].reduce((sum, service) => sum + service.price, 0) }$</div>
                   </div>
                   <div className="table__cell cell-status">
                     <div className="cell-status__content">
@@ -130,10 +130,10 @@ export default function UserOrders() {
                   <div className="table__cell"></div>
                   <div className="table__cell">
                     {
-                      device.isMobile && <div className="cell-service__text">{ order.selectedServices.length } Services</div>
+                      device.isMobile && <div className="cell-service__text">{ [...order.selectedGeneralServices, ...order.selectedIndividualServices].length } Services</div>
                     }
                     {
-                      order.selectedServices.map((service, idx) => <div className="cell-service__text" key={idx}>{service.name}</div>)
+                     [...order.selectedGeneralServices, ...order.selectedIndividualServices].map((service, idx) => <div className="cell-service__text" key={idx}>{service.name}</div>)
                     }
                   </div>
                   <div className="table__cell">
@@ -148,7 +148,7 @@ export default function UserOrders() {
                       device.isMobile && <div className="cell-price__text">{ order.price }$</div>
                     }
                     {
-                      order.selectedServices.map((service, idx) => <div className="cell-price__text" key={idx}>{service.price}$</div>)
+                      [...order.selectedGeneralServices, ...order.selectedIndividualServices].map((service, idx) => <div className="cell-price__text" key={idx}>{service.price}$</div>)
                     }
                   </div>
                   <div className="table__cell"></div>

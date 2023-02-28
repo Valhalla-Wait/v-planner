@@ -9,7 +9,7 @@ import { getQuotes } from "../Store/Actions/getAllQuotes"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
-export default function Reports() {
+export default function ReportsQuote() {
 
   const token = localStorage.getItem("token")
   const dispatch = useDispatch()
@@ -22,7 +22,7 @@ export default function Reports() {
 
   const quotesList = useSelector(state => {
     if(state.quotes.quotesList) {
-      return state.quotes.quotesList.filter((quote) => quote.status === quoteStatuses.ACCEPTED.value || quote.status === quoteStatuses.VIEWED.value || quote.status === quoteStatuses.DECLINED.value)
+      return state.quotes.quotesList
     }else{ 
       return null
     }
@@ -87,11 +87,11 @@ export default function Reports() {
       <div className="reports__header">
         <div className="reports__btns">
           <Button
-            className="btn btn-light active"
+            className="btn btn-light"
             onClick={() => navigate("/reports")}
           >Sale Reports</Button>
           <Button
-            className="btn btn-accent"
+            className="btn btn-light active"
             onClick={() => navigate("/quote-reports")}
           >Quotetion reports</Button>
         </div>
@@ -110,6 +110,7 @@ export default function Reports() {
           <Select
             placeholder="Status sorting"
             options={[
+              { value: quoteStatuses.NEW.value, label: "New" },
               { value: quoteStatuses.VIEWED.value, label: "Awaiting Acceptance" },
               { value: quoteStatuses.ACCEPTED.value, label: "Accepted" },
               { value: quoteStatuses.DECLINED.value, label: "Declined" },

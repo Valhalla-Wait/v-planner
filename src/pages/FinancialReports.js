@@ -9,7 +9,7 @@ import { getQuotes } from "../Store/Actions/getAllQuotes"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
-export default function Reports() {
+export default function FinancialReports() {
 
   const token = localStorage.getItem("token")
   const dispatch = useDispatch()

@@ -32,7 +32,11 @@
 @media (min-width: $lg){
   .quotes__table{
     & .cell-service{
-
+      &__text {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
   }
 }

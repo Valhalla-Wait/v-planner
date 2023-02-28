@@ -18,6 +18,8 @@ import Quote from "../pages/Quote/Quote";
 import f from "../validation/fieldName";
 import {connect} from "react-redux";
 import QuoteForm from "../pages/QuoteForm/QuoteForm";
+import ReportsQuote from "../pages/ReportsQuote";
+import FinancialReports from "../pages/FinancialReports";
 
 
  function VendorRouter({vendorData}) {
@@ -49,6 +51,8 @@ import QuoteForm from "../pages/QuoteForm/QuoteForm";
           <Route path="/quotes" element={<VendorQuotes />} />
           <Route path="/history" element={<VendorHistory />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/quote-reports" element={<ReportsQuote />} />
+          <Route path="/financial-reports" element={<FinancialReports />} />
           <Route path="/chat" element={<VendorChat />} />
           <Route path="/quote-form/:id" element={<QuoteForm />} />
           <Route path="/chat/:id" element={<VendorChat />} />
