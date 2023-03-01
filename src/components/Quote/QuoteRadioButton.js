@@ -1,8 +1,8 @@
-export const QuoteRadioButton = ({offerId, offerPrice, offerActive, setOffer, setTotal}) => {
+export const QuoteRadioButton = ({offer, offerId, offerPrice, offerActive, setOffer, setTotal}) => {
     const btnHandler = () => {
         
         setTotal(offerPrice)
-        setOffer(offerId)
+        setOffer(offer)
     }
     return (
         <button onClick={btnHandler}>

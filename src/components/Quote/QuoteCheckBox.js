@@ -1,4 +1,4 @@
-export const QuoteCheckBox = ({offerId, offerPrice, offersActive, setOffer, setTotal}) => {
+export const QuoteCheckBox = ({offer, offerId, offerPrice, offersActive, setOffer, setTotal}) => {
 
     console.log(offersActive, offerId)
     const toggleHandler = () => {

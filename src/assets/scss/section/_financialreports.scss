@@ -1,0 +1,64 @@
+.financial-reports {
+  display: grid;
+  gap: 40px;
+}
+
+.charts {
+  display: flex;
+  justify-content: center;
+  &__item{
+
+  }
+  .line{
+
+  }
+  .pie{
+
+  }
+}
+
+.reports-lists {
+  display: grid;
+  gap: 16px;
+}
+
+.reports-lists-item {
+  &__title {
+    .accepted {
+      color: #3EAF3F;
+    }
+    
+    .declined {
+      color: #E14942;
+    }
+    padding: 16px;
+    border-bottom: 1px solid #DEDFE9;
+  }
+}
+
+.reports-lists>.shadow {
+  box-shadow: 5px 4px 28px rgba(0, 0, 0, 0.1);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.quotes-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px;
+  align-items: center;
+  border-bottom: 1px solid #DEDFE9;
+
+  &__title {
+    font-size: 14px;
+    line-height: 17px;
+    color: #3A3F50;
+    font-weight: 600;
+  }
+  &__viewed {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19px;
+  }
+}
+

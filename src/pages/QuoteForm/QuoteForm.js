@@ -52,7 +52,7 @@ export default function QuoteForm() {
     const user = await axios({
       method: "get",
       url: `${process.env.REACT_APP_API_URL}/clients/getById?id=${id}`,
-      headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` }
+      headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
     setFormData(prev => ({
       ...prev,

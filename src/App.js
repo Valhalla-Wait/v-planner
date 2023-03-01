@@ -39,7 +39,7 @@ const App = (props) => {
 
   useEffect(() => {
     console.log('app js')
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem('token')
     if (token) {
       dispatch(getCurrentUser(token))
       dispatch(getLikedVendors())

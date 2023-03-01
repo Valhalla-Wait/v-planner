@@ -3,16 +3,19 @@ import { numberWithCommas } from "../../utils/numberWithCommas"
 import { QuoteCheckBox } from "./QuoteCheckBox"
 import { QuoteRadioButton } from "./QuoteRadioButton"
 
-export const QuoteTableOffers = ({ optional, offers, setTotal }) => {
+export const QuoteTableOffers = ({ setOffer, optional, offers, setTotal }) => {
 
-    const [mainOfferActive, setMainOfferActive] = useState(offers.length && !optional ? offers[0].id : 0)
+    console.log(offers)
+    // debugger
+
+    const [mainOfferActive, setMainOfferActive] = useState( offers.length && !optional ? offers[0].id : 0)
     const [checkBoxToggle, setCheckBoxToggle] = useState([])
 
     useEffect(() => {
         // console.log(offers.find(offer => offer.id === mainOfferActive))
         // debugger
         setTotal((prev) => {
-            const findMainOffer = offers.find(offer => offer.id === mainOfferActive)
+            const findMainOffer = offers ? offers.find(offer => offer.id === mainOfferActive) : false
             if(findMainOffer) {
                 return findMainOffer.price
             }else{
@@ -21,7 +24,16 @@ export const QuoteTableOffers = ({ optional, offers, setTotal }) => {
         })
     }, [mainOfferActive])
 
-    console.log(mainOfferActive)
+    useEffect(() => {
+        setOffer(checkBoxToggle)
+    }, [checkBoxToggle])
+
+    useEffect(() => {
+        setOffer(mainOfferActive)
+    }, [mainOfferActive])
+
+    console.log(checkBoxToggle, mainOfferActive)
+    
     return (
         <table className="grid-table">
             <tr className="grid-table__title">
@@ -40,13 +52,13 @@ export const QuoteTableOffers = ({ optional, offers, setTotal }) => {
                     AMOUNT
                 </td>
             </tr>
-            {offers.map(offer =>
+            {offers && offers.map(offer =>
                 <tr key={offer.id} className="inside-light-line">
                     <td className="first">
                             {optional ?
-                                <QuoteCheckBox offerId={offer.id} offerPrice={offer.price} offersActive={checkBoxToggle} setOffer={setCheckBoxToggle} setTotal={setTotal} />
+                                <QuoteCheckBox offerId={offer.id} offerPrice={offer.price} offer={offer} offersActive={checkBoxToggle} setOffer={setCheckBoxToggle} setTotal={setTotal} />
                             :
-                                <QuoteRadioButton offerId={offer.id} offerPrice={offer.price} offerActive={mainOfferActive} setOffer={setMainOfferActive} setTotal={setTotal} />
+                                <QuoteRadioButton offer={offer} offerId={offer.id} offerPrice={offer.price} offerActive={mainOfferActive} setOffer={setMainOfferActive} setTotal={setTotal} />
                             }
                     </td>
                     <td className="grid-table__content second">
