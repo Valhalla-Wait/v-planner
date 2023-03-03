@@ -65,6 +65,9 @@
     height: calc(100vh - 208px);
     overflow: auto;
     margin-top: 5px;
+    .lds-dual-ring {
+      margin: 0 34%;
+    }
   }
   &__err {
     text-align: center;

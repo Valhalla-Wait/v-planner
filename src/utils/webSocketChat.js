@@ -4,10 +4,12 @@ export const connectToChat = async (userId, onMsgCallback, updateChat) => {
     const Stomp = require("stompjs");
     var SockJS = require("sockjs-client");
 
-    SockJS = new SockJS("http://142.93.15.46:8080/ws");
+    SockJS = new SockJS(`${process.env.REACT_APP_URL_TEST}/ws`);
     stompClient = Stomp.over(SockJS);
 
-    await stompClient.connect({},  () => onConnected(userId, onMsgCallback, updateChat), onError);
+    await stompClient.connect({
+        // Authorization: `Bearer ${localStorage.getItem("token")}`
+    },  () => onConnected(userId, onMsgCallback, updateChat), onError);
     
 };
 const onConnected = async (id, onMsgCallback, updateChat) => {
@@ -27,6 +29,7 @@ const onError = (err) => {
     console.log(err);
 };
 export const sendMessage = async (msg,senderId,recipientId,senderName,recipientName) => {
+    debugger
     if (msg.trim() !== "") {
         const message = {
             senderId: senderId,
