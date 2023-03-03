@@ -47,7 +47,7 @@ const VendorPersonalInfarmationForm = ({ onCallback }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(testFunc)}>
+    <form onSubmit={handleSubmit(onCallback)}>
       <div className="photo-add">
         <label className="photo-add__label">
           <div className="photo-add__header">
@@ -60,7 +60,7 @@ const VendorPersonalInfarmationForm = ({ onCallback }) => {
             type="file"
             className="photo-add__input"
             accept={allowerImageType}
-            register={register(f.budget)}
+            register={register(f.avatar)}
             onInput={addPhoto}
           />
         </label>
@@ -115,6 +115,7 @@ const VendorPersonalInfarmationForm = ({ onCallback }) => {
       <Button
         className="btn btn-accent w-100 m-t-8"
         disabled={!isValid}
+        onClick={onCallback}
       >Next</Button>
     </form>
   )

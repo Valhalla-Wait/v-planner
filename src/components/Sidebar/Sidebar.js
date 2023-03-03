@@ -12,6 +12,8 @@ export const Sidebar = () => {
 
   const auth = useContext(AuthContext)
   const device = useDevice()
+
+  debugger
   
   if(auth.user.role === process.env.REACT_APP_ROLE_USER){
     return (

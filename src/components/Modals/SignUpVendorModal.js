@@ -17,6 +17,7 @@ import SignInVendorModal from "./SignInVendorModal";
 import SignUpUserModal from "./SignUpUserModal";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpAction } from "../../Store/Actions/VendorSignUp";
+import axios from "axios";
 
 const SignUpVendorModal = () => {
   const auth = useContext(AuthContext);
@@ -39,7 +40,11 @@ const SignUpVendorModal = () => {
   };
 
   const vendorData = useSelector((state) => state.vendorInfo.vendorData);
-  
+
+  const relogin = (email, password) => {
+    auth.login(email, password)
+  }
+
   const signIn = (data) => {
     const req = {
       ...step1,
@@ -50,19 +55,48 @@ const SignUpVendorModal = () => {
       ...step6,
       ...data,
     };
+    debugger
     console.log('SIGNIN DATA', req)
-    dispatch(signUpAction(req));
-    
+    dispatch(signUpAction(req, relogin));
     modal.destroy();
   };
 
   console.log(step1)
 
-  useEffect(() => {
-    if (vendorData.id) {
-      auth.login(vendorData.email, vendorData.password, process.env.REACT_APP_ROLE_VENDOR);
+
+  const serviceTypes = [
+    {
+      value: [{
+        id: 1,
+        name: "Photographer"
+      }],
+      label: "Photographer"
+    },
+    {
+      value: [{
+        id: 2,
+        name: "Engineer"
+      }],
+      label: "Engineer"
+    },
+    {
+      value: [{
+        id: 3,
+        name: "Seller"
+      }],
+      label: "Seller"
     }
-  }, [vendorData])
+  ]
+  // console.log(serviceTypes)
+
+  // useEffect(() => {
+  //   axios({
+  //     method: "get",
+  //     url: `${process.env.REACT_APP_API_URL}/service-type/get-all`,
+  //     headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${localStorage.getItem("token")}` },
+  //   }).then((res) => setServiceTypes(res.data.result))
+  // }, [])
+
 
   const titleList = [
     "Personal Information",
@@ -114,6 +148,7 @@ const SignUpVendorModal = () => {
                   nextStep(2);
                 }}
                 onBack={() => nextStep(0)}
+                serviceTypes={serviceTypes}
               />
             </StepTab>
             <StepTab stepNumber={2} currentStep={step.currentStep}>
@@ -125,6 +160,7 @@ const SignUpVendorModal = () => {
                 }}
                 onNext={() => nextStep(3)}
                 onBack={() => nextStep(1)}
+                serviceTypes={serviceTypes}
               />
             </StepTab>
             <StepTab stepNumber={3} currentStep={step.currentStep}>

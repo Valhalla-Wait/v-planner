@@ -6,16 +6,18 @@ import ChatHeader from "./ChatHeader"
 import ChatHistory from "./ChatHistory"
 import ChatMenu from "./ChatMenu"
 import ChatUsers from "./ChatUsers"
-import {connect, useSelector} from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import {getMessages as getMessagesAction} from "../../Store/Actions/getAllMessages";
 import { connectToChat, sendMessage, stompClient } from "../../utils/webSocketChat"
 import axios from "axios"
 import QuoteForm from "../QuoteForm/QuoteForm"
 import { getTimeFromDate } from "../../utils/getTimeFromDate"
 import { quoteStatuses } from "../../Store/Actions/quoteActions"
+import { SetConnectChat } from "../../Store/Actions/setChatConnect"
 
 function VendorChat({getMessages,userId,userName, stateMessages}) {
 
+  const dispatch = useDispatch()
   const chatState = useSelector(state => state.chat)
   const currentUserId = useSelector(state => state.vendorInfo?.vendorData?.id)
   const currentUserData = useSelector(state => state.vendorInfo?.vendorData)
@@ -26,7 +28,7 @@ function VendorChat({getMessages,userId,userName, stateMessages}) {
   useEffect(() => {
     // fetchData()
     getMessages()
-    connectToChat(currentUserId, onMessageReceived)
+    connectToChat(currentUserId, onMessageReceived, () => dispatch(SetConnectChat()))
   }, []);
 
 

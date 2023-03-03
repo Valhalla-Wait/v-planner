@@ -12,7 +12,7 @@ import { schemaVendorServiceDetails } from "../../../validation/schemas"
 import { ServiceForm } from "./VendorServiceForm"
 
 
-const VendorServiceDetailsForm = ({ onCallback, onBack, onNext }) => {
+const VendorServiceDetailsForm = ({ onCallback, onBack, onNext, serviceTypes }) => {
 
   const {
     register,
@@ -60,7 +60,7 @@ const VendorServiceDetailsForm = ({ onCallback, onBack, onNext }) => {
       onCallback(data)
     })}>
 
-      {serviceInputsData.map((input) => <ServiceForm key={input.id} id={input.id} services={serviceInputsData} title={input.title} callback={setService} />)}
+      {/* {serviceInputsData.map((input) => <ServiceForm key={input.id} id={input.id} services={serviceInputsData} title={input.title} callback={setService} />)}
 
       <div
         className="btn btn-light add-btn" onClick={() => setServiceInputsData(prev => [
@@ -68,7 +68,7 @@ const VendorServiceDetailsForm = ({ onCallback, onBack, onNext }) => {
           {id: serviceInputsData.length, title: '', price: 0}
         ])}
       >Add item</div>
-      <br />
+      <br /> */}
 
       <label className="input-label">
         Type of services
@@ -174,7 +174,7 @@ const VendorServiceDetailsForm = ({ onCallback, onBack, onNext }) => {
           className="btn btn-accent w-100 m-t-24"
           style={{ flex: 1 }}
           disabled={!isValid}
-          // onClick={onNext}
+          onClick={onNext}
         >Next</Button>
       </div>
     </form>

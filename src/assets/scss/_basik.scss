@@ -236,6 +236,9 @@ a{
     padding: 0 16px;
   }
   &__body{
+    .lds-dual-ring{
+      margin: 0 50%;
+    }
     flex: 1;
     padding: 0 16px 25px;
     & > * + * {

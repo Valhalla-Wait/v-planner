@@ -8,13 +8,14 @@ import {
   GET_CURRENT_USER_START,
   GET_CURRENT_USER_SUCCESS,
   GET_CURRENT_USER_FAILED,
+  USER_LOGOUT,
 
 } from "../types";
 
 const initialState = {
   loading: false,
   userData: {
-    surname: ""
+    username: ""
   },
   token: null,
   error: null,
@@ -81,6 +82,13 @@ export default function userReducer(state = initialState, action) {
         loading: false,
         isAuth: false,
       };
+    case USER_LOGOUT:
+      return {
+        ...state,
+        userData: {
+          username:""
+        }
+      };
 
     default:
       return state;
@@ -94,3 +102,4 @@ export const signInFailed = (err) => ({ type: SIGNIN_FAILED, payload: err })
 export const getCurrentUserStart = () => ({ type: GET_CURRENT_USER_START })
 export const getCurrentUserSuccess = (user) => ({ type: GET_CURRENT_USER_SUCCESS, payload: user })
 export const getCurrentUserFailed = (err) => ({ type: GET_CURRENT_USER_FAILED, payload: err })
+export const userLogout = () => ({type: USER_LOGOUT})

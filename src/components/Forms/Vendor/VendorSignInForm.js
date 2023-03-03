@@ -28,13 +28,14 @@ const VendorSignInForm = () => {
   });
 
   const signIn = (data) => {
-    // const reqData = {
-    //   email: data.email,
-    //   password: data.password,
-    // };
-    // dispatch(loginAction(reqData));
+    const reqData = {
+      email: data.email,
+      password: data.password,
+    };
+    dispatch(loginAction(reqData));
     auth.login(data.email, data.password)
 
+    
     modal.destroy();
   };
 

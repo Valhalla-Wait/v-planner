@@ -44,6 +44,9 @@
     width: 100%;
     position: relative;
     padding: 48px $grid + px;
+    .lds-dual-ring{
+      margin: 0 37%;
+      }
     & .modal__close{
       position: absolute;
       top: 8px;
@@ -169,6 +172,9 @@
 @media (min-width: $sm) {
   .middle-modal{
     &__content{
+      .lds-dual-ring{
+        margin: 0 37%;
+      }
       margin: 24px auto;
       max-width: 416px;
       border-radius: 24px;
@@ -179,6 +185,10 @@
 @media (min-width: $md) {
   .middle-modal{
     &__content{
+      .lds-dual-ring{
+        margin: 0 37%;
+      }
+      
     }
   }
 }

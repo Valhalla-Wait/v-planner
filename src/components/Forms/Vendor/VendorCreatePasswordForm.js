@@ -5,6 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { schemaVendorCreatePassword } from "../../../validation/schemas";
 import f from "../../../validation/fieldName";
 import { FieldError } from "../../UI/FieldError";
+import { useSelector } from "react-redux";
+import Loader from "../../UI/Loader/Loader";
 
 const VendorCreatePasswordForm = ({ onCallback, onBack }) => {
   const {
@@ -16,10 +18,12 @@ const VendorCreatePasswordForm = ({ onCallback, onBack }) => {
     resolver: yupResolver(schemaVendorCreatePassword()),
   });
 
+  const loading = useSelector((state) => state.userInfo.loading);
   const isValidField = (field) => !errors[field];
   const getErrorField = (field) => errors[field]?.message;
 
   return (
+    loading ? <Loader /> :
     <form onSubmit={handleSubmit(onCallback)}>
       <Input
         type="password"

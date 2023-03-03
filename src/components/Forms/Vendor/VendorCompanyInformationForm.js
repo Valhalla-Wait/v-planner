@@ -10,7 +10,7 @@ import { customReactSelectOptions } from "../../../utils/customReactSelectOption
 import { useContext } from "react";
 import { ThemeContext } from "../../../context/ThemeContext";
 
-const VendorCompanyInformationForm = ({ onCallback, onBack }) => {
+const VendorCompanyInformationForm = ({ onCallback, onBack, serviceTypes }) => {
   const {
     register,
     formState: { errors, isValid },
@@ -117,7 +117,7 @@ const VendorCompanyInformationForm = ({ onCallback, onBack }) => {
           render={({ field }) => (
             <Select
               placeholder="Service Type"
-              options={optionTypes}
+              options={serviceTypes}
               isClearable={false}
               isSearchable={false}
               {...field}

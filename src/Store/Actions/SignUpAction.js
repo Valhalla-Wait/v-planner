@@ -19,7 +19,7 @@ export const signUpAction = ({
 }) => {
 
   return (dispatch) => {
-    dispatch(LoginStart);
+    dispatch(LoginStart());
     const reqBody = new FormData();
 
 

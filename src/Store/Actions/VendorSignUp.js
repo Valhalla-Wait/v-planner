@@ -2,12 +2,13 @@ import { VENDOR_SIGNIN, VENDOR_SUCCESS, VENDOR_FAILED } from "../types";
 import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { loginAction } from "./AuthAction";
+import { signInStart, signInSuccess as signInSuccessUser } from "../Reducers/UserReducer";
 
-export const signUpAction = (data) => {
+export const signUpAction = (data, auth) => {
   // console.log("data in signUpAction", data);
   return (dispatch) => {
-
-    dispatch(LoginStart);
+    dispatch(signInStart());
     const reqBody = new FormData();
     const obj = {
       aboutCompany: data.aboutCompany,
@@ -18,30 +19,24 @@ export const signUpAction = (data) => {
       companyTitle: data.title,
       email: data.email,
       facebook: data.facebook,
-      fieldOfActivity: data.type.value,
+      fieldOfActivity: 'Activity',
       firstName: data.firstName,
+      generalServiceIds: [data.type.value[0].id],
+      individualServiceModels: [],
       instagram: data.instagram,
       password: data.password,
       phoneNumber: data.phone,
-      photoStyle: data.type.value,
+      photoStyle: 'PhotoCool',
       priceFrom: data.priceRange.value.priceFrom,
       priceTo: data.priceRange.value.priceTo,
-      serviceModels: [
-        //   {
-        //     name: data.serviceModels[0].name,
-        //     price: data.serviceModels[0].price,
-        //   }
-        {
-          "name": "test_name",
-          "price": 0
-        },
-      ],
       surname: data.lastName,
       tiktok: data.tiktok,
       twitter: data.twitter,
       username: data.name,
       // typeOfService: data.type.value,
       weddingActivity: data.activities.value,
+      yearsOnMarket: 12,
+      youtube: data.youtube
     }
 
     console.log('obj', obj)
@@ -74,7 +69,12 @@ export const signUpAction = (data) => {
       headers: { "Content-Type": "multipart/form-data" },
     }).then((res) => {
       console.log("response in vendro", res)
-      dispatch(signInSuccess(res));
+      dispatch(loginAction({
+        email: obj.email,
+        password: obj.password
+      }))
+      if(auth) auth(obj.email, obj.password)
+      signInSuccess()
     })
       .catch((err) => {
         dispatch(addTodoFailure(err.message));

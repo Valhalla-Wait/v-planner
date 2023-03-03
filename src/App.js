@@ -25,16 +25,33 @@ const App = (props) => {
   const theme = useTheme();
 
   const state = useSelector(state => state.userInfo)
-  const isAuth = useSelector(state => state.userInfo.isAuth)
-  const role = useSelector(state => state.userInfo.userData?.roleModel?.role)
+  const isAuthClient = useSelector(state => state.userInfo?.userData?.id)
+  const isAuthVendor = useSelector(state => state.vendorInfo?.vendorData?.id)
+  const roleClient = useSelector(state => state.userInfo.userData?.roleModel?.role)
+  const roleVendor = useSelector(state => state.vendorInfo.vendorData?.roleModel?.role)
 
-  console.log('state', state)
-  console.log('isAuth', isAuth)
-  console.log('role', role)
+  // console.log('state', state)
+  // console.log('isAuth', isAuth)
+  // console.log('role', role)
 
   const dispatch = useDispatch()
+  const token = localStorage.getItem('token')
 
-  const routes = Routes(auth.isAuth, auth.user?.role || auth.user?.roleModel?.role);
+  const getAuth = () => {
+    if(isAuthClient && token) return isAuthClient
+    if(isAuthVendor && token) return isAuthVendor
+    return false
+  }
+
+  const getRole = () => {
+    if(roleClient) return roleClient
+    if(roleVendor) return roleVendor
+    return false
+  }
+
+
+
+  const routes = Routes(getAuth(), getRole());
   // const routes = Routes(isAuth, role);
 
   useEffect(() => {
@@ -47,9 +64,7 @@ const App = (props) => {
     }
   }, []);
 
-  if (auth.isLoading) {
-    return <>Loading</>;
-  }
+  // debugger
 
   return (
     <AuthContext.Provider value={{ ...auth }}>

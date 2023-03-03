@@ -5,6 +5,7 @@ import {
   VENDOR_SIGNIN,
   VENDOR_SIGNIN_SUCCESS,
   VENDOR_SIGNIN_FAILED,
+  VENDOR_LOGOUT,
 } from "../types";
 
 const initialState = {
@@ -59,7 +60,16 @@ export default function VendorReducer(state = initialState, action) {
         loading: false,
         error: action.payload.error,
       };
+      case VENDOR_LOGOUT:
+      return {
+        ...state,
+        vendorData: {
+          username:""
+        }
+      };
     default:
       return state;
   }
 }
+
+export const vendorLogout = () => ({type: VENDOR_LOGOUT})

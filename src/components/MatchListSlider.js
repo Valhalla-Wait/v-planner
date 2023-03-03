@@ -20,7 +20,7 @@ const MatchListSlider = ({ files = [], vendorData, triggerStories, data, setVend
   const auth = useContext(AuthContext);
   const dispatch = useDispatch()
 
-  console.log(auth.user.profile.likes)
+  // console.log(auth.user.profile.likes)
 
   useEffect(() => {
     if (swiperRef) {

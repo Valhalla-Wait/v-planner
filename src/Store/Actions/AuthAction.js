@@ -10,23 +10,32 @@ import { useSelector } from "react-redux";
 
 
 
-export const loginAction = ({ email, password }) => {
+export const loginAction = (data) => {
 
   return (dispatch) => {
     dispatch(signInStart());
-    axios
-      .post(`${process.env.REACT_APP_URL_TEST}/user/login`, {
-        email,
-        password,
-      })
-      .then((res) => {
-        dispatch(signInSuccess(res.data?.result?.jwt))
-        localStorage.setItem('token', res.data?.result?.jwt)
-        dispatch(getCurrentUser(res.data?.result.jwt))
-      })
+    // debugger
+    // const reqBody = new FormData();
+    const json = JSON.stringify(data);
+    const blob = new Blob([json], {
+      type: "application/json",
+    });
+    // reqBody.append("email", data.email);
+
+    // reqBody.append("password", data.password);
+    axios({
+      method: "post",
+      data,
+      url: `http://142.93.15.46:8080/user/login`,
+    }).then((res) => {
+      localStorage.setItem('token', res.data?.result?.jwt)
+      dispatch(getCurrentUser(res.data?.result.jwt))
+      dispatch(signInSuccess(res.data?.result?.jwt))
+    })
       .catch((err) => {
         dispatch(signInFailed(err.message));
       });
+
   };
 };
 

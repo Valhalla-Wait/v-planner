@@ -30,8 +30,9 @@ const UserSignInForm = () => {
       email: data[f.email],
       password: data[f.password],
     };
-    // dispatch(loginAction(reqData)); 
+    dispatch(loginAction(reqData));
     auth.login(reqData.email, reqData.password)
+    // dispatch(reqData.email, reqData.password)
 
     modal.destroy();
   };

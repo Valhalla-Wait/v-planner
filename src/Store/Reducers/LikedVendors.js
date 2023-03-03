@@ -7,42 +7,7 @@ import {
 
 const initialState = {
     loading: false,
-    vendors: [{
-        id: 1,
-        companyName: "companyName",
-        fieldOfActivity: "fieldOfActivity",
-        weddingActivity: "weddingActivity",
-        companyTitle: "companyTitle",
-        companyDescription: "companyDescription",
-        aboutCompany: "aboutCompany",
-        aboutTeam: "photoStyle",
-        photoStyle: "photoStyle",
-        tiktok: null,
-        instagram: null,
-        twitter: null,
-        facebook: null,
-        services: [],
-        photos: [
-            {
-                id: 26,
-                name: "lGQDrud7--1197993887.jpg",
-                type: "AVATAR",
-                url: "https://images-and-videos.fra1.digitaloceanspaces.comimages/lGQDrud7--1197993887.jpg"
-            },
-            {
-                id: 27,
-                name: "i28mlfMb-1885065787.jpg",
-                type: "COMPANY_AVATAR",
-                url: "https://images-and-videos.fra1.digitaloceanspaces.comimages/i28mlfMb-1885065787.jpg"
-            },
-            {
-                id: 28,
-                name: "NQxD6RnP--1723052065.jpg",
-                type: "PHOTO_AND_VIDEOS",
-                url: "https://images-and-videos.fra1.digitaloceanspaces.comimages/NQxD6RnP--1723052065.jpg"
-            }
-        ]
-    }],
+    vendors: [],
 };
 
 export default function LikedVendors(state = initialState, action) {
