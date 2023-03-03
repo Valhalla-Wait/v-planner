@@ -23,6 +23,8 @@ export default function FinancialReports() {
     if (token) dispatch(getQuotes(token))
   }, [])
 
+  const allQuotes = useSelector(state => state.quotes.quotesList ? state.quotes.quotesList : [])
+
   const acceptedQuotes = useSelector(state => {
     if (state.quotes.quotesList) {
       return state.quotes.quotesList.filter((quote) => quote.status === quoteStatuses.ACCEPTED.value)
@@ -88,28 +90,31 @@ export default function FinancialReports() {
           }}
         />
         </div> */}
-          <div className="charts__item pie">
-          <Doughnut width={300} height={300} 
-          options={{
-            responsive: true,
-            plugins: {
-              legend: {
-                position: 'left'
-              }
-            }
-          }}
-           data={{
-          labels: ["Await", "Accepted", "Declined"],
-          datasets: [{
-            data: [awaitingQuotes.length, acceptedQuotes.length, declinedQuotes.length],
-            backgroundColor: ["#E7EBFF", "#43E6D2", "#3057E1"]
-          }
-        ]
-        }} />
-          </div>
-        
 
-        
+        {allQuotes.length ?
+          <div className="charts__item pie">
+            <Doughnut width={300} height={300}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'left'
+                  }
+                }
+              }}
+              data={{
+                labels: ["Await", "Accepted", "Declined"],
+                datasets: [{
+                  data: [awaitingQuotes.length, acceptedQuotes.length, declinedQuotes.length],
+                  backgroundColor: ["#E7EBFF", "#43E6D2", "#3057E1"]
+                }
+                ]
+              }} />
+          </div>
+          :
+          "Quotes not found"
+          }
+
       </div>
       <div className="reports-lists">
         <FinancialReportsItem title={"Awaiting Acceptence"} quotes={awaitingQuotes} />

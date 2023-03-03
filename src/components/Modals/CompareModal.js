@@ -23,7 +23,7 @@ const CompareModal = ({ quotes }) => {
       description: quotes[0].description,
       generalServiceIds: quotes[0].selectedGeneralServices.map(service => service.id),
       individualServiceIds: quotes[0].selectedIndividualServices.map(service => service.id),
-      photoId: 47, //quotes[0].logo.id
+      photoId: quotes[0].logo.id,
       quoteNumber: quotes[0].quoteNumber,
       title: quotes[0].title,
     }
@@ -34,7 +34,7 @@ const CompareModal = ({ quotes }) => {
       description: quotes[1].description,
       generalServiceIds: quotes[1].selectedGeneralServices.map(service => service.id),
       individualServiceIds: quotes[1].selectedIndividualServices.map(service => service.id),
-      photoId: 47,
+      photoId: quotes[1].logo.id,
       quoteNumber: quotes[1].quoteNumber,
       title: quotes[1].title,
     }
