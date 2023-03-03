@@ -87,7 +87,7 @@ const UserSignUpForm = () => {
   const [src, setSrc] = useState(null);
   console.log(src)
   const [isCustomBudget, setIsCustomBudget] = useState(false);
-  let { token } = useSelector((state) => state.userInfo);
+  const token = localStorage.getItem('token')
 
   const addPhoto = (e) => {
     if (e.target.files && e.target.files.length) {
@@ -107,8 +107,12 @@ const UserSignUpForm = () => {
 
   // useEffect
 
+  const relogin = (email, password) => {
+    auth.login(email, password)
+  }
+
   const onSubmit = (data) => {
-    dispatch(signUpAction({ ...data }));
+    dispatch(signUpAction({ ...data }, relogin));
     modal.destroy();
   };
 

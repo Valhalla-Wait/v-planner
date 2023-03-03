@@ -16,7 +16,7 @@ export const signUpAction = ({
   customBudget,
   password,
   avatar,
-}) => {
+}, auth) => {
 
   return (dispatch) => {
     dispatch(LoginStart());
@@ -56,10 +56,15 @@ export const signUpAction = ({
       url: `${process.env.REACT_APP_API_URL}/clients/create`,
       data: reqBody,
       headers: { "Content-Type": "multipart/form-data" },
-    })
-   
-      .then((res) => {
+    }).then((res) => {
+
         console.log(res, "res in create client");
+        localStorage.setItem('token', res.data?.result?.jwt)
+        dispatch(loginAction({
+          email: obj.email,
+          password: obj.password
+        }))
+        if(auth) auth(obj.email, obj.password)
         dispatch(signInSuccess(res));
       })
       .catch((err) => {
