@@ -108,6 +108,7 @@ const UserSignUpForm = () => {
   // useEffect
 
   const relogin = (email, password) => {
+    debugger
     auth.login(email, password)
   }
 
@@ -118,24 +119,6 @@ const UserSignUpForm = () => {
 
   const isValidField = (field) => !errors[field];
   const getErrorField = (field) => errors[field]?.message;
-  useEffect(() => {
-
-    if (token !== null) {
-      console.log("token in useEffect", token);
-      console.log("userData in test", userData);
-      auth.login(
-        process.env.REACT_APP_ROLE_USER,
-        userData.mail,
-        userData.firstName,
-        userData.surname,
-
-        "avata  r",
-        userData.phone,
-        userData.nickname,
-        userData.partnersFirstName
-      );
-    }
-  }, [token]);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="photo-add">

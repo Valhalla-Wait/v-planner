@@ -1,5 +1,6 @@
 import { SIGNIN_SUCCESS, SIGNIN_START, SIGNIN_FAILED } from "../types";
 import axios from "axios";
+import { loginAction } from "./AuthAction";
 
 export const signUpAction = ({
   firstName,
@@ -64,6 +65,7 @@ export const signUpAction = ({
           email: obj.email,
           password: obj.password
         }))
+        debugger
         if(auth) auth(obj.email, obj.password)
         dispatch(signInSuccess(res));
       })
