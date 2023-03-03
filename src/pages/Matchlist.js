@@ -631,7 +631,7 @@ function Matchlist({ dto, getAll, token, loading, getMessages, chatState }) {
                         className="btn btn-light d-block w-100"
                         onClick={() => {
                           dispatch(getDetailVendor(selectVendor?.userModel?.id));
-                          navigate(`/vendor/${selectVendor?.userModel?.id}`);
+                          navigate(`/vendor/${selectVendor?.id}`);
                         }}
                       >
                         View Vendor

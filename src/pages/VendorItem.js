@@ -84,6 +84,7 @@ function VendorItem({ isLoading }) {
       })
     }} />);
   };
+  debugger
   const images = vendorData.photos
   console.log("vendor more", vendorData)
   console.log("images", images)
