@@ -26,7 +26,7 @@ export const loginAction = (data) => {
     axios({
       method: "post",
       data,
-      url: `http://142.93.15.46:8080/user/login`,
+      url: `${process.env.REACT_APP_URL_TEST}/user/login`,
     }).then((res) => {
       localStorage.setItem('token', res.data?.result?.jwt)
       dispatch(getCurrentUser(res.data?.result.jwt))
