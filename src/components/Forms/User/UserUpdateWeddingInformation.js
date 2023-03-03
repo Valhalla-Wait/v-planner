@@ -13,11 +13,12 @@ import { AuthContext } from "../../../context/AuthContext"
 import { ThemeContext } from "../../../context/ThemeContext"
 import { useDispatch, useSelector } from "react-redux"
 import { getCurrentUser } from "../../../Store/Actions/getCurrentUser"
+import axios from "axios"
 
 const optionsBudget = [
-  { value: "Budget", label: "Budget"},
-  { value: "Max Budget", label: "Max Budget"},
-  { value: "custom", label: "Your variant"}
+  { value: "Budget", label: "Budget" },
+  { value: "Max Budget", label: "Max Budget" },
+  { value: "custom", label: "Your variant" }
 ]
 
 const optionsState = [
@@ -82,7 +83,7 @@ const UserUpdateWeddingInformation = () => {
 
   const userData = useSelector((state) => state.userInfo.userData);
 
-  const [isCustomBudget, setIsCustomBudget] = useState(false)
+  const [isCustomBudget, setIsCustomBudget] = useState(!(optionsBudget.find(o => o.value == userData.clientModel.budget)) && userData.clientModel.budget)
 
   const dispatch = useDispatch()
 
@@ -128,31 +129,30 @@ const UserUpdateWeddingInformation = () => {
 
     const json = JSON.stringify({
       ...formData,
-      firstName: data.firstName,
-      partnerFirstName: data.partnersFirstName,
-      partnerLastName: data.partnersLastName,
-      surname: data.lastName,
-      username: data.nickname,
+      budget: data.customBudget > 0 ? String(data.customBudget) : data.budget.value,
+      engagementDate: new Date(data.engagementDate),
+      weddingDate: new Date(data.weddingDate),
+      weddingAddress: data.location.value,
+      amountOfGuests: data.countGuest,
     })
 
     const blob = new Blob([json], {
       type: "application/json",
     })
 
-    // reqBody.append('updateClientModel', blob)
-    // if(data.avatar[0]) reqBody.append('avatar', data.avatar[0])
+    reqBody.append('updateClientModel', blob)
 
-    // axios({
-    //   method: "put",
-    //   url: `${process.env.REACT_APP_API_URL}/clients/update`,
-    //   data: reqBody,
-    //   headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${localStorage.getItem("token")}` },
-    // }).then((res) => {
-    //   dispatch(getCurrentUser(localStorage.getItem("token")))
-    // })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
+    axios({
+      method: "put",
+      url: `${process.env.REACT_APP_API_URL}/clients/update`,
+      data: reqBody,
+      headers: { "Content-Type": "multipart/form-data", "Access-Control-Allow-Origin": "*", Authorization: `Bearer ${localStorage.getItem("token")}` },
+    }).then((res) => {
+      dispatch(getCurrentUser(localStorage.getItem("token")))
+    })
+      .catch((err) => {
+        console.log(err)
+      })
 
   }
 
@@ -176,14 +176,14 @@ const UserUpdateWeddingInformation = () => {
                   placeholderText="Engagement Date"
                   className="input-control"
                   selected={field.value}
-                ref={field.ref}
-                onChange={field.onChange}
-                onBlur={field.onBlur}
+                  ref={field.ref}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
                   readonly={true}
                 />
               )}
             />
-            { !isValidField(f.date.engagement) &&  <FieldError text={getErrorField(f.date.engagement)} /> }
+            {!isValidField(f.date.engagement) && <FieldError text={getErrorField(f.date.engagement)} />}
           </label>
         </div>
         <div>
@@ -195,19 +195,19 @@ const UserUpdateWeddingInformation = () => {
               defaultValue={new Date(userData.clientModel.weddingDate)}
               render={({ field }) => (
                 <DatePicker
-                dateFormat="d MMMM yy"
-                {...field}
-                placeholderText="Engagement Date"
-                className="input-control"
-                selected={field.value}
-              ref={field.ref}
-              onChange={field.onChange}
-              onBlur={field.onBlur}
-                readonly={true}
-                  />
+                  dateFormat="d MMMM yy"
+                  {...field}
+                  placeholderText="Engagement Date"
+                  className="input-control"
+                  selected={field.value}
+                  ref={field.ref}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  readonly={true}
+                />
               )}
             />
-            { !isValidField(f.date.wedding) &&  <FieldError text={getErrorField(f.date.wedding)} /> }
+            {!isValidField(f.date.wedding) && <FieldError text={getErrorField(f.date.wedding)} />}
           </label>
         </div>
       </div>
@@ -222,22 +222,22 @@ const UserUpdateWeddingInformation = () => {
               placeholder="State"
               options={optionsState}
               isClearable={false}
-                isSearchable={false}
-                {...field}
-                onChange={(e) => {
-                  if (e.value === "custom") {
-                    setIsCustomBudget(true);
-                    return;
-                  }
-                  field.onChange(e);
-                }}
+              isSearchable={false}
+              {...field}
+              onChange={(e) => {
+                if (e.value === "custom") {
+                  setIsCustomBudget(true);
+                  return;
+                }
+                field.onChange(e);
+              }}
               {...customReactSelectOptions(theme.get())}
             />
           )}
         />
-        { !isValidField(f.location.default) && <FieldError text={getErrorField(f.location.default)} /> }
+        {!isValidField(f.location.default) && <FieldError text={getErrorField(f.location.default)} />}
       </label>
-      {/* <Input
+      <Input
         type="text"
         placeholder="Guests Number"
         label="Guests Number"
@@ -245,8 +245,8 @@ const UserUpdateWeddingInformation = () => {
         register={register(f.count.guest)}
         error={getErrorField(f.count.guest)}
         isValid={isValidField(f.count.guest)}
-      /> */}
-      {/* <label className="input-label">
+      />
+      <label className="input-label">
         Budget, $
         {
           isCustomBudget
@@ -261,7 +261,7 @@ const UserUpdateWeddingInformation = () => {
             : <Controller
                 control={control}
                 name={f.budget}
-                defaultValue={optionsBudget}
+                defaultValue={!userData.clientModel.budget ? optionsBudget[0] : optionsBudget.find(o => o.value == userData.clientModel.budget)}
                 render={({ field }) => (
                   <Select
                     placeholder="Budget"
@@ -282,7 +282,7 @@ const UserUpdateWeddingInformation = () => {
               />
         }
         { !isValidField(f.budget) && <FieldError text={getErrorField(f.budget)} /> }
-      </label> */}
+      </label>
       <Button
         className="btn btn-accent m-t-8"
         disabled={!isValid}
