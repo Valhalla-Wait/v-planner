@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import GuestLayout from "../components/Layouts/GuestLayout";
 import About from "../pages/About";
+import Login from "../pages/Admin/Login/Login";
 import Faq from "../pages/Faq";
 import Help from "../pages/Help";
 import Home from "../pages/Home";
@@ -19,6 +20,7 @@ export default function GuestRouter(props) {
         <Route path="faq" element={<Faq />} />
         <Route path="*" element={<Home />} />
       </Route>
+      <Route path="/admin" element={<Login />} />
     </Routes>
   );
 }

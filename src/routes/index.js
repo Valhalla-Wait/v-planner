@@ -1,3 +1,4 @@
+import AdminRouter from "./AdminRouter";
 import GuestRouter from "./GuestRouter";
 import UserRouter from "./UserRouter";
 import VendorRouter from "./VendorRouter";
@@ -16,12 +17,9 @@ export default function Routes(isAuth, role) {
     return <VendorRouter />;
   }
 
-  else {
-    console.log('route: none was loaded')
+  if (role === process.env.REACT_APP_ROLE_ADMIN) {
+    return <AdminRouter />
   }
 
-  if (isAuth) {
-    console.log("isAuth")
-  }
   return <p>none was loaded</p>
 }
