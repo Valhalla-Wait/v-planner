@@ -5,20 +5,23 @@ const defaultTheme = isDarkThemeDefault ? "dark" : "light"
 
 const useTheme = () => {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || defaultTheme)
-  
+
   useLayoutEffect(() => {
     document.documentElement.setAttribute("data-theme", theme)
-    localStorage.setItem("theme", theme)
+    if (theme !== "admin") {
+      localStorage.setItem("theme", theme)
+    }
   }, [theme])
 
   const toggle = () => theme === "dark" ? setLight() : setDark()
-  
+
   const setDark = () => setTheme("dark")
   const setLight = () => setTheme("light")
-  
+  const setAdmin = () => setTheme("admin")
+
   const get = () => theme
 
-  return { setDark, setLight, toggle, get }
+  return { setDark, setLight, setAdmin, toggle, get }
 }
 
 export default useTheme
