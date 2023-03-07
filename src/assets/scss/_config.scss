@@ -21,4 +21,7 @@ $xl: 1199.98px;
 @include addFont("SFProDisplay", "Regular", 400, "normal");
 @include addFont("SFProDisplay", "Semibold", 600, "normal");
 @include addFont("Sora", "Regular", 400, "normal");
+@include addFont("Roboto", "Regular", 400, "normal");
+@include addFont("Roboto", "Medium", 500, "normal");
+@include addFont("Roboto", "Bold", 700, "normal");
 
