@@ -1,7 +1,6 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useContext, useLayoutEffect } from 'react'
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
-import useTheme from '../../../hooks/useTheme'
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -14,16 +13,17 @@ import Input from '../../../components/Admin/UI/Input/Input'
 
 import cls from "./Login.module.scss"
 import { loginAdminAction } from '../../../Store/Actions/Admin/AdminAuthAction';
+import { ThemeContext } from '../../../context/ThemeContext';
 
 const Login = () => {
-  const theme = useTheme()
+  const theme = useContext(ThemeContext);
   const dispatch = useDispatch()
   const { error } = useSelector(state => state.userInfo)
 
 
   useLayoutEffect(() => {
     theme.setAdmin();
-  })
+  }, [theme])
 
   const {
     register,

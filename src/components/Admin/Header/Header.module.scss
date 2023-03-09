@@ -1,0 +1,27 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-left: 315px;
+    height: 80px;
+    background-color: #FFF;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.headerAdminName {
+    color: #84828A;
+}
+
+.headerLogoutBtn {
+    background-color: transparent;
+    color: #84828A;
+    display: flex;
+    align-items: center;
+}
+
+.headerLogoutBtnIcon {
+    margin-right: 10px;
+}

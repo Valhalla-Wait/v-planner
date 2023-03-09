@@ -1,19 +1,28 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useContext, useLayoutEffect } from 'react'
 import { Outlet } from 'react-router-dom'
-import useTheme from '../../hooks/useTheme'
+import { ThemeContext } from '../../context/ThemeContext'
+import Header from '../Admin/Header/Header'
 import Sidebar from '../Admin/Sidebar/Sidebar'
 
+import cls from "./AdminLayout.module.scss"
+
 const Layout = () => {
-    const theme = useTheme()
+  const theme = useContext(ThemeContext);
 
     useLayoutEffect(() => {
         theme.setAdmin();
-    })
+        return theme.setThemeBeforeAdmin
+    }, [theme])
 
     return (
-        <div>
+        <div className={cls.layout}>
             <Sidebar />
-            <Outlet />
+            <div className={cls.main}>
+                <Header />
+                <div className={cls.content}>
+                    <Outlet />
+                </div>
+            </div>
         </div>
     )
 }

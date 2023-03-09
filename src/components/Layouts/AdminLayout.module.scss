@@ -1,0 +1,12 @@
+.layout {
+    display: flex;
+}
+
+.main {
+    flex-grow: 1;
+    position: relative;
+}
+
+.content {
+    margin-top: 80px;
+}

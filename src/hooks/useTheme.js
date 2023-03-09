@@ -18,10 +18,14 @@ const useTheme = () => {
   const setDark = () => setTheme("dark")
   const setLight = () => setTheme("light")
   const setAdmin = () => setTheme("admin")
+  const setThemeBeforeAdmin = () => {
+    const prevTheme = localStorage.getItem("theme")
+    setTheme(prevTheme)
+  }
 
   const get = () => theme
 
-  return { setDark, setLight, setAdmin, toggle, get }
+  return { setDark, setLight, setAdmin, setThemeBeforeAdmin, toggle, get }
 }
 
 export default useTheme
