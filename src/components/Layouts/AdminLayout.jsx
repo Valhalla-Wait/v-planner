@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import useTheme from '../../hooks/useTheme'
+import Sidebar from '../Admin/Sidebar/Sidebar'
 
 const Layout = () => {
     const theme = useTheme()
@@ -11,6 +12,7 @@ const Layout = () => {
 
     return (
         <div>
+            <Sidebar />
             <Outlet />
         </div>
     )
