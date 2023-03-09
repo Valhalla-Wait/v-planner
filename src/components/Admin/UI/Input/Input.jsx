@@ -1,10 +1,22 @@
 import React from 'react'
+import { FieldError } from '../../../UI/FieldError'
+
+import { classNames } from '../../../../utils/classNames'
 
 import cls from "./Input.module.scss"
 
-const Input = ({ className, type = "text" }) => {
+const Input = ({ error, isValid, register = {}, className, type = "text", ...props }) => {
+
     return (
-        <input type={type} className={[cls.input, className].join(' ')} />
+        <>
+            <input
+                type={type}
+                className={classNames(cls.input, { [cls.notValid]: !isValid }, [className])}
+                {...register}
+                {...props}
+            />
+            {error && <FieldError text={error} />}
+        </>
     )
 }
 

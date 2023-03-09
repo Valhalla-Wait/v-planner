@@ -1,10 +1,14 @@
 import React from 'react'
+import { classNames } from '../../../../utils/classNames'
 
 import cls from "./Button.module.scss"
 
-const Button = ({ children, className }) => {
+const Button = ({ children, className, ...props }) => {
     return (
-        <button className={[cls.btn, className].join(' ')}>{children}</button>
+        <button
+            className={classNames(cls.btn, {}, [className])}
+            {...props}
+        >{children}</button>
     )
 }
 

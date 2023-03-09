@@ -1,5 +1,9 @@
 html[data-theme=admin] body {
-    background-color: #F1F4FA;
-    font-family: Roboto;
-    margin: 0
+  background-color: #F1F4FA;
+  font-family: Roboto;
+  margin: 0
+}
+
+html[data-theme=admin] .field-error {
+  color: #F44336;
 }
