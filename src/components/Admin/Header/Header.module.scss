@@ -3,12 +3,33 @@
     top: 0;
     left: 0;
     right: 0;
-    margin-left: 315px;
+    margin-left: 225px;
     height: 80px;
     background-color: #FFF;
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
     align-items: center;
+    padding: 10px 24px;
+}
+
+.menu {
+    width: 34px;
+    height: 34px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: #EFE9FF;
+    fill: #6425FE;
+    border-radius: 8px;
+}
+
+.menu:hover {
+    background-color: #6425FE;
+    fill: #FFF;
+}
+
+.headerSpacer {
+    flex-grow: 1;
 }
 
 .headerAdminName {
@@ -24,4 +45,13 @@
 
 .headerLogoutBtnIcon {
     margin-right: 10px;
+}
+
+@media (max-width: 900px) {
+    .header {
+        margin-left: 0;
+    }
+    .menu {
+        display: flex;
+    }
 }
