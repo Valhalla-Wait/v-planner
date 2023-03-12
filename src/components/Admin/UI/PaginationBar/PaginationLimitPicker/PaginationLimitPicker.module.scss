@@ -1,0 +1,44 @@
+.limitPicker {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+}
+
+.limitPickerBtn {
+    padding: 10px;
+    min-width: 48px;
+    display: flex;
+}
+
+.limitPageBtnIcon {
+    transition: transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+}
+
+.limitPicker:hover .limitPageBtnIcon {
+    transform: rotate(180deg);
+}
+
+.limitPickerContent {
+    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 48px;
+    text-align: center;
+    display: none;
+    position: absolute;
+    bottom: 0;
+    transform: translateY(-30px);
+    background-color: #FFF;
+    padding: 10px 0;
+}
+
+.limitPicker:hover .limitPickerContent {
+    display: block;
+}
+
+.limitPickerContentItem {
+    padding: 5px 0;
+}
+
+.limitPickerContentItem:hover {
+    background: rgba(33, 148, 243, 0.1);
+}

@@ -1,0 +1,27 @@
+.deleteHeader {
+    text-align: center;
+}
+
+.deleteBody {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.deleteFooter {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.deleteFooterDelete {
+    background-color: #FFF;
+    color: #F44336;
+    border: 1px solid #F44336;
+}
+
+.deleteFooterCancel {
+    background-color: #FFF;
+    color: #3A36DB;
+    border: 1px solid #3A36DB;
+}

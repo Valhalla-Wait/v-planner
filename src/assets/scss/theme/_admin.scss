@@ -7,3 +7,12 @@ html[data-theme=admin] body {
 html[data-theme=admin] .field-error {
   color: #F44336;
 }
+
+html[data-theme=admin] .modal.active {
+  backdrop-filter: none;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+html[data-theme=admin] .middle-modal__content {
+  background-color: #FFF;
+}

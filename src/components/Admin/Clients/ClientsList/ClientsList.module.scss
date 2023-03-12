@@ -1,0 +1,36 @@
+.clientsList {
+    display: table;
+    border-spacing: 0;
+    width: 100%;
+    color: #121926;
+}
+
+.clientsListHeader {
+    display: table-header-group;
+}
+
+.clientsListHeaderItem {
+    text-align: left;
+    padding: 16px 16px 16px 24px;
+    border-bottom: 1px solid #E3E8EE;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.clientsListHeaderItem:last-of-type {
+    text-align: right;
+}
+
+.clientsListDelete {
+    white-space: nowrap;
+    background-color: #F44336;
+    color: #FFF;
+    border: 1px solid #F44336;
+    border-radius: 4px;
+}
+
+.listItemDeleteBtn.disabled {
+    border: 1px solid rgb(105, 117, 134);
+    background-color: #FFF;
+    color: rgb(105, 117, 134);
+}

@@ -14,6 +14,7 @@ const Sidebar = () => {
                 <div className={cls.sidebarLogo}>Dashboard</div>
                 <SidebarList />
             </div >
+            <div className={cls.sidebarSkelet}></div>
             <div className={classNames(cls.background, { [cls.backgroundActive]: sidebar.isActive })} onClick={sidebar.toggle}></div>
         </>
     )
