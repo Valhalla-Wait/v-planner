@@ -19,7 +19,7 @@ const SignInVendorModal = () => {
 
   const loading = useSelector(state => state.vendorInfo.loading)
 
-  debugger
+  // debugger
   return (
     <ModalMiddleContent>
       <div className="middle-modal__header">

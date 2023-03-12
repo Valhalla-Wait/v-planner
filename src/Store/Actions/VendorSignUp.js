@@ -3,12 +3,12 @@ import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { loginAction } from "./AuthAction";
-import { signInStart, signInSuccess as signInSuccessUser } from "../Reducers/UserReducer";
+import { vendorSignIn } from "../Reducers/VendorReducer";
 
 export const signUpAction = (data, auth) => {
   // console.log("data in signUpAction", data);
   return (dispatch) => {
-    dispatch(signInStart());
+    dispatch(vendorSignIn());
     const reqBody = new FormData();
     const obj = {
       aboutCompany: data.aboutCompany,
@@ -74,7 +74,7 @@ export const signUpAction = (data, auth) => {
         password: obj.password
       }))
       if(auth) auth(obj.email, obj.password)
-      signInSuccess()
+      signInSuccess(res)
     })
       .catch((err) => {
         dispatch(addTodoFailure(err.message));
@@ -90,10 +90,6 @@ const signInSuccess = (response) => {
     },
   };
 };
-
-const LoginStart = () => ({
-  type: VENDOR_SIGNIN,
-});
 
 const addTodoFailure = (error) => ({
   type: VENDOR_FAILED,

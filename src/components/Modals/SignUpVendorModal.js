@@ -33,6 +33,8 @@ const SignUpVendorModal = () => {
   const signInVendor = () => modal.setContent(<SignInVendorModal />);
   const signUpUser = () => modal.setContent(<SignUpUserModal />);
 
+  const laoding = useSelector(state => state.vendorInfo.loading)
+
   console.log(step3)
 
   const nextStep = (number) => {
@@ -55,10 +57,13 @@ const SignUpVendorModal = () => {
       ...step6,
       ...data,
     };
-    debugger
+    // debugger
     console.log('SIGNIN DATA', req)
     dispatch(signUpAction(req, relogin));
-    modal.destroy();
+    if(!laoding) {
+      modal.destroy();
+    }
+    
   };
 
   console.log(step1)

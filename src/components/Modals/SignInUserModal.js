@@ -18,7 +18,7 @@ const SignInUserModal = () => {
   const requestResetPassword = () => modal.setContent(<RequestResetPasswordModal goBackCallback={() => modal.setContent(<SignInUserModal />)} />)
 
   const loading = useSelector(state => state.userInfo.loading)
-debugger
+// debugger
   return (
     <ModalMiddleContent>
       <div className="middle-modal__header">

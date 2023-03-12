@@ -230,7 +230,7 @@ const VendorUpdateCompanyInformationForm = ({ img, name, amount, country }) => {
         <div>
           <Input
             type="text"
-            placeholder="Country"
+            placeholder="County"
             label="County"
             defaultValue={country}
             register={register(f.country)}

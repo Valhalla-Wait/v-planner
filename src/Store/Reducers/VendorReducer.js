@@ -73,3 +73,4 @@ export default function VendorReducer(state = initialState, action) {
 }
 
 export const vendorLogout = () => ({type: VENDOR_LOGOUT})
+export const vendorSignIn = () => ({type: LOGIN_VENDOR})

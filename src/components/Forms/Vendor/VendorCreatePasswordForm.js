@@ -18,7 +18,7 @@ const VendorCreatePasswordForm = ({ onCallback, onBack }) => {
     resolver: yupResolver(schemaVendorCreatePassword()),
   });
 
-  const loading = useSelector((state) => state.userInfo.loading);
+  const loading = useSelector((state) => state.vendorInfo.loading);
   const isValidField = (field) => !errors[field];
   const getErrorField = (field) => errors[field]?.message;
 

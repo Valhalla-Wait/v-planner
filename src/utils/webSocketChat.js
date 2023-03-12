@@ -29,7 +29,7 @@ const onError = (err) => {
     console.log(err);
 };
 export const sendMessage = async (msg,senderId,recipientId,senderName,recipientName) => {
-    debugger
+    // debugger
     if (msg.trim() !== "") {
         const message = {
             senderId: senderId,

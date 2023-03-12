@@ -161,7 +161,7 @@ const VendorCompanyInformationForm = ({ onCallback, onBack, serviceTypes }) => {
         <div>
           <Input
             type="text"
-            placeholder="Country"
+            placeholder="County"
             label="County"
             register={register(f.country)}
             error={getErrorField(f.country)}

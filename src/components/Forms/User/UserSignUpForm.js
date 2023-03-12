@@ -108,7 +108,7 @@ const UserSignUpForm = () => {
   // useEffect
 
   const relogin = (email, password) => {
-    debugger
+    // debugger
     auth.login(email, password)
   }
 
