@@ -1,0 +1,22 @@
+.serviceTypesList {
+    display: table;
+    border-spacing: 0;
+    width: 100%;
+    color: #121926;
+}
+
+.serviceTypesListHeader {
+    display: table-header-group;
+}
+
+.serviceTypesListHeaderItem {
+    text-align: left;
+    padding: 16px 16px 16px 24px;
+    border-bottom: 1px solid #E3E8EE;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.serviceTypesListItem:last-of-type {
+    text-align: right;
+}

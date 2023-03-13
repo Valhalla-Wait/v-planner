@@ -6,7 +6,7 @@ import CheckBox from '../../UI/CheckBox/CheckBox'
 
 import cls from "./VendorsItem.module.scss"
 import { ModalContext } from '../../../../context/ModalContext'
-import DeleteUser from '../../Modals/DeleteUser/DeleteUser'
+import DeleteModal from '../../Modals/DeleteModal/DeleteModal'
 import { useDispatch } from 'react-redux'
 import { deleteVendorByIdAction } from '../../../../Store/Actions/Admin/deleteVendorByIdAction'
 
@@ -26,12 +26,13 @@ const VendorsItem = ({ vendor, isChecked, handleCheck, isDeletingAll }) => {
     }
 
     const openModal = () => {
+        const headerText = "Delete vendors"
+        const bodyText = "Are you sure you want to delete selected vendors"
         modal.start()
-        modal.setContent(<DeleteUser callback={deleteUser} />)
+        modal.setContent(<DeleteModal callback={deleteUser} header={headerText} body={bodyText} />)
     }
 
     const handleClick = () => {
-        console.log('cheked')
         handleCheck(vendor.id, isChecked)
     }
 

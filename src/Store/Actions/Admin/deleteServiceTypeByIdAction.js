@@ -1,17 +1,16 @@
 import axios from "axios";
-import { deleteVendorByIdSuccess } from "../../Reducers/Admin/VendorsReducer";
+import { deleteServiceTypeByIdSuccess } from "../../Reducers/Admin/ServicesReducer";
 
-
-export const deleteVendorByIdAction = (jwt, id) => {
+export const deleteServiceTypeByIdAction = (jwt, id) => {
     return (dispatch) => {
         return axios({
             method: "delete",
-            url: `${process.env.REACT_APP_URL_TEST}/vendors/delete`,
+            url: `${process.env.REACT_APP_URL_TEST}/service-type/delete`,
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${jwt}` },
-            params: {id: id}
+            params: { id: id }
         })
             .then(() => {
-                dispatch(deleteVendorByIdSuccess(id))
+                dispatch(deleteServiceTypeByIdSuccess(id))
             })
             .catch((err) => {
                 console.log(err)

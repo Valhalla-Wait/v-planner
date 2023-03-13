@@ -6,6 +6,7 @@ import DetailVendor from "./Reducers/VendorInfoReducer";
 import chatReducer from "./Reducers/Chat";
 import vendorsReducer from "./Reducers/Admin/VendorsReducer"
 import clientsReducer from "./Reducers/Admin/ClientsReducer"
+import servicesReducer from "./Reducers/Admin/ServicesReducer";
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import thunk from "redux-thunk";
@@ -20,6 +21,7 @@ const reducers = combineReducers({
   quotes: quotesReducer,
   vendors: vendorsReducer,
   clients: clientsReducer,
+  services: servicesReducer
 });
 const reduxDevTools = composeWithDevTools(
     applyMiddleware(thunk)

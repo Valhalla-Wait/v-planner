@@ -12,8 +12,7 @@ const Button = ({ children, className, isLoading = false, disabled = false, ...p
             {...props}
         >
             {isLoading && <Loader />}
-            <span className={classNames("", { [cls.notVisible]: isLoading })}>{children}</span>
-        </button>
+            <span className={classNames("", { [cls.notVisible]: isLoading })}>{children}</span></button>
     )
 }
 

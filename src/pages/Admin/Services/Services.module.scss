@@ -1,0 +1,30 @@
+.services {
+    background-color: #FFF;
+}
+
+.servicesHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.servicesAddBtn {
+    padding: 10px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    transition: background-color 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+    background-color: rgba(#03A89E, 0.1);
+    fill: #03A89E;
+    color: #03A89E;
+}
+
+.servicesAddBtn:hover {
+    background-color: rgba(#03A89E, 0.3);
+}
+
+.servicesAddBtn svg {
+    vertical-align: middle;
+}

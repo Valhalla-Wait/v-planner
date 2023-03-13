@@ -1,0 +1,49 @@
+.listItem {
+    text-align: left;
+    padding: 16px 16px 16px 24px;
+    font-size: 14px;
+}
+
+.listItem:last-of-type {
+    text-align: right;
+}
+
+.listItemBtn {
+    padding: 10px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    transition: background-color 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+}
+
+.llistItemBtn.disabled {
+    background-color: rgba(#06152B, 0.1);
+    fill: #06152B;
+}
+
+.listItemEditBtn {
+    background-color: rgba(#3A36DB, 0.1);
+    fill: #3A36DB;
+    color: #3A36DB;
+    margin-right: 10px;
+}
+
+.listItemEditBtn:hover {
+    background-color: rgba(#3A36DB, 0.3);
+}
+
+.listItemDeleteBtn {
+    background-color: rgba(#FF69B4, 0.1);
+    fill: #FF69B4;
+    color: #FF69B4;
+}
+
+.listItemDeleteBtn:hover {
+    background-color: rgba(#FF69B4, 0.3);
+}
+
+.listItemBtn svg {
+    vertical-align: middle;
+}

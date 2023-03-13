@@ -1,26 +1,26 @@
-.deleteHeader {
+.header {
     text-align: center;
 }
 
-.deleteBody {
+.body {
     margin-top: 30px;
     text-align: center;
     font-size: 16px;
 }
 
-.deleteFooter {
+.footer {
     margin-top: 30px;
     display: flex;
     justify-content: space-around;
 }
 
-.deleteFooterDelete {
+.footerDeleteBtn {
     background-color: #FFF;
     color: #F44336;
     border: 1px solid #F44336;
 }
 
-.deleteFooterCancel {
+.footerCancelBtn {
     background-color: #FFF;
     color: #3A36DB;
     border: 1px solid #3A36DB;

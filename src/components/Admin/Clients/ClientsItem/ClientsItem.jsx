@@ -7,7 +7,7 @@ import CheckBox from '../../UI/CheckBox/CheckBox'
 import cls from "./ClientsItem.module.scss"
 import { ModalContext } from '../../../../context/ModalContext'
 import { formatDate } from '../../../../utils/formatDate'
-import DeleteUser from '../../Modals/DeleteUser/DeleteUser'
+import DeleteModal from '../../Modals/DeleteModal/DeleteModal'
 import { useDispatch } from 'react-redux'
 import { deleteClientByIdAction } from '../../../../Store/Actions/Admin/deleteClientByIdAction'
 
@@ -26,12 +26,13 @@ const ClientsItem = ({ client, isChecked, handleCheck, isDeletingAll }) => {
     }
 
     const openModal = () => {
+        const headerText = "Delete Client"
+        const bodyText = "Are you sure you want to delete client?"
         modal.start()
-        modal.setContent(<DeleteUser callback={deleteUser} />)
+        modal.setContent(<DeleteModal callback={deleteUser} header={headerText} body={bodyText} />)
     }
 
     const handleClick = () => {
-        console.log('cheked')
         handleCheck(client.id, isChecked)
     }
 

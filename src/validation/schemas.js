@@ -255,3 +255,12 @@ export const schemaHelp = () => yup.object().shape({
   [f.email]: yup.string().typeError(e.string).required().matches(regexpEmail, { message: e.email }),
   [f.message]: yup.string().typeError(e.string).required().min(50, e.min(50)).max(1000, e.max(1000))
 })
+
+export const schemaGeneralService = () => yup.object().shape({
+  [f.name]: yup.string().typeError(e.string).required(),
+  [f.price]: yup.number().typeError(e.number.default).required().positive(e.number.positive),
+})
+
+export const schemaServiceType = () => yup.object().shape({
+  [f.name]: yup.string().typeError(e.string).required(),
+})

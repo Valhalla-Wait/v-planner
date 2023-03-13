@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { ModalContext } from '../../../../context/ModalContext'
 import { deleteClientByIdAction } from '../../../../Store/Actions/Admin/deleteClientByIdAction'
 import { classNames } from '../../../../utils/classNames'
-import DeleteUser from '../../Modals/DeleteUser/DeleteUser'
+import DeleteModal from '../../Modals/DeleteModal/DeleteModal'
 import Button from '../../UI/Button/Button'
 import CheckBox from '../../UI/CheckBox/CheckBox'
 import ClientsItem from '../ClientsItem/ClientsItem'
@@ -19,7 +19,6 @@ const ClientsList = ({ clients }) => {
     const [selectedIdList, setSelectedIdList] = useState([])
 
     const handleCheck = (id, checked) => {
-        console.log(id, checked)
         if (checked) {
             setSelectedIdList((prev) => prev.filter(item => item !== id));
         } else {
@@ -46,8 +45,10 @@ const ClientsList = ({ clients }) => {
     }
 
     const openModal = () => {
+        const headerText = "Delete clients"
+        const bodyText = "Are you sure you want to delete selected clients?"
         modal.start()
-        modal.setContent(<DeleteUser callback={deleteAll} plural={true} />)
+        modal.setContent(<DeleteModal callback={deleteAll} header={headerText} body={bodyText} />)
     }
 
     return (

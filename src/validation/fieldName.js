@@ -28,6 +28,7 @@ const fieldName = {
     styles: "styles",
     default: "photo"
   },
+  price: "price",
   priceRange: "priceRange",
   activities: "activities",
   about: {

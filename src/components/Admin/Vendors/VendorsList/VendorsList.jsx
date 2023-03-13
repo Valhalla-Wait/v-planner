@@ -16,7 +16,6 @@ const VendorsList = ({ vendors }) => {
     const [selectedIdList, setSelectedIdList] = useState([])
 
     const handleCheck = (id, checked) => {
-        console.log(id, checked)
         if (checked) {
             setSelectedIdList((prev) => prev.filter(item => item !== id));
         } else {
