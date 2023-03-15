@@ -1,5 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from "react"
 import Button from "../components/UI/Button"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { ThemeContext } from "../context/ThemeContext"
 import { quoteStatuses } from "../Store/Actions/quoteActions"
 import { getQuotes } from "../Store/Actions/getAllQuotes"
@@ -13,6 +15,7 @@ import { ResponsivePie } from '@nivo/pie'
 import { ResponsiveStream } from "@nivo/stream"
 import { ResponsiveLine } from "@nivo/line"
 import moment from "moment"
+import { listMonths } from "../utils/getFormatDate";
 Chart.register(ArcElement, Legend, CategoryScale, LinearScale, PointElement, LineElement)
 
 const quoteCategories = {
@@ -68,27 +71,16 @@ export default function FinancialReports() {
     }
   })
 
-  // const time = moment(acceptedQuotes[0].statusChangeDate).format("HH:mm")
-  // console.log(moment(moment(acceptedQuotes[0].statusChangeDate).format("HH:mm") < "14:00" && acceptedQuotes[0].statusChangeDate).format("HH:mm") < "12:00")
+  const findQuotesByDate = (quotes, date, sortType) => {
 
+    const formatByType = sortType === 'months' ? "M" : sortType === "years" ? "Y" : "D"
 
-  // const [quotes, setQuotes] = useState([])
-
-  // if((quotesList && quotesList.length) && !quotes.length) setQuotes(quotesList)
-
-  const theme = useContext(ThemeContext)
-
-  // acceptedQuotes.map(q => ({
-  //   "x": moment(q.statusChangeDate).format("HH:mm"),
-  //   "y": 1
-  // }))
-
-  const findQuoteCount = (quotes, timeTo, timeFrom) => {
     const findQuotes = quotes.filter(q => {
-      if(q.statusChangeDate) return moment(q.statusChangeDate).format("HH:mm") < timeFrom && moment(q.statusChangeDate).format("HH:mm") >= timeTo
-      if(q.statusViewedDate) return moment(q.statusViewedDate).format("HH:mm") < timeFrom && moment(q.statusViewedDate).format("HH:mm") >= timeTo
+      if (q.statusChangeDate) return Number(moment(q.statusChangeDate).format(formatByType)) == date
+
+      if (q.statusViewedDate) return Number(moment(q.statusViewedDate).format(formatByType)) == date
     })
-    console.log(findQuotes.length)
+
     return findQuotes.length
   }
 
@@ -103,55 +95,66 @@ export default function FinancialReports() {
     }
   }
 
-  
+  console.log(moment(new Date()).format("h:mm"))
+
+  const getDateSortType = () => {
+
+    if(Number(moment(rangeDateFrom).format("Y")) != Number(moment(rangeDateTo).format("Y"))) return 'years'
+
+    if(Number(moment(rangeDateFrom).format("M")) != Number(moment(rangeDateTo).format("M"))) return 'months'
+
+    return 'days'
+  } 
+
+
   const convertLineQuotesData = (category) => {
+
+    const sortType = getDateSortType()
+
+    const dateFromByType = sortType === 'months' ? Number(moment(rangeDateFrom).format("M")) : 
+      sortType === "years" ? Number(moment(rangeDateFrom).format("Y")) :
+      Number(moment(rangeDateFrom).format("D"))
+
+    const dateToByType = sortType === 'months' ? Number(moment(rangeDateTo).format("M")) : sortType === "years" ? Number(moment(rangeDateTo).format("Y")) : Number(moment(rangeDateTo).format("D"))
+
+    const datesInRage = []
+    
+      for (let i = dateFromByType; i <= dateToByType; i++) {
+        datesInRage.push({
+          label: sortType === 'months' ? listMonths[i-1] : i,
+          value: i
+        })
+      }
+
+    const data = datesInRage.map(date => ({
+          "x": date.label,
+          "y": findQuotesByDate(getQuotesByCategory(category.title), date.value, sortType)
+    }))
+
     return [{
       "id": category.title,
       "color": category.color,
-      "data": [
-        {
-          "x": "12:00",
-          "y": findQuoteCount(getQuotesByCategory(category.title), "12:00", "13:00")
-        },
-        {
-          "x": "13:00",
-          "y": findQuoteCount(getQuotesByCategory(category.title), "13:00", "14:00")
-        },
-        {
-          "x": "14:00",
-          "y":findQuoteCount(getQuotesByCategory(category.title), "14:00", "15:00")
-        },
-        {
-          "x": "15:00",
-          "y": findQuoteCount(getQuotesByCategory(category.title), "15:00", "16:00")
-        },
-        {
-          "x": "16:00",
-          "y": findQuoteCount(getQuotesByCategory(category.title), "16:00", "17:00")
-        },
-        {
-          "x": "17:00",
-          "y": findQuoteCount(getQuotesByCategory(category.title), "17:00", "18:00")
-        },
-        {
-          "x": "18:00",
-          "y": findQuoteCount(getQuotesByCategory(category.title), "17:00", "18:00")
-        },
-      ]
+      "data": data
+      
     }]
-  } 
+  }
 
   const [currentQuotes, setCurrentQuotes] = useState([])
+  const [rangeDateFrom, setRangeDateFrom] = useState()
+  const [rangeDateTo, setRangeDateTo] = useState()
+  
+
+  console.log("currentQuotes",currentQuotes)
 
   useEffect(() => {
     setCurrentQuotes(convertLineQuotesData(quoteCategories.Await))
-  }, [allQuotes])
+  }, [rangeDateFrom, rangeDateTo])
 
   const setQuotesCategory = (category) => {
     switch (category) {
       case quoteCategories.Await.title:
         return setCurrentQuotes(convertLineQuotesData(quoteCategories.Await))
-      
+
       case quoteCategories.Accepted.title:
         return setCurrentQuotes(convertLineQuotesData(quoteCategories.Accepted))
 
@@ -160,14 +163,19 @@ export default function FinancialReports() {
     }
   }
 
+ 
+
   return (
     <section className="financial-reports">
       <div className="charts">
 
         {allQuotes.length ?
           <>
-          <div className="line-chart">
-          <ResponsiveLine
+            <div className="line-chart">
+              {!currentQuotes[0]?.data.length ? 
+              <div className="line-chart__err">Quotes not found or incorrect date</div> 
+              :
+              <ResponsiveLine
               data={currentQuotes}
               //areaBaselineValue={0} //startLine
               margin={{ top: 30, right: 110, bottom: 20, left: 30 }}
@@ -237,108 +245,135 @@ export default function FinancialReports() {
                 }
               ]}
             />
-          </div>
-              <div className="pie-chart">
+            }
+              
+            </div>
+            <div className="pie-chart">
               <ResponsivePie
-              data={[
-                {
-                  id: quoteCategories.Await.title,
-                  label: quoteCategories.Await.title,
-                  value: awaitingQuotes.length,
-                  color: "#E7EBFF"
-                },
-                {
-                  id: quoteCategories.Accepted.title,
-                  label: quoteCategories.Accepted.title,
-                  value: acceptedQuotes.length,
-                  color: "#43E6D2"
-                },
-                {
-                  id: quoteCategories.Declined.title,
-                  label: quoteCategories.Declined.title,
-                  value: declinedQuotes.length,
-                  color: "#3057E1"
-                },
-              ]}
-              onClick={(e) => setQuotesCategory(e.label)}
-              margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-              innerRadius={0.55}
-              activeOuterRadiusOffset={8}
-              colors={{ datum: 'color' }}
-              arcLinkLabelsSkipAngle={10}
-              arcLinkLabelsTextColor="#333333"
-              arcLinkLabelsThickness={2}
-              arcLinkLabelsColor={{ from: 'color' }}
-              arcLabelsSkipAngle={10}
-              arcLabelsTextColor={{
-                from: 'color',
-                modifiers: [
-                  [
-                    'darker',
-                    2
+                data={[
+                  {
+                    id: quoteCategories.Await.title,
+                    label: quoteCategories.Await.title,
+                    value: awaitingQuotes.length,
+                    color: "#E7EBFF"
+                  },
+                  {
+                    id: quoteCategories.Accepted.title,
+                    label: quoteCategories.Accepted.title,
+                    value: acceptedQuotes.length,
+                    color: "#43E6D2"
+                  },
+                  {
+                    id: quoteCategories.Declined.title,
+                    label: quoteCategories.Declined.title,
+                    value: declinedQuotes.length,
+                    color: "#3057E1"
+                  },
+                ]}
+                onClick={(e) => setQuotesCategory(e.label)}
+                margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
+                innerRadius={0.55}
+                activeOuterRadiusOffset={8}
+                colors={{ datum: 'color' }}
+                arcLinkLabelsSkipAngle={10}
+                arcLinkLabelsTextColor="#333333"
+                arcLinkLabelsThickness={2}
+                arcLinkLabelsColor={{ from: 'color' }}
+                arcLabelsSkipAngle={10}
+                arcLabelsTextColor={{
+                  from: 'color',
+                  modifiers: [
+                    [
+                      'darker',
+                      2
+                    ]
                   ]
-                ]
-              }}
-              defs={[
-                {
-                  id: quoteCategories.Await.title,
-                  type: 'patternDots',
-                  background: "#E7EBFF",
-                  color: "#E7EBFF",
-                  size: 4,
-                  padding: 1,
-                  stagger: true
-                },
-                {
-                  id: quoteCategories.Accepted.title,
-                  type: 'patternLines',
-                  background: "#43E6D2",
-                  color: "#43E6D2",
-                  rotation: -45,
-                  lineWidth: 6,
-                  spacing: 10
-                },
-                {
-                  id: quoteCategories.Declined.title,
-                  type: 'patternDots',
-                  background: "#3057E1",
-                  color: "#3057E1",
-                  size: 4,
-                  padding: 1,
-                  stagger: true
-                },
-              ]}
-              fill={[
-                {
-                  match: {
+                }}
+                defs={[
+                  {
+                    id: quoteCategories.Await.title,
+                    type: 'patternDots',
+                    background: "#E7EBFF",
+                    color: "#E7EBFF",
+                    size: 4,
+                    padding: 1,
+                    stagger: true
+                  },
+                  {
+                    id: quoteCategories.Accepted.title,
+                    type: 'patternLines',
+                    background: "#43E6D2",
+                    color: "#43E6D2",
+                    rotation: -45,
+                    lineWidth: 6,
+                    spacing: 10
+                  },
+                  {
+                    id: quoteCategories.Declined.title,
+                    type: 'patternDots',
+                    background: "#3057E1",
+                    color: "#3057E1",
+                    size: 4,
+                    padding: 1,
+                    stagger: true
+                  },
+                ]}
+                fill={[
+                  {
+                    match: {
+                      id: quoteCategories.Await.title
+                    },
                     id: quoteCategories.Await.title
                   },
-                  id: quoteCategories.Await.title
-                },
-                {
-                  match: {
+                  {
+                    match: {
+                      id: quoteCategories.Accepted.title
+                    },
                     id: quoteCategories.Accepted.title
                   },
-                  id: quoteCategories.Accepted.title
-                },
-                {
-                  match: {
+                  {
+                    match: {
+                      id: quoteCategories.Declined.title
+                    },
                     id: quoteCategories.Declined.title
                   },
-                  id: quoteCategories.Declined.title
-                },
-              ]}
-              enableArcLabels={false}
-              enableArcLinkLabels={false}
-            />
-              </div>
-            
+                ]}
+                enableArcLabels={false}
+                enableArcLinkLabels={false}
+              />
+            </div>
+
 
 
           </>
           :
           "Quotes not found"
         }
+
+      </div>
+      <div className="range-celendar">
+        <div className="range-celendar__item">
+          <DatePicker
+            dateFormat="d MMMM yy"
+            selected={rangeDateFrom}
+            // ref={field.ref}
+            onChange={setRangeDateFrom}
+            // onBlur={field.onBlur}
+            placeholderText="To"
+            className="input-control"
+          />
+        </div>
+        <div className="range-celendar__item">
+          <DatePicker
+            dateFormat="d MMMM yy"
+            selected={rangeDateTo}
+            // ref={field.ref}
+            onChange={setRangeDateTo}
+            // onBlur={field.onBlur}
+            placeholderText="From"
+            className="input-control"
+          />
+        </div>
 
       </div>
       <div className="reports-lists">
